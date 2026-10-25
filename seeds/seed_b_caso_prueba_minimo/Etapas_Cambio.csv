@@ -1,0 +1,11 @@
+id,nombre,secuencia,sla_horas
+CS01,Registro,1,24
+CS02,Revisión inicial,2,48
+CS03,Clasificación,3,72
+CS04,Análisis de impacto,4,96
+CS05,Revisión del comité,5,120
+CS06,Decisión,6,144
+CS07,Planificación,7,168
+CS08,Implementación,8,192
+CS09,Verificación,9,216
+CS10,Cierre,10,240

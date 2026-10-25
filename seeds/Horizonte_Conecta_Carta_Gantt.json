@@ -1,0 +1,2189 @@
+{
+  "Proyecto": [
+    {
+      "clave": "codigo",
+      "valor": "HORIZONTE-CONECTA"
+    },
+    {
+      "clave": "nombre",
+      "valor": "Horizonte Conecta"
+    },
+    {
+      "clave": "cliente",
+      "valor": "Constructora Horizonte"
+    },
+    {
+      "clave": "responsable",
+      "valor": "Jefe de Proyecto"
+    },
+    {
+      "clave": "fecha_inicio",
+      "valor": "2026-10-05"
+    },
+    {
+      "clave": "fecha_comprometida",
+      "valor": "2027-07-12"
+    },
+    {
+      "clave": "presupuesto",
+      "valor": "212809000"
+    },
+    {
+      "clave": "contingencia_pct",
+      "valor": "10"
+    },
+    {
+      "clave": "horas_por_dia",
+      "valor": "8"
+    },
+    {
+      "clave": "dias_laborales",
+      "valor": "L-V"
+    },
+    {
+      "clave": "fecha_corte",
+      "valor": "2027-01-15"
+    }
+  ],
+  "Calendario": [
+    {
+      "fecha": "2026-10-12",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional: Encuentro de Dos Mundos"
+    },
+    {
+      "fecha": "2026-12-08",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional: Inmaculada Concepción"
+    },
+    {
+      "fecha": "2026-12-25",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional: Navidad"
+    },
+    {
+      "fecha": "2027-01-01",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional: Año Nuevo"
+    },
+    {
+      "fecha": "2027-03-26",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional: Viernes Santo"
+    },
+    {
+      "fecha": "2027-05-21",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional: Día de las Glorias Navales"
+    },
+    {
+      "fecha": "2027-06-21",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional: Día Nacional de los Pueblos Indígenas"
+    },
+    {
+      "fecha": "2027-06-28",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional: San Pedro y San Pablo"
+    },
+    {
+      "fecha": "2027-07-16",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional: Día de la Virgen del Carmen"
+    }
+  ],
+  "Gantt": [
+    {
+      "id": "E-1-1",
+      "tipo": "ETAPA",
+      "nombre": "Gestión del proyecto",
+      "padre_id": "",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-1-1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.1.1",
+      "padre_id": "E-1-1",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A01",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Constituir equipo y comité directivo, y realizar kick-off",
+      "padre_id": "AC-1-1-1",
+      "inicio_plan": "2026-10-05",
+      "fin_plan": "2026-10-08",
+      "duracion_dias": 4,
+      "predecesoras": "",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H01",
+      "tipo": "HITO",
+      "nombre": "Hito: Kick-off realizado",
+      "padre_id": "AC-1-1-1",
+      "inicio_plan": "2026-10-08",
+      "fin_plan": "2026-10-08",
+      "duracion_dias": 0,
+      "predecesoras": "A01FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A02",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Elaborar y aprobar plan de dirección del proyecto",
+      "padre_id": "AC-1-1-1",
+      "inicio_plan": "2026-10-09",
+      "fin_plan": "2026-10-23",
+      "duracion_dias": 10,
+      "predecesoras": "H01FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-1-2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.1.2",
+      "padre_id": "E-1-1",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A03",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Realizar seguimiento y control (comités quincenales, riesgos y cambios)",
+      "padre_id": "AC-1-1-2",
+      "inicio_plan": "2026-10-26",
+      "fin_plan": "2027-06-22",
+      "duracion_dias": 166,
+      "predecesoras": "A02FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-1-3",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.1.3",
+      "padre_id": "E-1-1",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A04",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Elaborar informe final, lecciones aprendidas y acta de cierre",
+      "padre_id": "AC-1-1-3",
+      "inicio_plan": "2027-07-07",
+      "fin_plan": "2027-07-12",
+      "duracion_dias": 4,
+      "predecesoras": "H09FS;A42FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H10",
+      "tipo": "HITO",
+      "nombre": "Hito: Cierre formal del proyecto",
+      "padre_id": "AC-1-1-3",
+      "inicio_plan": "2027-07-12",
+      "fin_plan": "2027-07-12",
+      "duracion_dias": 0,
+      "predecesoras": "A04FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "E-1-2",
+      "tipo": "ETAPA",
+      "nombre": "Diagnóstico y requisitos",
+      "padre_id": "",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-2-1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.2.1",
+      "padre_id": "E-1-2",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A05",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Levantar procesos en las 3 obras piloto y en oficina central",
+      "padre_id": "AC-1-2-1",
+      "inicio_plan": "2026-10-09",
+      "fin_plan": "2026-10-19",
+      "duracion_dias": 6,
+      "predecesoras": "H01FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A06",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Documentar diagnóstico y línea base de indicadores",
+      "padre_id": "AC-1-2-1",
+      "inicio_plan": "2026-10-20",
+      "fin_plan": "2026-10-23",
+      "duracion_dias": 4,
+      "predecesoras": "A05FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-2-2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.2.2",
+      "padre_id": "E-1-2",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A07",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Especificar requisitos e historias de usuario (incluye offline y seguridad)",
+      "padre_id": "AC-1-2-2",
+      "inicio_plan": "2026-10-26",
+      "fin_plan": "2026-11-09",
+      "duracion_dias": 11,
+      "predecesoras": "A06FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A08",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Definir indicadores de las 6 preguntas de la gerencia y validarlos con Finanzas",
+      "padre_id": "AC-1-2-2",
+      "inicio_plan": "2026-10-26",
+      "fin_plan": "2026-11-03",
+      "duracion_dias": 7,
+      "predecesoras": "A06FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A09",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Priorizar backlog en Release 1 y 2 y aprobar el alcance en comité",
+      "padre_id": "AC-1-2-2",
+      "inicio_plan": "2026-11-10",
+      "fin_plan": "2026-11-11",
+      "duracion_dias": 2,
+      "predecesoras": "A07FS;A08FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H02",
+      "tipo": "HITO",
+      "nombre": "Hito: Alcance aprobado",
+      "padre_id": "AC-1-2-2",
+      "inicio_plan": "2026-11-11",
+      "fin_plan": "2026-11-11",
+      "duracion_dias": 0,
+      "predecesoras": "A09FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "E-1-3",
+      "tipo": "ETAPA",
+      "nombre": "Diseño de la solución",
+      "padre_id": "",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-3-1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.3.1",
+      "padre_id": "E-1-3",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A10",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Probar la API del sistema de compras con el proveedor (prueba de concepto)",
+      "padre_id": "AC-1-3-1",
+      "inicio_plan": "2026-10-09",
+      "fin_plan": "2026-10-23",
+      "duracion_dias": 10,
+      "predecesoras": "H01SS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A11",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Diseñar arquitectura, integraciones y modelo de datos, y aprobarlos con TI",
+      "padre_id": "AC-1-3-1",
+      "inicio_plan": "2026-10-26",
+      "fin_plan": "2026-11-19",
+      "duracion_dias": 19,
+      "predecesoras": "A06FS;A10FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-3-2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.3.2",
+      "padre_id": "E-1-3",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A12",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Diseñar el prototipo UX/UI y validarlo con jefes de obra",
+      "padre_id": "AC-1-3-2",
+      "inicio_plan": "2026-11-12",
+      "fin_plan": "2026-12-09",
+      "duracion_dias": 19,
+      "predecesoras": "H02FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H03",
+      "tipo": "HITO",
+      "nombre": "Hito: Diseño de solución aprobado",
+      "padre_id": "AC-1-3-2",
+      "inicio_plan": "2026-12-09",
+      "fin_plan": "2026-12-09",
+      "duracion_dias": 0,
+      "predecesoras": "A11FS;A12FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "E-1-4",
+      "tipo": "ETAPA",
+      "nombre": "Plataforma base",
+      "padre_id": "",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-4-1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.4.1",
+      "padre_id": "E-1-4",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A13",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Provisionar ambientes cloud, CI/CD, monitoreo y respaldos",
+      "padre_id": "AC-1-4-1",
+      "inicio_plan": "2026-11-20",
+      "fin_plan": "2026-12-11",
+      "duracion_dias": 15,
+      "predecesoras": "A11FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-4-2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.4.2",
+      "padre_id": "E-1-4",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A14",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Desarrollar núcleo: usuarios, roles por obra, auditoría y maestros",
+      "padre_id": "AC-1-4-2",
+      "inicio_plan": "2026-12-14",
+      "fin_plan": "2027-01-04",
+      "duracion_dias": 14,
+      "predecesoras": "H03FS;A13FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A15",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Desarrollar la app móvil offline y probarla en terreno",
+      "padre_id": "AC-1-4-2",
+      "inicio_plan": "2026-12-10",
+      "fin_plan": "2027-01-06",
+      "duracion_dias": 18,
+      "predecesoras": "H03FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H04",
+      "tipo": "HITO",
+      "nombre": "Hito: Plataforma base operativa",
+      "padre_id": "AC-1-4-2",
+      "inicio_plan": "2027-01-08",
+      "fin_plan": "2027-01-08",
+      "duracion_dias": 0,
+      "predecesoras": "A14FS;A15FS;A16FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "E-1-5",
+      "tipo": "ETAPA",
+      "nombre": "Integraciones corporativas",
+      "padre_id": "",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-5-1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.5.1",
+      "padre_id": "E-1-5",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A16",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Integrar el inicio de sesión corporativo (SSO) y el repositorio documental Microsoft",
+      "padre_id": "AC-1-5-1",
+      "inicio_plan": "2026-12-14",
+      "fin_plan": "2027-01-08",
+      "duracion_dias": 18,
+      "predecesoras": "A13FS;A10FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-5-2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.5.2",
+      "padre_id": "E-1-5",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A17",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Integrar el sistema de compras (API) y validarlo con Adquisiciones",
+      "padre_id": "AC-1-5-2",
+      "inicio_plan": "2027-01-11",
+      "fin_plan": "2027-02-09",
+      "duracion_dias": 22,
+      "predecesoras": "A16FF",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A18",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Integrar el ERP en modo lectura y conciliar montos con Finanzas",
+      "padre_id": "AC-1-5-2",
+      "inicio_plan": "2027-02-10",
+      "fin_plan": "2027-03-04",
+      "duracion_dias": 17,
+      "predecesoras": "A17SF",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "E-1-6",
+      "tipo": "ETAPA",
+      "nombre": "Release 1: operación de obra",
+      "padre_id": "",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-6-1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.6.1",
+      "padre_id": "E-1-6",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A19",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Desarrollar importación de programación, cálculo de avance y alertas de bloqueo",
+      "padre_id": "AC-1-6-1",
+      "inicio_plan": "2027-01-11",
+      "fin_plan": "2027-02-16",
+      "duracion_dias": 27,
+      "predecesoras": "H04FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A20",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Desarrollar el registro móvil de avance por partida con fotos",
+      "padre_id": "AC-1-6-1",
+      "inicio_plan": "2027-01-11",
+      "fin_plan": "2027-02-09",
+      "duracion_dias": 22,
+      "predecesoras": "H04FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-6-2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.6.2",
+      "padre_id": "E-1-6",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A21",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Desarrollar el módulo de observaciones con fotos y flujo de cierre",
+      "padre_id": "AC-1-6-2",
+      "inicio_plan": "2027-01-11",
+      "fin_plan": "2027-01-28",
+      "duracion_dias": 14,
+      "predecesoras": "H04FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-6-3",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.6.3",
+      "padre_id": "E-1-6",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A22",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Desarrollar el catálogo y el visor offline de planos vigentes",
+      "padre_id": "AC-1-6-3",
+      "inicio_plan": "2027-01-29",
+      "fin_plan": "2027-02-12",
+      "duracion_dias": 11,
+      "predecesoras": "A21FS;A16FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "E-1-7",
+      "tipo": "ETAPA",
+      "nombre": "Release 2: control económico",
+      "padre_id": "",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-7-1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.7.1",
+      "padre_id": "E-1-7",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A23",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Desarrollar el módulo de materiales (OC, recepción móvil y conciliación con facturas)",
+      "padre_id": "AC-1-7-1",
+      "inicio_plan": "2027-03-03",
+      "fin_plan": "2027-03-24",
+      "duracion_dias": 16,
+      "predecesoras": "A29FS;A17FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-7-2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.7.2",
+      "padre_id": "E-1-7",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A24",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Desarrollar el módulo de subcontratos y estados de pago",
+      "padre_id": "AC-1-7-2",
+      "inicio_plan": "2027-02-15",
+      "fin_plan": "2027-03-10",
+      "duracion_dias": 18,
+      "predecesoras": "A22FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-7-3",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.7.3",
+      "padre_id": "E-1-7",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A25",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Construir el modelo analítico con cargas diarias",
+      "padre_id": "AC-1-7-3",
+      "inicio_plan": "2027-01-11",
+      "fin_plan": "2027-02-02",
+      "duracion_dias": 17,
+      "predecesoras": "H04FS;A08FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A26",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Desarrollar el tablero ejecutivo y validarlo con Gerencia y Finanzas",
+      "padre_id": "AC-1-7-3",
+      "inicio_plan": "2027-03-05",
+      "fin_plan": "2027-03-29",
+      "duracion_dias": 16,
+      "predecesoras": "A25FS;A18FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "E-1-8",
+      "tipo": "ETAPA",
+      "nombre": "Pruebas y calidad",
+      "padre_id": "",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-8-1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.8.1",
+      "padre_id": "E-1-8",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A27",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Elaborar el plan y los casos de prueba",
+      "padre_id": "AC-1-8-1",
+      "inicio_plan": "2026-11-12",
+      "fin_plan": "2026-11-27",
+      "duracion_dias": 12,
+      "predecesoras": "H02FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A28",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Apoyar los sprints: refinamiento, diseño de detalle, QA continuo, ambientes y revisión técnica",
+      "padre_id": "AC-1-8-1",
+      "inicio_plan": "2027-01-11",
+      "fin_plan": "2027-03-10",
+      "duracion_dias": 43,
+      "predecesoras": "H04FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-8-2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.8.2",
+      "padre_id": "E-1-8",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A29",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Ejecutar pruebas de sistema de Release 1 y corregir defectos",
+      "padre_id": "AC-1-8-2",
+      "inicio_plan": "2027-02-17",
+      "fin_plan": "2027-03-02",
+      "duracion_dias": 10,
+      "predecesoras": "A19FS;A20FS;A22FS;A27FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A30",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Realizar la prueba de aceptación (UAT) de Release 1 con usuarios de obra",
+      "padre_id": "AC-1-8-2",
+      "inicio_plan": "2027-03-03",
+      "fin_plan": "2027-03-09",
+      "duracion_dias": 5,
+      "predecesoras": "A29FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H05",
+      "tipo": "HITO",
+      "nombre": "Hito: Release 1 aceptada",
+      "padre_id": "AC-1-8-2",
+      "inicio_plan": "2027-03-09",
+      "fin_plan": "2027-03-09",
+      "duracion_dias": 0,
+      "predecesoras": "A30FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-8-3",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.8.3",
+      "padre_id": "E-1-8",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A31",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Ejecutar pruebas de sistema de Release 2 (con regresión) y corregir defectos",
+      "padre_id": "AC-1-8-3",
+      "inicio_plan": "2027-03-30",
+      "fin_plan": "2027-04-12",
+      "duracion_dias": 10,
+      "predecesoras": "A23FS;A24FS;A26FS;H05FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A32",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Ejecutar la prueba de seguridad externa y corregir hallazgos",
+      "padre_id": "AC-1-8-3",
+      "inicio_plan": "2027-04-13",
+      "fin_plan": "2027-04-22",
+      "duracion_dias": 8,
+      "predecesoras": "A31FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A33",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Realizar la UAT de Release 2 con obra y oficina central",
+      "padre_id": "AC-1-8-3",
+      "inicio_plan": "2027-04-13",
+      "fin_plan": "2027-04-19",
+      "duracion_dias": 5,
+      "predecesoras": "A31FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H07",
+      "tipo": "HITO",
+      "nombre": "Hito: Release 2 aceptada",
+      "padre_id": "AC-1-8-3",
+      "inicio_plan": "2027-04-22",
+      "fin_plan": "2027-04-22",
+      "duracion_dias": 0,
+      "predecesoras": "A33FS;A32FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "E-1-9",
+      "tipo": "ETAPA",
+      "nombre": "Piloto y gestión del cambio",
+      "padre_id": "",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-9-1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.9.1",
+      "padre_id": "E-1-9",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A34",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Elaborar el plan de cambio, comprar dispositivos y cargar datos maestros de las obras",
+      "padre_id": "AC-1-9-1",
+      "inicio_plan": "2027-01-11",
+      "fin_plan": "2027-02-05",
+      "duracion_dias": 20,
+      "predecesoras": "H04FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-9-2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.9.2",
+      "padre_id": "E-1-9",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A35",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Capacitar a los usuarios de obra en Release 1 (sesiones cortas en obra)",
+      "padre_id": "AC-1-9-2",
+      "inicio_plan": "2027-03-03",
+      "fin_plan": "2027-03-12",
+      "duracion_dias": 8,
+      "predecesoras": "A29FS;A34FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A36",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Desplegar Release 1 en producción",
+      "padre_id": "AC-1-9-2",
+      "inicio_plan": "2027-03-15",
+      "fin_plan": "2027-03-15",
+      "duracion_dias": 1,
+      "predecesoras": "H05FS;A35FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H06",
+      "tipo": "HITO",
+      "nombre": "Hito: Release 1 en operación en las 3 obras",
+      "padre_id": "AC-1-9-2",
+      "inicio_plan": "2027-03-15",
+      "fin_plan": "2027-03-15",
+      "duracion_dias": 0,
+      "predecesoras": "A36FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A37",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Acompañar la operación asistida de Release 1 en terreno",
+      "padre_id": "AC-1-9-2",
+      "inicio_plan": "2027-03-16",
+      "fin_plan": "2027-04-12",
+      "duracion_dias": 19,
+      "predecesoras": "H06FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-9-3",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.9.3",
+      "padre_id": "E-1-9",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A38",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Capacitar a los usuarios en Release 2",
+      "padre_id": "AC-1-9-3",
+      "inicio_plan": "2027-04-13",
+      "fin_plan": "2027-04-20",
+      "duracion_dias": 6,
+      "predecesoras": "A31FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A39",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Desplegar Release 2 en producción",
+      "padre_id": "AC-1-9-3",
+      "inicio_plan": "2027-04-23",
+      "fin_plan": "2027-04-23",
+      "duracion_dias": 1,
+      "predecesoras": "H07FS;A38FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H08",
+      "tipo": "HITO",
+      "nombre": "Hito: Release 2 en operación en las 3 obras",
+      "padre_id": "AC-1-9-3",
+      "inicio_plan": "2027-04-23",
+      "fin_plan": "2027-04-23",
+      "duracion_dias": 0,
+      "predecesoras": "A39FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A40",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Acompañar la operación asistida de Release 2 durante 2 ciclos mensuales de EP",
+      "padre_id": "AC-1-9-3",
+      "inicio_plan": "2027-04-26",
+      "fin_plan": "2027-06-22",
+      "duracion_dias": 40,
+      "predecesoras": "H08FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-9-4",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.9.4",
+      "padre_id": "E-1-9",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A41",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Medir resultados del piloto y elaborar el plan de escalamiento",
+      "padre_id": "AC-1-9-4",
+      "inicio_plan": "2027-06-23",
+      "fin_plan": "2027-07-06",
+      "duracion_dias": 9,
+      "predecesoras": "A40FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H09",
+      "tipo": "HITO",
+      "nombre": "Hito: Evaluación del piloto aprobada",
+      "padre_id": "AC-1-9-4",
+      "inicio_plan": "2027-07-06",
+      "fin_plan": "2027-07-06",
+      "duracion_dias": 0,
+      "predecesoras": "A41FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "E-1-10",
+      "tipo": "ETAPA",
+      "nombre": "Transición a operación",
+      "padre_id": "",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC-1-10-1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Actividad 1.10.1",
+      "padre_id": "E-1-10",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A42",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Elaborar documentación y manuales, y traspasar la operación a TI",
+      "padre_id": "AC-1-10-1",
+      "inicio_plan": "2027-04-26",
+      "fin_plan": "2027-05-11",
+      "duracion_dias": 12,
+      "predecesoras": "H08FS",
+      "avance_pct": 0.0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    }
+  ],
+  "Recursos": [
+    {
+      "recurso_id": "R001",
+      "nombre": "Analista Funcional / de Negocio 1",
+      "tipo": "HUMANO",
+      "rol": "Analista Funcional / de Negocio",
+      "tarifa": 22000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R002",
+      "nombre": "Analista QA 1",
+      "tipo": "HUMANO",
+      "rol": "Analista QA",
+      "tarifa": 18500,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R003",
+      "nombre": "Analista QA 2",
+      "tipo": "HUMANO",
+      "rol": "Analista QA",
+      "tarifa": 18500,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R004",
+      "nombre": "Analista QA 3",
+      "tipo": "HUMANO",
+      "rol": "Analista QA",
+      "tarifa": 18500,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R005",
+      "nombre": "Analista QA 4",
+      "tipo": "HUMANO",
+      "rol": "Analista QA",
+      "tarifa": 18500,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R006",
+      "nombre": "Analista de Datos / BI 1",
+      "tipo": "HUMANO",
+      "rol": "Analista de Datos / BI",
+      "tarifa": 24000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R007",
+      "nombre": "Arquitecto de Solución 1",
+      "tipo": "HUMANO",
+      "rol": "Arquitecto de Solución",
+      "tarifa": 30000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R008",
+      "nombre": "Desarrollador Backend 1",
+      "tipo": "HUMANO",
+      "rol": "Desarrollador Backend",
+      "tarifa": 24000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R009",
+      "nombre": "Desarrollador Backend 2",
+      "tipo": "HUMANO",
+      "rol": "Desarrollador Backend",
+      "tarifa": 24000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R010",
+      "nombre": "Desarrollador Frontend/Móvil 1",
+      "tipo": "HUMANO",
+      "rol": "Desarrollador Frontend/Móvil",
+      "tarifa": 24000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R011",
+      "nombre": "Desarrollador Frontend/Móvil 2",
+      "tipo": "HUMANO",
+      "rol": "Desarrollador Frontend/Móvil",
+      "tarifa": 24000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R012",
+      "nombre": "Desarrollador de Integraciones 1",
+      "tipo": "HUMANO",
+      "rol": "Desarrollador de Integraciones",
+      "tarifa": 26000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R013",
+      "nombre": "Diseñador UX/UI 1",
+      "tipo": "HUMANO",
+      "rol": "Diseñador UX/UI",
+      "tarifa": 22000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R014",
+      "nombre": "Especialista Gestión del Cambio y Capacitación 1",
+      "tipo": "HUMANO",
+      "rol": "Especialista Gestión del Cambio y Capacitación",
+      "tarifa": 22000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R015",
+      "nombre": "Ingeniero DevOps / Cloud 1",
+      "tipo": "HUMANO",
+      "rol": "Ingeniero DevOps / Cloud",
+      "tarifa": 26000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R016",
+      "nombre": "Jefe de Proyecto 1",
+      "tipo": "HUMANO",
+      "rol": "Jefe de Proyecto",
+      "tarifa": 30000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "RE-EQ-001",
+      "nombre": "Tablet de obra",
+      "tipo": "EQUIPAMIENTO",
+      "rol": "Dispositivo",
+      "tarifa": 350000,
+      "unidad": "unidad",
+      "capacidad_h_dia": ""
+    },
+    {
+      "recurso_id": "RE-INF-001",
+      "nombre": "Infraestructura cloud",
+      "tipo": "INFRAESTRUCTURA_LICENCIA",
+      "rol": "Cloud",
+      "tarifa": 1200000,
+      "unidad": "mes",
+      "capacidad_h_dia": ""
+    },
+    {
+      "recurso_id": "RE-SVC-001",
+      "nombre": "Servicio externo API compras",
+      "tipo": "SERVICIO_EXTERNO",
+      "rol": "Proveedor",
+      "tarifa": 3000000,
+      "unidad": "servicio",
+      "capacidad_h_dia": ""
+    }
+  ],
+  "Asignaciones": [
+    {
+      "tarea_id": "A01",
+      "recurso_id": "R016",
+      "horas_planificadas": 32.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A02",
+      "recurso_id": "R016",
+      "horas_planificadas": 80.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A03",
+      "recurso_id": "R016",
+      "horas_planificadas": 664.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A04",
+      "recurso_id": "R016",
+      "horas_planificadas": 32.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A05",
+      "recurso_id": "R001",
+      "horas_planificadas": 48.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A05",
+      "recurso_id": "R013",
+      "horas_planificadas": 48.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A06",
+      "recurso_id": "R001",
+      "horas_planificadas": 32.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A07",
+      "recurso_id": "R001",
+      "horas_planificadas": 88.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A08",
+      "recurso_id": "R006",
+      "horas_planificadas": 56.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A09",
+      "recurso_id": "R001",
+      "horas_planificadas": 8.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A09",
+      "recurso_id": "R016",
+      "horas_planificadas": 8.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A10",
+      "recurso_id": "R012",
+      "horas_planificadas": 80.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A11",
+      "recurso_id": "R007",
+      "horas_planificadas": 152.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A12",
+      "recurso_id": "R013",
+      "horas_planificadas": 152.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A13",
+      "recurso_id": "R015",
+      "horas_planificadas": 90.0,
+      "cantidad": "",
+      "h_dia": 6.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A14",
+      "recurso_id": "R008",
+      "horas_planificadas": 224.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A15",
+      "recurso_id": "R010",
+      "horas_planificadas": 288.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A16",
+      "recurso_id": "R012",
+      "horas_planificadas": 144.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A17",
+      "recurso_id": "R012",
+      "horas_planificadas": 176.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A18",
+      "recurso_id": "R012",
+      "horas_planificadas": 136.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A19",
+      "recurso_id": "R008",
+      "horas_planificadas": 216.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A20",
+      "recurso_id": "R010",
+      "horas_planificadas": 176.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A21",
+      "recurso_id": "R008",
+      "horas_planificadas": 112.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A21",
+      "recurso_id": "R010",
+      "horas_planificadas": 112.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A22",
+      "recurso_id": "R008",
+      "horas_planificadas": 88.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A22",
+      "recurso_id": "R010",
+      "horas_planificadas": 88.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A23",
+      "recurso_id": "R008",
+      "horas_planificadas": 128.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A23",
+      "recurso_id": "R010",
+      "horas_planificadas": 128.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A24",
+      "recurso_id": "R008",
+      "horas_planificadas": 144.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A24",
+      "recurso_id": "R010",
+      "horas_planificadas": 144.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A25",
+      "recurso_id": "R006",
+      "horas_planificadas": 136.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A26",
+      "recurso_id": "R006",
+      "horas_planificadas": 128.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A27",
+      "recurso_id": "R002",
+      "horas_planificadas": 96.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A28",
+      "recurso_id": "R001",
+      "horas_planificadas": 172.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A28",
+      "recurso_id": "R013",
+      "horas_planificadas": 172.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A28",
+      "recurso_id": "R002",
+      "horas_planificadas": 172.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A28",
+      "recurso_id": "R015",
+      "horas_planificadas": 172.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A28",
+      "recurso_id": "R007",
+      "horas_planificadas": 172.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A29",
+      "recurso_id": "R002",
+      "horas_planificadas": 80.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A29",
+      "recurso_id": "R008",
+      "horas_planificadas": 80.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A29",
+      "recurso_id": "R010",
+      "horas_planificadas": 80.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A30",
+      "recurso_id": "R002",
+      "horas_planificadas": 20.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A30",
+      "recurso_id": "R001",
+      "horas_planificadas": 20.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A31",
+      "recurso_id": "R002",
+      "horas_planificadas": 80.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A31",
+      "recurso_id": "R003",
+      "horas_planificadas": 80.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A31",
+      "recurso_id": "R004",
+      "horas_planificadas": 80.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A31",
+      "recurso_id": "R005",
+      "horas_planificadas": 80.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A31",
+      "recurso_id": "R008",
+      "horas_planificadas": 80.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A31",
+      "recurso_id": "R010",
+      "horas_planificadas": 80.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A32",
+      "recurso_id": "R015",
+      "horas_planificadas": 24.0,
+      "cantidad": "",
+      "h_dia": 3.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A33",
+      "recurso_id": "R002",
+      "horas_planificadas": 20.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A33",
+      "recurso_id": "R001",
+      "horas_planificadas": 20.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A34",
+      "recurso_id": "R014",
+      "horas_planificadas": 60.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A34",
+      "recurso_id": "R015",
+      "horas_planificadas": 60.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A35",
+      "recurso_id": "R014",
+      "horas_planificadas": 64.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A36",
+      "recurso_id": "R015",
+      "horas_planificadas": 6.0,
+      "cantidad": "",
+      "h_dia": 6.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A37",
+      "recurso_id": "R014",
+      "horas_planificadas": 76.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A37",
+      "recurso_id": "R001",
+      "horas_planificadas": 76.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A38",
+      "recurso_id": "R014",
+      "horas_planificadas": 48.0,
+      "cantidad": "",
+      "h_dia": 8.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A39",
+      "recurso_id": "R015",
+      "horas_planificadas": 6.0,
+      "cantidad": "",
+      "h_dia": 6.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A40",
+      "recurso_id": "R014",
+      "horas_planificadas": 160.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A40",
+      "recurso_id": "R001",
+      "horas_planificadas": 160.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A40",
+      "recurso_id": "R008",
+      "horas_planificadas": 160.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A40",
+      "recurso_id": "R010",
+      "horas_planificadas": 160.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A41",
+      "recurso_id": "R016",
+      "horas_planificadas": 36.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A41",
+      "recurso_id": "R001",
+      "horas_planificadas": 36.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A41",
+      "recurso_id": "R006",
+      "horas_planificadas": 36.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A42",
+      "recurso_id": "R007",
+      "horas_planificadas": 48.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A42",
+      "recurso_id": "R015",
+      "horas_planificadas": 48.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A42",
+      "recurso_id": "R014",
+      "horas_planificadas": 48.0,
+      "cantidad": "",
+      "h_dia": 4.0,
+      "tarifa_override": ""
+    }
+  ],
+  "Criterios": [
+    {
+      "hito_id": "H01",
+      "criterio_id": "CR-H01-01",
+      "descripcion": "Acta de kick-off firmada",
+      "forma_de_verificacion": "Revisión del acta y evidencia del entregable",
+      "responsable": "Hito (responsable: Jefe de Proyecto)"
+    },
+    {
+      "hito_id": "H10",
+      "criterio_id": "CR-H10-01",
+      "descripcion": "Acta de cierre firmada",
+      "forma_de_verificacion": "Revisión del acta y evidencia del entregable",
+      "responsable": "Hito (responsable: Jefe de Proyecto)"
+    },
+    {
+      "hito_id": "H02",
+      "criterio_id": "CR-H02-01",
+      "descripcion": "Acta de comité con la línea base de alcance",
+      "forma_de_verificacion": "Revisión del acta y evidencia del entregable",
+      "responsable": "Hito (responsable: Analista Funcional / de Negocio)"
+    },
+    {
+      "hito_id": "H03",
+      "criterio_id": "CR-H03-01",
+      "descripcion": "Arquitectura y prototipo aprobados",
+      "forma_de_verificacion": "Revisión del acta y evidencia del entregable",
+      "responsable": "Hito (responsable: Diseñador UX/UI)"
+    },
+    {
+      "hito_id": "H04",
+      "criterio_id": "CR-H04-01",
+      "descripcion": "Núcleo, app offline y SSO funcionando en QA",
+      "forma_de_verificacion": "Revisión del acta y evidencia del entregable",
+      "responsable": "Hito (responsable: Desarrollador Backend)"
+    },
+    {
+      "hito_id": "H05",
+      "criterio_id": "CR-H05-01",
+      "descripcion": "Acta UAT R1 firmada",
+      "forma_de_verificacion": "Revisión del acta y evidencia del entregable",
+      "responsable": "Hito (responsable: Analista QA)"
+    },
+    {
+      "hito_id": "H07",
+      "criterio_id": "CR-H07-01",
+      "descripcion": "Acta UAT R2 e informe de seguridad aprobados",
+      "forma_de_verificacion": "Revisión del acta y evidencia del entregable",
+      "responsable": "Hito (responsable: Analista QA)"
+    },
+    {
+      "hito_id": "H06",
+      "criterio_id": "CR-H06-01",
+      "descripcion": "Usuarios registran datos reales",
+      "forma_de_verificacion": "Revisión del acta y evidencia del entregable",
+      "responsable": "Hito (responsable: Especialista Gestión del Cambio y Capacitación)"
+    },
+    {
+      "hito_id": "H08",
+      "criterio_id": "CR-H08-01",
+      "descripcion": "Primer EP y primera recepción en producción",
+      "forma_de_verificacion": "Revisión del acta y evidencia del entregable",
+      "responsable": "Hito (responsable: Especialista Gestión del Cambio y Capacitación)"
+    },
+    {
+      "hito_id": "H09",
+      "criterio_id": "CR-H09-01",
+      "descripcion": "Acta de comité con decisión de escalamiento",
+      "forma_de_verificacion": "Revisión del acta y evidencia del entregable",
+      "responsable": "Hito (responsable: Jefe de Proyecto)"
+    }
+  ],
+  "Hitos_Tareas": [
+    {
+      "hito_id": "H01",
+      "tarea_id": "A01"
+    },
+    {
+      "hito_id": "H10",
+      "tarea_id": "A04"
+    },
+    {
+      "hito_id": "H02",
+      "tarea_id": "A09"
+    },
+    {
+      "hito_id": "H03",
+      "tarea_id": "A11"
+    },
+    {
+      "hito_id": "H03",
+      "tarea_id": "A12"
+    },
+    {
+      "hito_id": "H04",
+      "tarea_id": "A14"
+    },
+    {
+      "hito_id": "H04",
+      "tarea_id": "A15"
+    },
+    {
+      "hito_id": "H04",
+      "tarea_id": "A16"
+    },
+    {
+      "hito_id": "H05",
+      "tarea_id": "A30"
+    },
+    {
+      "hito_id": "H07",
+      "tarea_id": "A33"
+    },
+    {
+      "hito_id": "H07",
+      "tarea_id": "A32"
+    },
+    {
+      "hito_id": "H06",
+      "tarea_id": "A36"
+    },
+    {
+      "hito_id": "H08",
+      "tarea_id": "A39"
+    },
+    {
+      "hito_id": "H09",
+      "tarea_id": "A41"
+    }
+  ]
+}

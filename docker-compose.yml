@@ -1,0 +1,57 @@
+name: trazo
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-trazo_db}
+      POSTGRES_USER: ${POSTGRES_USER:-trazo_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-trazo_local_password}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - trazo_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-trazo_app} -d ${POSTGRES_DB:-trazo_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      APP_NAME: ${APP_NAME:-trazo}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET must be set}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://trazo_app:trazo_local_password@db:5432/trazo_db}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "python -m alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      VITE_API_URL: http://localhost:${BACKEND_PORT:-8000}
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    volumes:
+      - ./frontend:/app
+      - trazo_frontend_node_modules:/app/node_modules
+    depends_on:
+      - backend
+    command: npm run dev -- --host 0.0.0.0
+
+volumes:
+  trazo_postgres_data:
+    name: trazo_postgres_data
+  trazo_frontend_node_modules:
+    name: trazo_frontend_node_modules

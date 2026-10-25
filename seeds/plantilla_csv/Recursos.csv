@@ -1,0 +1,2 @@
+recurso_id,nombre,tipo,rol,tarifa,unidad,capacidad_h_dia
+R01,Persona ejemplo,HUMANO,Analista,20000,hora,8

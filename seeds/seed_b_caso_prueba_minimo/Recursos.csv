@@ -1,0 +1,9 @@
+recurso_id,nombre,tipo,rol,tarifa,unidad,capacidad_h_dia
+R001,Ana Analista,HUMANO,Analista Funcional,22000,hora,8
+R002,Bruno Backend,HUMANO,Desarrollador Backend,24000,hora,8
+R003,Carla Frontend,HUMANO,Desarrollador Frontend/Móvil,24000,hora,8
+R004,Diego QA,HUMANO,Analista QA,18500,hora,8
+R005,Elena Proyecto,HUMANO,Jefe de Proyecto,30000,hora,8
+R006,Kit tablets de obra,EQUIPAMIENTO,Dispositivo,350000,unidad,
+R007,Nube de prueba,INFRAESTRUCTURA_LICENCIA,Cloud,1200000,mes,
+R008,Servicio API externo,SERVICIO_EXTERNO,Proveedor,3000000,servicio,

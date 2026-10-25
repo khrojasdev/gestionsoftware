@@ -1,0 +1,1108 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trazo · Mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f1ec; --surface:#ffffff; --surface-2:#faf9f6; --ink:#1c2126; --ink-2:#3d444b; --muted:#6c737a; --line:#e2ded6; --line-2:#efece6;
+  --side:#1b2127; --side-ink:#c9cfd5; --side-muted:#7f8992;
+  --accent:#d96a17; --accent-soft:#fbeadb; --accent-ink:#9a4a0e;
+  --plan:#c3c8ce; --real:#2e7d6b; --real-soft:#d6ebe5;
+  --crit:#c23b2c; --crit-soft:#f8e0dc; --warn:#c98a10; --warn-soft:#fbefd2; --ok:#2f8a57; --ok-soft:#dcf0e3; --info:#2f63a0; --info-soft:#dde8f5;
+  --radius:10px; --shadow:0 1px 2px rgba(20,24,28,.05),0 2px 8px rgba(20,24,28,.04);
+  --mono:'IBM Plex Mono',ui-monospace,monospace; --sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--sans);font-size:14px;color:var(--ink);background:var(--bg);line-height:1.45}
+button{font:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+.mono{font-family:var(--mono);font-size:12.5px}
+.muted{color:var(--muted)}
+.app{display:grid;grid-template-columns:236px 1fr;min-height:100vh;background:linear-gradient(90deg,var(--side) 236px,transparent 236px)}
+/* Sidebar */
+.side{background:var(--side);color:var(--side-ink);padding:18px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 8px 18px}
+.brand-mark{width:30px;height:30px;border-radius:8px;background:var(--accent);display:grid;place-items:center}
+.brand b{font-size:17px;color:#fff;letter-spacing:.2px}
+.brand small{display:block;font-size:11px;color:var(--side-muted);margin-top:-2px}
+.nav-group{font-size:10.5px;text-transform:uppercase;letter-spacing:.9px;color:var(--side-muted);padding:14px 10px 6px}
+.nav a{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:7px;color:var(--side-ink);text-decoration:none;font-size:13.5px}
+.nav a:hover{background:#262e35}
+.nav a.on{background:#2c353d;color:#fff}
+.nav a .n{font-family:var(--mono);font-size:10.5px;color:var(--side-muted);width:18px}
+.nav a.on .n{color:var(--accent)}
+/* Topbar */
+.main{min-width:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:14px;padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;flex-wrap:wrap}
+.proj-sel{display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+.proj-sel b{font-weight:600}
+.top .sp{flex:1}
+.cut{font-size:12.5px;color:var(--muted)}
+.cut b{color:var(--ink);font-family:var(--mono);font-weight:500}
+.role{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.role button{border:0;background:var(--surface);padding:6px 11px;font-size:12.5px;color:var(--muted)}
+.role button.on{background:var(--ink);color:#fff}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-weight:600;font-size:12px}
+.content{padding:22px 24px 60px;max-width:1440px;width:100%}
+/* Screen header */
+.screen{display:none}
+.screen.on{display:block}
+.sh{display:flex;align-items:flex-end;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.sh h1{font-size:22px;margin:0;font-weight:600;letter-spacing:-.2px}
+.sh .crumb{font-size:12px;color:var(--muted);margin-bottom:3px}
+.sh .sp{flex:1}
+.rub{display:block;background:var(--accent-soft);border:1px dashed #ecb98f;color:var(--accent-ink);border-radius:8px;padding:8px 12px;font-size:12.5px;margin-bottom:16px}
+.rub b{font-weight:600}
+.rub .tagm{margin-right:8px;font-family:var(--mono);font-size:11px;background:#fff;border:1px solid #ecb98f;border-radius:5px;padding:1px 6px}
+/* Basic components */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-h{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line-2)}
+.card-h h3{margin:0;font-size:14.5px;font-weight:600}
+.card-h .sp{flex:1}
+.card-b{padding:16px}
+.grid{display:grid;gap:16px}
+.grid>*,.split>*{min-width:0}
+.search{max-width:100%}
+.card-b{overflow-x:auto}
+.file>div{min-width:0}.file b{overflow-wrap:anywhere}
+.kpi .v{overflow-wrap:anywhere}
+.bars-h .r>*{min-width:0}
+.sh>*{min-width:0}
+.card-h{flex-wrap:wrap}.card-h h3{min-width:0}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g6{grid-template-columns:repeat(6,minmax(0,1fr))}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;font-size:13px;display:inline-flex;align-items:center;gap:6px;color:var(--ink)}
+.btn:hover{border-color:#cfc9bf}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.danger{color:var(--crit);border-color:#efc3bc}
+.btn.sm{padding:4px 9px;font-size:12px}
+.chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;background:var(--surface);color:var(--ink-2)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tag{display:inline-flex;align-items:center;gap:5px;border-radius:5px;padding:2px 7px;font-size:11.5px;font-weight:500;white-space:nowrap}
+.tag::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.t-ok{background:var(--ok-soft);color:var(--ok)}
+.t-warn{background:var(--warn-soft);color:#93650a}
+.t-crit{background:var(--crit-soft);color:var(--crit)}
+.t-info{background:var(--info-soft);color:var(--info)}
+.t-mute{background:#eceae5;color:var(--muted)}
+.t-acc{background:var(--accent-soft);color:var(--accent-ink)}
+.dep{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:4px;padding:1px 5px;background:var(--surface-2);white-space:nowrap}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.toolbar .sp{flex:1}
+.search{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--surface);min-width:200px}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+table.t th{text-align:left;font-weight:500;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding:9px 10px;border-bottom:1px solid var(--line);background:var(--surface-2);position:sticky;top:0;z-index:1;white-space:nowrap}
+table.t td{padding:8px 10px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+table.t tr:hover td{background:#fcfbf8}
+table.t td.num,table.t th.num{text-align:right;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field label{font-size:12px;color:var(--muted);font-weight:500}
+.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:7px;padding:7px 9px;background:var(--surface);width:100%;min-width:0}
+.field textarea{min-height:64px;resize:vertical}
+.row{display:flex;gap:10px}
+.row>*{flex:1;min-width:0}
+#actTbl td,#kpiTbl td,#edtTbl td{white-space:nowrap}
+#edtTbl td:nth-child(2),#edtTbl td:nth-child(4){white-space:normal}
+#kpiTbl td:nth-child(2),#kpiTbl td:nth-child(3){white-space:normal}
+#actTbl td.nm{max-width:250px;overflow:hidden;text-overflow:ellipsis}
+.gb.done{background:var(--real);border-color:var(--real)}
+.gb.done.critb{border:1.5px solid var(--crit)}
+.bar{height:6px;border-radius:4px;background:#ebe8e2;overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;background:var(--real);border-radius:4px}
+.alert{display:flex;gap:10px;padding:10px 12px;border-radius:8px;font-size:13px;align-items:flex-start}
+.alert.crit{background:var(--crit-soft);color:#7f2117}
+.alert.warn{background:var(--warn-soft);color:#6f4d08}
+.alert.ok{background:var(--ok-soft);color:#1d5a37}
+.alert.info{background:var(--info-soft);color:#204674}
+.alert b{font-weight:600}
+.ico{width:16px;height:16px;flex:none;margin-top:1px}
+/* KPI tiles */
+.kpi{padding:14px 16px}
+.kpi .l{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.kpi .v{font-size:25px;font-weight:600;letter-spacing:-.4px;margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--muted);margin-top:2px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.d-ok{background:var(--ok)}.d-warn{background:var(--warn)}.d-crit{background:var(--crit)}.d-info{background:var(--info)}
+/* Gantt */
+.gwrap{overflow:auto;max-height:640px;border-top:1px solid var(--line-2);position:relative}
+.ghead,.grow{display:flex}
+.ghead{position:sticky;top:0;z-index:5;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.gl{position:sticky;left:0;z-index:3;background:var(--surface);flex:none;width:400px;display:flex;align-items:center;border-right:1px solid var(--line);font-size:12.5px}
+.ghead .gl{background:var(--surface-2);z-index:6;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.gl .c1{width:62px;padding-left:10px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.gl .c2{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:6px}
+.gl .c3{width:44px;text-align:right;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.gl .c4{width:46px;text-align:right;padding-right:10px;font-family:var(--mono);font-size:11.5px}
+.gr{position:relative;flex:none}
+.grow{height:28px;border-bottom:1px solid #f3f1ed}
+.grow.lv1 .gl{font-weight:600;background:#f7f5f1}
+.grow.lv1 .gr{background:#fbfaf7}
+.grow.lv2 .gl .c2{padding-left:12px;font-weight:500}
+.grow.lv3 .gl .c2{padding-left:26px;color:var(--ink-2)}
+.tg{border:0;background:none;padding:0 4px 0 0;color:var(--muted);font-size:11px;width:14px}
+.gb{position:absolute;height:12px;top:6px;border-radius:3px;background:var(--real-soft);overflow:hidden;border:1px solid #9fcabe}
+.gb i{position:absolute;left:0;top:0;bottom:0;background:var(--real)}
+.gb.crit{border-color:var(--crit);background:#f7dcd7}
+.gb.crit i{background:var(--crit)}
+.gb.late{border-color:var(--warn);background:#fbe7c1}
+.gb.late i{background:var(--warn)}
+.gb.fut{background:repeating-linear-gradient(-45deg,#e9f3f0 0 4px,#d9ebe6 4px 8px)}
+.gb.crit.fut{background:repeating-linear-gradient(-45deg,#fbe9e6 0 4px,#f5d6d1 4px 8px)}
+.gbase{position:absolute;height:4px;top:20px;border-radius:2px;background:var(--plan)}
+.gsum{position:absolute;height:7px;top:10px;background:#3a4148;border-radius:1px}
+.gsum::before,.gsum::after{content:"";position:absolute;bottom:-5px;border:5px solid transparent;border-top-color:#3a4148}
+.gsum::before{left:-5px}.gsum::after{right:-5px}
+.gsum.pk{background:#8a9198;height:5px;top:11px}
+.gsum.pk::before,.gsum.pk::after{border-top-color:#8a9198;border-width:4px;bottom:-4px}
+.gms{position:absolute;width:12px;height:12px;top:8px;transform:rotate(45deg);background:var(--ink);border:2px solid #fff;box-shadow:0 0 0 1px var(--ink)}
+.gms.done{background:var(--ok);box-shadow:0 0 0 1px var(--ok)}
+.gms.risk{background:var(--warn);box-shadow:0 0 0 1px var(--warn)}
+.gtoday{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);z-index:2;pointer-events:none}
+.gtoday span{position:absolute;top:2px;left:4px;font-size:10px;color:var(--accent-ink);background:var(--accent-soft);padding:0 4px;border-radius:3px;white-space:nowrap;font-family:var(--mono)}
+.gm{position:absolute;top:0;height:22px;font-size:11px;font-weight:600;padding:3px 6px;border-left:1px solid var(--line);white-space:nowrap;color:var(--ink-2)}
+.gw{position:absolute;top:22px;height:18px;font-size:9.5px;color:var(--muted);border-left:1px solid var(--line-2);padding-left:2px;font-family:var(--mono)}
+.gweek{position:absolute;top:0;bottom:0;border-left:1px solid #f1eee9}
+.ghol{position:absolute;top:0;bottom:0;background:rgba(201,138,16,.08)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:10px 16px;border-top:1px solid var(--line-2)}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.lg{display:inline-block;width:22px;height:9px;border-radius:2px}
+/* Drawer */
+.split{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:16px;align-items:start}
+.drawer{position:sticky;top:76px}
+/* Stepper */
+.steps{display:flex;gap:0;counter-reset:s}
+.st{flex:1;position:relative;text-align:center;font-size:11.5px;color:var(--muted);padding-top:34px}
+.st::before{counter-increment:s;content:counter(s);position:absolute;top:0;left:50%;transform:translateX(-50%);width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;font-weight:600;font-size:12px;color:var(--muted);z-index:1;line-height:22px}
+.st::after{content:"";position:absolute;top:12px;left:calc(-50% + 13px);right:calc(50% + 13px);height:2px;background:var(--line)}
+.st:first-child::after{display:none}
+.st.done{color:var(--ink-2)}
+.st.done::before{background:var(--ok);border-color:var(--ok);color:#fff;content:"✓"}
+.st.done::after,.st.cur::after{background:var(--ok)}
+.st.cur{color:var(--ink);font-weight:600}
+.st.cur::before{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.st.rej::before{background:var(--crit);border-color:var(--crit);color:#fff;content:"✕"}
+/* Drop zone */
+.drop{border:2px dashed #d6cfc3;border-radius:12px;padding:22px;text-align:center;background:var(--surface-2)}
+.file{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:var(--surface)}
+.xls{width:34px;height:40px;border-radius:5px;background:#1f7a4a;color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;font-family:var(--mono)}
+/* Heatmap */
+.heat td.h{width:34px;text-align:center;font-family:var(--mono);font-size:11px;padding:6px 2px;border:2px solid #fff;border-radius:4px}
+/* charts */
+.bars-h .r{display:grid;grid-template-columns:150px 1fr 54px;gap:10px;align-items:center;margin-bottom:9px;font-size:12.5px}
+.bars-h .tr{position:relative;height:16px;background:#f0ede7;border-radius:4px}
+.bars-h .tr .p{position:absolute;left:0;top:0;bottom:0;background:var(--plan);border-radius:4px}
+.bars-h .tr .a{position:absolute;left:0;top:4px;bottom:4px;background:var(--real);border-radius:3px}
+.bars-h .tr .a.late{background:var(--warn)}
+.funnel .r{display:grid;grid-template-columns:22px 1fr 30px;gap:8px;align-items:center;margin-bottom:6px;font-size:12px}
+.funnel .r .b{height:18px;background:var(--info-soft);border-radius:4px;position:relative}
+.funnel .r .b i{position:absolute;left:0;top:0;bottom:0;background:var(--info);border-radius:4px}
+.funnel .r .b span{position:absolute;left:8px;top:0;line-height:18px;font-size:11.5px;color:#fff;white-space:nowrap;mix-blend-mode:normal}
+.lbl-n{font-family:var(--mono);color:var(--muted);font-size:11px}
+.tl{position:relative;height:84px;margin:6px 8px 0}
+.tl .ln{position:absolute;left:0;right:0;top:34px;height:2px;background:var(--line)}
+.tl .m{position:absolute;top:27px;transform:translateX(-50%);text-align:center;font-size:10.5px;width:70px}
+.tl .m .dm{width:13px;height:13px;transform:rotate(45deg);margin:0 auto 9px;background:var(--plan);border:2px solid #fff;box-shadow:0 0 0 1px var(--plan)}
+.tl .m.done .dm{background:var(--ok);box-shadow:0 0 0 1px var(--ok)}
+.tl .m.late .dm{background:var(--warn);box-shadow:0 0 0 1px var(--warn)}
+.tl .m.risk .dm{background:#fff;box-shadow:0 0 0 2px var(--warn)}
+.tl .m b{display:block;font-family:var(--mono);font-size:10.5px}
+.tl .m.up{top:-6px}
+.tl .m.up .dm{margin:9px auto 0}
+.tl .m.up b{margin-top:0}
+/* misc */
+.kv{display:grid;grid-template-columns:140px 1fr;gap:7px 12px;font-size:13px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.code{font-family:var(--mono);font-size:13px;background:#1f252b;color:#e6e1d6;border-radius:8px;padding:10px 12px}
+.code .v{color:#f0a868}
+.code .o{color:#8fc3b4}
+.swatch{display:flex;height:10px;border-radius:5px;overflow:hidden;margin:8px 0 4px}
+.swatch i{display:block}
+.mini-dep{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.mini-dep .md{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--surface-2);font-size:12px}
+.mini-dep svg{display:block;margin:6px 0}
+.perm td.c{text-align:center}
+.yes{color:var(--ok);font-weight:600}.no{color:#b9b3a9}
+.check{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line-2);font-size:13px}
+.check:last-child{border-bottom:0}
+.check .ci{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.check .ci.y{background:var(--ok-soft);color:var(--ok)}
+.check .ci.w{background:var(--warn-soft);color:var(--warn)}
+.check .cnt{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.flow .fi{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--surface)}
+.flow .fi h4{margin:0 0 8px;font-size:13.5px}
+.flow ol{margin:0;padding-left:18px;font-size:12.5px;color:var(--ink-2)}
+.flow li{margin-bottom:4px}
+.ba{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;font-size:12px;align-items:center;margin-top:10px;background:var(--surface-2);border-radius:7px;padding:8px}
+.ba .arrow{color:var(--accent)}
+.hide-consulta{}
+body.consulta .admin-only{display:none !important}
+body.consulta .ro-note{display:flex !important}
+.ro-note{display:none !important}
+.pager{display:flex;gap:8px;justify-content:space-between;margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.login{display:grid;grid-template-columns:1.1fr 1fr;min-height:560px;overflow:hidden}
+.login .art{background:var(--side);color:#e8e3da;padding:40px;position:relative;overflow:hidden}
+.login .art h2{font-size:30px;line-height:1.15;margin:40px 0 12px;font-weight:600;color:#fff;letter-spacing:-.5px}
+.login .art p{color:#aab3bb;max-width:380px}
+.login .form{padding:48px 44px;display:flex;flex-direction:column;justify-content:center}
+.rolecard{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px;font-size:12.5px}
+.rolecard.on{border-color:var(--accent);background:var(--accent-soft)}
+.rolecard input{margin-top:3px;accent-color:var(--accent)}
+.proj-card{padding:16px;display:flex;flex-direction:column;gap:10px}
+.proj-card h3{margin:0;font-size:15px}
+.thr{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.thr div{border-radius:7px;padding:8px;font-size:12px}
+.hist{display:flex;align-items:flex-end;gap:5px;height:90px;padding-top:6px}
+.hist div{flex:1;border-radius:3px 3px 0 0;position:relative}
+.hist div span{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:10px;font-family:var(--mono);color:var(--muted)}
+.ev{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line-2);font-size:12.5px}
+.ev:last-child{border:0}
+.ev .when{font-family:var(--mono);font-size:11px;color:var(--muted);width:84px;flex:none}
+.matrix{display:grid;grid-template-columns:28px repeat(3,1fr);grid-template-rows:repeat(3,58px) 22px;gap:4px;font-size:11px}
+.matrix .cell{border-radius:6px;display:flex;flex-wrap:wrap;gap:4px;align-content:center;justify-content:center;padding:4px}
+.matrix .pin{font-family:var(--mono);font-size:10.5px;background:#fff;border-radius:4px;padding:1px 5px;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.matrix .ax{color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:10.5px}
+@media (max-width:1100px){.g4,.g6{grid-template-columns:repeat(2,minmax(0,1fr))}.split{grid-template-columns:1fr}.drawer{position:static}.flow{grid-template-columns:1fr}}
+@media (max-width:860px){.app{grid-template-columns:1fr;background:none}.side{padding:10px 12px;min-width:0}.brand{padding-bottom:8px}.nav{display:flex;overflow-x:auto;gap:4px}.nav-group{display:none}.nav a{white-space:nowrap}.kv{grid-template-columns:100px 1fr}.thr{grid-template-columns:1fr}.code{overflow-x:auto}.matrix{grid-template-rows:repeat(3,48px) 22px}.bars-h .r{grid-template-columns:110px 1fr 44px}.steps{overflow-x:auto}.st{min-width:70px}.side{position:static;height:auto}.g2,.g3{grid-template-columns:1fr}.login{grid-template-columns:1fr}.content{padding:16px}.mini-dep{grid-template-columns:1fr 1fr}.top{padding:10px 16px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="i-warn" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1.5 15 14H1L8 1.5Zm-.75 4.5v4h1.5V6h-1.5Zm0 5v1.5h1.5V11h-1.5Z"/></symbol>
+    <symbol id="i-ok" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1Zm3.2 4.6L7 9.8 4.8 7.6l-1 1L7 11.8l5.2-5.2-1-1Z"/></symbol>
+    <symbol id="i-x" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1ZM5.6 4.5 4.5 5.6 6.9 8l-2.4 2.4 1.1 1.1L8 9.1l2.4 2.4 1.1-1.1L9.1 8l2.4-2.4-1.1-1.1L8 6.9 5.6 4.5Z"/></symbol>
+    <symbol id="i-info" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1Zm-.75 6v5h1.5V7h-1.5Zm0-3v1.5h1.5V4h-1.5Z"/></symbol>
+    <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 8 4 0 8z" fill="#9aa1a8"/></marker>
+    <marker id="arrc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 8 4 0 8z" fill="#c23b2c"/></marker>
+  </defs>
+</svg>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="brand-mark"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 4h10M2 9h14M2 14h7" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div>
+      <div><b>Trazo</b><small>Planificación y control</small></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <div class="proj-sel"><span class="muted" style="font-size:12px">Proyecto</span><b>Horizonte Conecta</b><span class="tag t-info">En ejecución</span><span class="muted">▾</span></div>
+      <span class="cut">Fecha de corte <b>15-01-2027</b></span>
+      <span class="cut">Línea base <b>v1.2</b></span>
+      <div class="sp"></div>
+      <div class="role" title="Simula cómo cambia la interfaz según el rol">
+        <button class="on" data-role="admin">Administrador</button>
+        <button data-role="consulta">Integrante</button>
+      </div>
+      <div class="avatar" id="av">KH</div>
+    </header>
+
+    <div class="content">
+
+<!-- 1 LOGIN -->
+<section class="screen" id="login" data-title="Inicio de sesión" data-group="General">
+  <div class="sh"><div><div class="crumb">Acceso</div><h1>Inicio de sesión</h1></div></div>
+  <div class="rub"><span class="tagm">Ind. 8</span> Aplicación con <b>dos roles</b>: Administrador (Jefe de Proyecto) e Integrante del equipo.</div>
+  <div class="card login">
+    <div class="art">
+      <div class="brand" style="padding:0"><div class="brand-mark"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 4h10M2 9h14M2 14h7" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div><div><b>Trazo</b><small>Planificación y control</small></div></div>
+      <h2>De la EDT a la Carta Gantt, con cada cambio trazado.</h2>
+      <p>Sube tu EDT, define precedencias y recursos, y controla el proyecto con KPI y gestión del cambio en un solo lugar.</p>
+      <svg viewBox="0 0 420 170" style="position:absolute;left:40px;right:0;bottom:30px;width:calc(100% - 40px);max-width:460px;opacity:.9">
+        <g font-family="IBM Plex Mono" font-size="9" fill="#7f8992"><text x="0" y="12">1.4</text><text x="0" y="42">1.5</text><text x="0" y="72">1.6</text><text x="0" y="102">1.7</text><text x="0" y="132">1.8</text></g>
+        <rect x="34" y="4" width="110" height="10" rx="2" fill="#2e7d6b"/>
+        <rect x="120" y="34" width="150" height="10" rx="2" fill="#c23b2c"/>
+        <rect x="150" y="64" width="120" height="10" rx="2" fill="#2e7d6b" opacity=".7"/>
+        <rect x="250" y="94" width="110" height="10" rx="2" fill="#4b5560"/>
+        <rect x="300" y="124" width="90" height="10" rx="2" fill="#4b5560"/>
+        <path d="M144 9h8v30h-30" stroke="#7f8992" fill="none"/><path d="M270 39h8v30" stroke="#c23b2c" fill="none"/>
+        <rect x="196" y="0" width="2" height="150" fill="#d96a17"/>
+        <rect x="364" y="150" width="10" height="10" transform="rotate(45 369 155)" fill="#d96a17"/>
+      </svg>
+    </div>
+    <div class="form">
+      <h2 style="margin:0 0 4px;font-size:21px">Ingresar</h2>
+      <p class="muted" style="margin:0 0 20px">Usa tu correo institucional</p>
+      <div class="field"><label>Correo</label><input value="kevin.henriquez@duocuc.cl"></div>
+      <div class="field"><label>Contraseña</label><input type="password" value="••••••••••"></div>
+      <label class="muted" style="font-size:12px;margin:2px 0 8px">Rol asignado (lo define el administrador)</label>
+      <label class="rolecard on"><input type="radio" name="r" checked><div><b>Administrador · Jefe de Proyecto</b><br><span class="muted">Crea proyectos, importa la EDT, edita planificación, configura KPI y aprueba cambios.</span></div></label>
+      <label class="rolecard"><input type="radio" name="r"><div><b>Integrante del equipo</b><br><span class="muted">Registra avance real de sus actividades, crea solicitudes de cambio y consulta tableros.</span></div></label>
+      <button class="btn pri" style="justify-content:center;margin-top:10px;padding:10px">Ingresar</button>
+    </div>
+  </div>
+</section>
+
+<!-- 2 PROYECTOS -->
+<section class="screen" id="proyectos" data-title="Proyectos" data-group="General">
+  <div class="sh"><div><div class="crumb">Administración</div><h1>Proyectos</h1></div><div class="sp"></div><button class="btn pri admin-only">+ Nuevo proyecto</button></div>
+  <div class="rub"><span class="tagm">Ind. 2</span> Crear, editar, consultar y <b>cerrar</b> proyectos; gestionar estado, responsable, presupuesto y avance.</div>
+  <div class="split">
+    <div>
+      <div class="toolbar"><input class="search" placeholder="Buscar proyecto…"><span class="chip on">Todos 3</span><span class="chip">En ejecución 1</span><span class="chip">Planificación 1</span><span class="chip">Cerrados 1</span></div>
+      <div class="card scroll">
+        <table class="t">
+          <thead><tr><th>Código</th><th>Proyecto</th><th>Estado</th><th>Responsable</th><th class="num">Presupuesto</th><th>Avance</th><th>Inicio → Fin</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="mono">HC-01</td><td><b>Horizonte Conecta</b><div class="muted" style="font-size:12px">Constructora Horizonte · 10 etapas · 42 subactividades</div></td><td><span class="tag t-info">En ejecución</span></td><td>Kevin Henríquez</td><td class="num">$234.109.000</td><td><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="width:80px"><i data-bind="avw"></i></div><span class="mono" data-bind="avr"></span></div></td><td class="mono">05-10-26 → 12-07-27</td><td><button class="btn sm">Abrir</button></td></tr>
+            <tr><td class="mono">CP-01</td><td><b>Caso de prueba mínimo</b><div class="muted" style="font-size:12px">4 etapas · 12 actividades · 20 subactividades</div></td><td><span class="tag t-warn">Planificación</span></td><td>Diego López</td><td class="num">$48.000.000</td><td><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="width:80px"><i style="width:0"></i></div><span class="mono">0%</span></div></td><td class="mono">01-03-27 → 30-07-27</td><td><button class="btn sm">Abrir</button></td></tr>
+            <tr><td class="mono">DM-00</td><td><b>Proyecto demo</b><div class="muted" style="font-size:12px">Usado para pruebas internas</div></td><td><span class="tag t-mute">Cerrado</span></td><td>Christian Pérez</td><td class="num">$12.500.000</td><td><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="width:80px"><i style="width:100%"></i></div><span class="mono">100%</span></div></td><td class="mono">02-03-26 → 30-06-26</td><td><button class="btn sm">Ver</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="alert info" style="margin-top:14px"><svg class="ico"><use href="#i-info"/></svg><div>El <b>avance</b> y el <b>costo real</b> del proyecto no se editan aquí: se consolidan automáticamente desde la EDT (subactividades → actividades → etapas → proyecto).</div></div>
+    </div>
+    <div class="card drawer admin-only">
+      <div class="card-h"><h3>Editar proyecto</h3><div class="sp"></div><span class="mono muted">HC-01</span></div>
+      <div class="card-b">
+        <div class="field"><label>Nombre</label><input value="Horizonte Conecta – Plataforma de gestión operacional de obras"></div>
+        <div class="row"><div class="field"><label>Código</label><input value="HC-01"></div><div class="field"><label>Estado</label><select><option>En ejecución</option><option>Planificación</option><option>Suspendido</option><option>Cerrado</option></select></div></div>
+        <div class="field"><label>Responsable (Jefe de Proyecto)</label><select><option>Kevin Henríquez Rojas</option></select></div>
+        <div class="row"><div class="field"><label>Inicio</label><input value="05-10-2026"></div><div class="field"><label>Fecha comprometida</label><input value="04-08-2027"></div></div>
+        <div class="row"><div class="field"><label>Presupuesto aprobado</label><input value="$234.109.000"></div><div class="field"><label>Contingencia</label><input value="10 %"></div></div>
+        <div class="field"><label>Calendario</label><select><option>Chile · L-V · 8 h/día · feriados 2026-27</option></select></div>
+        <div style="display:flex;gap:8px;margin-top:6px"><button class="btn pri">Guardar</button><button class="btn danger">Cerrar proyecto…</button></div>
+        <p class="muted" style="font-size:12px;margin:10px 0 0">Cerrar exige: todas las subactividades al 100 %, solicitudes de cambio cerradas y acta de cierre adjunta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 IMPORTAR EDT -->
+<section class="screen" id="importar" data-title="Importar EDT" data-group="Planificación">
+  <div class="sh"><div><div class="crumb">Horizonte Conecta · EDT</div><h1>Importar EDT desde Excel</h1></div><div class="sp"></div><button class="btn">⬇ Descargar plantilla .xlsx</button></div>
+  <div class="rub"><span class="tagm">Ind. 1–2</span> Carga masiva de la EDT: el nivel se deduce del <b>código</b> (1.x = etapa, 1.x.y = actividad, 1.x.y.z = subactividad) y se validan duplicados, precedencias y <b>ciclos</b> antes de guardar.</div>
+  <div class="card" style="margin-bottom:16px"><div class="card-b">
+    <div class="steps">
+      <div class="st done">Subir archivo</div><div class="st done">Mapear columnas</div><div class="st cur">Validar</div><div class="st">Vista previa</div><div class="st">Confirmar</div>
+    </div>
+  </div></div>
+  <div class="grid g2" style="align-items:start">
+    <div class="grid">
+      <div class="card"><div class="card-h"><h3>1 · Archivo</h3></div><div class="card-b">
+        <div class="drop">
+          <div style="font-weight:600;margin-bottom:4px">Arrastra tu EDT aquí</div>
+          <div class="muted" style="font-size:12.5px;margin-bottom:12px">.xlsx o .csv · una fila por elemento de la EDT</div>
+          <div class="file" style="text-align:left">
+            <div class="xls">XLSX</div>
+            <div style="flex:1"><b>Caso3_Horizonte_Planificacion_Gantt.xlsx</b><div class="muted" style="font-size:12px">Hoja «Cronograma» · 52 filas + hoja «EDT» · 36 filas</div></div>
+            <span class="tag t-ok">Leído</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="card"><div class="card-h"><h3>2 · Mapeo de columnas</h3><div class="sp"></div><span class="muted" style="font-size:12px">Detectado automáticamente</span></div>
+        <div class="scroll"><table class="t">
+          <thead><tr><th>Columna en tu archivo</th><th></th><th>Campo en Trazo</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">Paquete EDT / ID EDT</td><td>→</td><td><select class="search" style="min-width:0"><option>Código EDT (define el nivel)</option></select></td></tr>
+            <tr><td class="mono">ID</td><td>→</td><td><select class="search" style="min-width:0"><option>ID de subactividad / hito</option></select></td></tr>
+            <tr><td class="mono">Actividad</td><td>→</td><td><select class="search" style="min-width:0"><option>Nombre</option></select></td></tr>
+            <tr><td class="mono">Predecesora(s) + Tipo</td><td>→</td><td><select class="search" style="min-width:0"><option>Precedencias (FS/SS/FF/SF ± desfase)</option></select></td></tr>
+            <tr><td class="mono">Duración (días)</td><td>→</td><td><select class="search" style="min-width:0"><option>Duración planificada</option></select></td></tr>
+            <tr><td class="mono">Esfuerzo (hp)</td><td>→</td><td><select class="search" style="min-width:0"><option>Horas de trabajo</option></select></td></tr>
+            <tr><td class="mono">Recurso / Rol</td><td>→</td><td><select class="search" style="min-width:0"><option>Recursos asignados</option></select></td></tr>
+            <tr><td class="mono">Fecha inicio · Fecha fin</td><td>→</td><td><select class="search" style="min-width:0"><option>Fechas planificadas (línea base)</option></select></td></tr>
+            <tr><td class="mono">Hito (Sí/No)</td><td>→</td><td><select class="search" style="min-width:0"><option>Es hito</option></select></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="card-h"><h3>3 · Resultado de la validación</h3></div><div class="card-b">
+        <div class="grid g4" style="margin-bottom:14px">
+          <div><div class="muted" style="font-size:12px">Etapas</div><div style="font-size:22px;font-weight:600">10</div></div>
+          <div><div class="muted" style="font-size:12px">Actividades</div><div style="font-size:22px;font-weight:600">25</div></div>
+          <div><div class="muted" style="font-size:12px">Subactividades</div><div style="font-size:22px;font-weight:600">42</div></div>
+          <div><div class="muted" style="font-size:12px">Hitos</div><div style="font-size:22px;font-weight:600">10</div></div>
+        </div>
+        <div class="grid" style="gap:8px">
+          <div class="alert ok"><svg class="ico"><use href="#i-ok"/></svg><div>Códigos EDT únicos y jerarquía completa (ningún nodo huérfano).</div></div>
+          <div class="alert ok"><svg class="ico"><use href="#i-ok"/></svg><div>73 precedencias válidas · <b>sin ciclos</b> detectados.</div></div>
+          <div class="alert ok"><svg class="ico"><use href="#i-ok"/></svg><div>11 roles reconocidos y vinculados a tarifas (Recursos).</div></div>
+          <div class="alert warn"><svg class="ico"><use href="#i-warn"/></svg><div><b>Todas las precedencias son FS.</b> Puedes cambiar el tipo después en «Actividades y precedencias».</div></div>
+          <div class="alert warn"><svg class="ico"><use href="#i-warn"/></svg><div><b>A03 y A28</b> son de nivel de esfuerzo (4 h/día): se importan con disponibilidad parcial.</div></div>
+          <div class="alert crit"><svg class="ico"><use href="#i-x"/></svg><div><b>Ejemplo de error bloqueante:</b> «Fila 41: A23 → A29 y A29 → A23 forman un ciclo». La importación no continúa hasta corregirlo.</div></div>
+        </div>
+      </div></div>
+      <div class="card"><div class="card-h"><h3>4 · Vista previa</h3><div class="sp"></div><span class="muted" style="font-size:12px">primeras filas</span></div>
+        <div class="scroll" style="max-height:230px"><table class="t" id="prevTbl"><thead><tr><th>Código</th><th>Nivel</th><th>Nombre</th><th class="num">Dur.</th></tr></thead><tbody></tbody></table></div>
+        <div class="card-b" style="display:flex;gap:8px;border-top:1px solid var(--line-2)"><button class="btn">Volver</button><div style="flex:1"></div><label class="muted" style="font-size:12.5px;display:flex;gap:6px;align-items:center"><input type="checkbox" checked> Guardar como línea base v1.0</label><button class="btn pri">Importar 87 elementos</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 EDT -->
+<section class="screen" id="edt" data-title="EDT / WBS" data-group="Planificación">
+  <div class="sh"><div><div class="crumb">Horizonte Conecta</div><h1>EDT / WBS</h1></div><div class="sp"></div><button class="btn" data-act="edt-toggle">Expandir todo</button><button class="btn admin-only">+ Nodo</button><button class="btn pri admin-only" data-go="importar">Importar EDT</button></div>
+  <div class="rub"><span class="tagm">Ind. 2</span> Jerarquía <b>etapa → actividad → subactividad</b> con códigos; duración, costo y avance de los niveles superiores se <b>consolidan</b> automáticamente (no se escriben a mano).</div>
+  <div class="grid g4" style="margin-bottom:16px" id="edtStats"></div>
+  <div class="card scroll"><table class="t" id="edtTbl">
+    <thead><tr><th style="width:90px">Código</th><th>Elemento</th><th>Nivel</th><th>Responsable</th><th class="num">Dur.</th><th>Inicio</th><th>Fin</th><th class="num">Costo plan.</th><th class="num">Costo real</th><th style="width:140px">Avance</th></tr></thead>
+    <tbody></tbody></table></div>
+</section>
+
+<!-- 5 ACTIVIDADES -->
+<section class="screen" id="actividades" data-title="Actividades y precedencias" data-group="Planificación">
+  <div class="sh"><div><div class="crumb">Horizonte Conecta · Programación</div><h1>Actividades y precedencias</h1></div></div>
+  <div class="rub"><span class="tagm">Ind. 3–4</span> Fechas <b>plan y real</b>, duración, precedencias <b>FS · SS · FF · SF</b> con desfase, recálculo automático de sucesoras y <b>rechazo de ciclos</b>.</div>
+  <div class="split">
+    <div>
+      <div class="toolbar" id="actFilters">
+        <input class="search" placeholder="Buscar ID o nombre…">
+        <button class="chip on" data-f="all">Todas</button><button class="chip" data-f="curso">En curso</button><button class="chip" data-f="late">Atrasadas</button><button class="chip" data-f="crit">Ruta crítica</button><button class="chip" data-f="ms">Hitos</button>
+      </div>
+      <div class="card scroll" style="max-height:560px"><table class="t" id="actTbl">
+        <thead><tr><th>ID</th><th>EDT</th><th>Subactividad</th><th class="num">Dur.</th><th>Inicio plan</th><th>Fin plan</th><th>Inicio real</th><th>Fin real / proy.</th><th>Precedencias</th><th class="num">Holg.</th><th>Estado</th></tr></thead>
+        <tbody></tbody></table></div>
+    </div>
+    <div class="card drawer">
+      <div class="card-h"><h3>Editar <span class="mono">A17</span></h3><div class="sp"></div><span class="tag t-crit">Ruta crítica</span></div>
+      <div class="card-b">
+        <div style="font-weight:500;margin-bottom:10px">Integrar el sistema de compras (API) y validarlo con Adquisiciones</div>
+        <div class="row"><div class="field"><label>Duración (días háb.)</label><input value="22"></div><div class="field"><label>% avance real</label><input value="5 %"></div></div>
+        <div class="row"><div class="field"><label>Inicio real</label><input value="11-01-2027"></div><div class="field"><label>Fin real</label><input placeholder="—"></div></div>
+        <label class="muted" style="font-size:12px;font-weight:500">Predecesoras</label>
+        <table class="t" style="margin:6px 0 8px"><thead><tr><th>ID</th><th>Tipo</th><th>Desfase</th><th></th></tr></thead><tbody>
+          <tr><td class="mono">A16</td><td><select class="search" style="min-width:0;padding:3px 6px"><option>FS</option><option>SS</option><option>FF</option><option>SF</option></select></td><td><input class="search" style="min-width:0;width:60px;padding:3px 6px" value="0 d"></td><td class="muted">✕</td></tr>
+          <tr><td class="mono" style="color:var(--crit)">A26</td><td><select class="search" style="min-width:0;padding:3px 6px"><option>FS</option></select></td><td><input class="search" style="min-width:0;width:60px;padding:3px 6px" value="0 d"></td><td class="muted">✕</td></tr>
+        </tbody></table>
+        <div class="alert crit" style="margin-bottom:10px"><svg class="ico"><use href="#i-x"/></svg><div><b>Precedencia rechazada:</b> A26 no puede preceder a A17 porque genera el ciclo <span class="mono">A17 → A18 → A26 → A17</span>.</div></div>
+        <div class="alert warn" style="margin-bottom:12px"><svg class="ico"><use href="#i-warn"/></svg><div>Con el avance actual, A17 terminaría el <b class="mono" data-bind="a17pe"></b>. Al guardar se recalculan <b data-bind="nsucc"></b> sucesoras, incluido el cierre (H10).</div></div>
+        <div style="display:flex;gap:8px" class="admin-only"><button class="btn pri">Guardar y recalcular</button><button class="btn">Cancelar</button></div>
+        <div class="alert info ro-note" style="margin-top:8px"><svg class="ico"><use href="#i-info"/></svg><div>Como Integrante solo puedes actualizar <b>% avance</b> y <b>fechas reales</b> de tus actividades.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px"><div class="card-h"><h3>Tipos de precedencia soportados</h3><div class="sp"></div><span class="muted" style="font-size:12px">desfase positivo = espera · negativo = adelanto</span></div><div class="card-b">
+    <div class="mini-dep">
+      <div class="md"><b>FS</b> · Fin → Inicio<svg viewBox="0 0 160 40" width="100%" height="40"><rect x="4" y="6" width="60" height="9" rx="2" fill="#8a9198"/><rect x="80" y="25" width="70" height="9" rx="2" fill="#2e7d6b"/><path d="M64 10h8v19h6" stroke="#6c737a" fill="none" marker-end="url(#arr)"/></svg><span class="muted">B empieza cuando A termina. <span class="mono">A16 → A17</span></span></div>
+      <div class="md"><b>SS</b> · Inicio → Inicio<svg viewBox="0 0 160 40" width="100%" height="40"><rect x="14" y="6" width="80" height="9" rx="2" fill="#8a9198"/><rect x="34" y="25" width="90" height="9" rx="2" fill="#2e7d6b"/><path d="M14 10h-8v19h26" stroke="#6c737a" fill="none" marker-end="url(#arr)"/></svg><span class="muted">B empieza cuando A empieza (+ desfase).</span></div>
+      <div class="md"><b>FF</b> · Fin → Fin<svg viewBox="0 0 160 40" width="100%" height="40"><rect x="10" y="6" width="100" height="9" rx="2" fill="#8a9198"/><rect x="60" y="25" width="62" height="9" rx="2" fill="#2e7d6b"/><path d="M110 10h20v19h-6" stroke="#6c737a" fill="none" marker-end="url(#arr)"/></svg><span class="muted">B termina cuando A termina.</span></div>
+      <div class="md"><b>SF</b> · Inicio → Fin<svg viewBox="0 0 160 40" width="100%" height="40"><rect x="80" y="6" width="70" height="9" rx="2" fill="#8a9198"/><rect x="10" y="25" width="70" height="9" rx="2" fill="#2e7d6b"/><path d="M80 10h-4v19h6" stroke="#6c737a" fill="none" marker-end="url(#arr)"/></svg><span class="muted">B no termina hasta que A empiece.</span></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- 6 GANTT -->
+<section class="screen" id="gantt" data-title="Carta Gantt" data-group="Planificación">
+  <div class="sh"><div><div class="crumb">Horizonte Conecta · Programación</div><h1>Carta Gantt</h1></div><div class="sp"></div>
+    <div class="role"><button class="on">Semanas</button><button>Meses</button></div></div>
+  <div class="rub"><span class="tagm">Ind. 4</span> Gantt <b>dinámico y jerárquico</b>: avance, hitos, atrasos, <b>plan vs real</b> (línea base bajo cada barra), vínculos de precedencia y ruta crítica.</div>
+  <div class="toolbar">
+    <button class="chip on" id="gBase">✓ Línea base</button><button class="chip on" id="gLinks">✓ Vínculos</button><button class="chip" id="gCrit">Solo ruta crítica</button><button class="chip" data-act="g-expand">Expandir todo</button>
+    <div class="sp"></div><span class="muted" style="font-size:12.5px" id="gInfo"></span>
+  </div>
+  <div class="card">
+    <div class="gwrap" id="gwrap"></div>
+    <div class="legend">
+      <span><i class="lg" style="background:var(--real)"></i>Avance real</span>
+      <span><i class="lg" style="background:repeating-linear-gradient(-45deg,#e9f3f0 0 4px,#cfe5df 4px 8px);border:1px solid #9fcabe"></i>Pendiente / proyectado</span>
+      <span><i class="lg" style="background:var(--crit)"></i>Ruta crítica</span>
+      <span><i class="lg" style="background:var(--warn)"></i>Atrasada</span>
+      <span><i class="lg" style="background:var(--plan);height:4px"></i>Línea base</span>
+      <span><i class="gms" style="position:static;display:inline-block;transform:rotate(45deg) scale(.8)"></i>Hito</span>
+      <span><i class="lg" style="background:var(--accent);width:2px"></i>Fecha de corte</span>
+    </div>
+  </div>
+</section>
+
+<!-- 7 RECURSOS -->
+<section class="screen" id="recursos" data-title="Recursos y costos" data-group="Planificación">
+  <div class="sh"><div><div class="crumb">Horizonte Conecta</div><h1>Recursos y costos</h1></div><div class="sp"></div><button class="btn admin-only">+ Recurso</button></div>
+  <div class="rub"><span class="tagm">Ind. 3</span> Profesionales y <b>4 tipos de recurso</b> con tarifas y cantidades; costo planificado y real por actividad; calendario y <b>alertas de sobreasignación</b>.</div>
+  <div class="grid g4" style="margin-bottom:16px" id="costTiles"></div>
+  <div class="grid g2" style="align-items:start;margin-bottom:16px">
+    <div class="card"><div class="card-h"><h3>Profesionales</h3><div class="sp"></div><span class="tag t-acc">Humano</span></div>
+      <div class="scroll"><table class="t" id="profTbl"><thead><tr><th>Rol</th><th class="num">Dot.</th><th class="num">Tarifa/h</th><th class="num">Horas</th><th class="num">Costo plan.</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="card"><div class="card-h"><h3>Recursos no laborales</h3></div>
+      <div class="scroll"><table class="t" id="nlTbl"><thead><tr><th>Recurso · tipo</th><th class="num">Cantidad</th><th class="num">Unitario</th><th class="num">Total</th></tr></thead><tbody></tbody></table></div></div>
+  </div>
+  <div class="card" style="margin-bottom:16px"><div class="card-h"><h3>Carga semanal por rol</h3><div class="sp"></div><span class="muted" style="font-size:12px">% de la capacidad (dotación × 8 h) · según fechas proyectadas</span></div>
+    <div class="card-b scroll"><table class="heat" id="heat" style="border-collapse:separate"></table>
+      <div id="overAlert" style="margin-top:12px"></div></div></div>
+  <div class="grid g2" style="align-items:start">
+    <div class="card"><div class="card-h"><h3>Asignación · A21 Módulo de observaciones</h3></div><div class="card-b">
+      <table class="t"><thead><tr><th>Recurso</th><th class="num">Cant.</th><th class="num">h/día</th><th class="num">Horas</th><th class="num">Costo</th></tr></thead><tbody>
+        <tr><td>Desarrollador Backend</td><td class="num">1</td><td class="num">8</td><td class="num">112</td><td class="num">$2.688.000</td></tr>
+        <tr><td>Desarrollador Frontend/Móvil</td><td class="num">1</td><td class="num">8</td><td class="num">112</td><td class="num">$2.688.000</td></tr>
+        <tr><td colspan="3"><b>Total planificado</b></td><td class="num"><b>224</b></td><td class="num"><b>$5.376.000</b></td></tr>
+      </tbody></table>
+      <p class="muted" style="font-size:12px;margin:10px 0 0">Duración calculada = horas ÷ (n° recursos × h/día) = 224 ÷ 16 = <b>14 días</b>. Si cambias la cantidad, la duración y el costo se recalculan.</p>
+    </div></div>
+    <div class="card"><div class="card-h"><h3>Calendario del proyecto</h3></div><div class="card-b">
+      <dl class="kv"><dt>Jornada</dt><dd>8 h/día · lunes a viernes</dd><dt>Zona</dt><dd>Chile – feriados nacionales</dd><dt>Recurso compartido</dt><dd>Jefes de obra: máx. 2 h/semana</dd></dl>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px" id="holList"></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- 8 HITOS -->
+<section class="screen" id="hitos" data-title="Hitos" data-group="Planificación">
+  <div class="sh"><div><div class="crumb">Horizonte Conecta</div><h1>Hitos</h1></div><div class="sp"></div><button class="btn admin-only">+ Hito</button></div>
+  <div class="rub"><span class="tagm">Ind. 4–5</span> Hitos con fecha base, fecha real o proyectada, criterio de aceptación y evidencia; alimentan los <b>KPI de hitos</b>.</div>
+  <div class="card" style="margin-bottom:16px"><div class="card-b"><div class="tl" id="msTl"></div></div></div>
+  <div class="grid g4" style="margin-bottom:16px" id="msTiles"></div>
+  <div class="card scroll"><table class="t" id="msTbl"><thead><tr><th>ID</th><th>Hito</th><th>EDT</th><th>Fecha base</th><th>Real / proyectada</th><th class="num">Desv.</th><th>Criterio de aceptación</th><th>Evidencia</th><th>Estado</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<!-- 9 KPI -->
+<section class="screen" id="kpi" data-title="Administrador de KPI" data-group="Control">
+  <div class="sh"><div><div class="crumb">Horizonte Conecta · Control</div><h1>Administrador de KPI</h1></div><div class="sp"></div><button class="btn pri admin-only">+ Nuevo KPI</button></div>
+  <div class="rub"><span class="tagm">Ind. 5</span> KPI <b>configurables</b>: variables, fórmula, meta, umbrales, histórico y alertas. 8 de proyecto e hitos + 12 de gestión del cambio (incluye 3 adicionales).</div>
+  <div class="split">
+    <div>
+      <div class="toolbar"><button class="chip on" data-kt="p">Proyecto e hitos · 8</button><button class="chip" data-kt="c">Gestión del cambio · 12</button></div>
+      <div class="card scroll"><table class="t" id="kpiTbl"><thead><tr><th>Código</th><th>Indicador</th><th>Fórmula</th><th>Meta</th><th class="num">Valor</th><th>Tendencia</th><th>Estado</th></tr></thead><tbody></tbody></table></div>
+    </div>
+    <div class="card drawer">
+      <div class="card-h"><h3>Editar KPI-P02 · CPI</h3></div>
+      <div class="card-b">
+        <div class="field"><label>Nombre</label><input value="Índice de desempeño de costo (CPI)"></div>
+        <label class="muted" style="font-size:12px;font-weight:500">Variables</label>
+        <table class="t" style="margin:6px 0 10px"><tbody>
+          <tr><td class="mono"><b>EV</b></td><td>Valor ganado</td><td class="muted" style="font-size:12px">Σ costo plan × % avance</td></tr>
+          <tr><td class="mono"><b>AC</b></td><td>Costo real</td><td class="muted" style="font-size:12px">Σ costo real registrado</td></tr>
+        </tbody></table>
+        <div class="field"><label>Fórmula</label><div class="code"><span class="v">EV</span> <span class="o">/</span> <span class="v">AC</span></div></div>
+        <div class="row"><div class="field"><label>Meta</label><input value="≥ 1,00"></div><div class="field"><label>Frecuencia</label><select><option>Semanal (cada corte)</option></select></div></div>
+        <label class="muted" style="font-size:12px;font-weight:500">Umbrales</label>
+        <div class="thr" style="margin:6px 0 12px"><div style="background:var(--ok-soft)">Verde<br><b class="mono">≥ 0,95</b></div><div style="background:var(--warn-soft)">Amarillo<br><b class="mono">0,90 – 0,95</b></div><div style="background:var(--crit-soft)">Rojo<br><b class="mono">&lt; 0,90</b></div></div>
+        <div class="field"><label>Alerta</label><select><option>Notificar al Jefe de Proyecto si queda en rojo 2 cortes seguidos</option></select></div>
+        <label class="muted" style="font-size:12px;font-weight:500">Histórico (últimos cortes)</label>
+        <div class="hist" id="cpiHist"></div>
+        <div style="display:flex;justify-content:space-between" class="mono muted" id="cpiHistL"></div>
+        <div style="display:flex;gap:8px;margin-top:14px" class="admin-only"><button class="btn pri">Guardar</button><button class="btn">Probar fórmula</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 CAMBIOS -->
+<section class="screen" id="cambios" data-title="Solicitudes de cambio" data-group="Control">
+  <div class="sh"><div><div class="crumb">Horizonte Conecta · Gestión del cambio</div><h1>Solicitudes de cambio</h1></div><div class="sp"></div><button class="btn pri">+ Nueva solicitud</button></div>
+  <div class="rub"><span class="tagm">Ind. 6</span> Registro y <b>filtro</b> de solicitudes por estado, tipo, responsable y etapa del flujo de <b>10 etapas</b>, con impactos y evidencias.</div>
+  <div class="toolbar">
+    <input class="search" placeholder="Buscar…">
+    <select class="search" style="min-width:0"><option>Estado: todos</option><option>Abiertas</option><option>Aprobadas</option><option>Rechazadas</option></select>
+    <select class="search" style="min-width:0"><option>Tipo: todos</option><option>Alcance</option><option>Plazo</option><option>Costo</option><option>Recursos</option></select>
+    <select class="search" style="min-width:0"><option>Responsable: todos</option></select>
+    <select class="search" style="min-width:0"><option>Etapa: todas</option></select>
+  </div>
+  <div class="card scroll"><table class="t" id="scTbl">
+    <thead><tr><th>ID</th><th>Solicitud</th><th>Tipo</th><th>Prioridad</th><th>Solicitante</th><th>Responsable</th><th>Etapa del flujo</th><th class="num">Δ Plazo</th><th class="num">Δ Costo</th><th class="num">Evid.</th><th>Estado</th></tr></thead>
+    <tbody></tbody></table></div>
+  <div class="card" style="margin-top:16px"><div class="card-h"><h3>Flujo de 10 etapas</h3><div class="sp"></div><span class="muted" style="font-size:12px">configurable por proyecto</span></div><div class="card-b">
+    <div class="steps" id="flow10"></div>
+  </div></div>
+</section>
+
+<!-- 11 DETALLE CAMBIO -->
+<section class="screen" id="cambio" data-title="Detalle de solicitud" data-group="Control">
+  <div class="sh"><div><div class="crumb">Gestión del cambio · <span class="mono">SC-04</span></div><h1>Tablero ejecutivo exportable a PDF para el Directorio</h1></div><div class="sp"></div><span class="tag t-warn">En revisión del comité</span></div>
+  <div class="rub"><span class="tagm">Ind. 6 · 8</span> Trazabilidad completa y <b>línea base</b>: al aprobar, el cambio se aplica a la planificación y se recalculan Gantt, costos y KPI (escenario 3 de la demostración).</div>
+  <div class="card" style="margin-bottom:16px"><div class="card-b"><div class="steps" id="flowSC"></div></div></div>
+  <div class="grid" style="grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:start">
+    <div class="grid">
+      <div class="card"><div class="card-h"><h3>Solicitud</h3></div><div class="card-b">
+        <dl class="kv">
+          <dt>Tipo</dt><dd><span class="tag t-acc">Alcance</span> <span class="tag t-mute">Plazo</span> <span class="tag t-mute">Costo</span></dd>
+          <dt>Solicitante</dt><dd>Gerencia de Operaciones (INT-05)</dd>
+          <dt>Responsable</dt><dd>Kevin Henríquez · Jefe de Proyecto</dd>
+          <dt>Registrada</dt><dd class="mono">08-01-2027</dd>
+          <dt>Descripción</dt><dd>Agregar al tablero ejecutivo (A26) la exportación del informe mensual en PDF con las 6 preguntas de la gerencia, para enviarlo al Directorio sin rearmarlo a mano.</dd>
+          <dt>Justificación</dt><dd>El informe al Directorio hoy demora 8 días; la exportación directa elimina el armado manual.</dd>
+        </dl>
+      </div></div>
+      <div class="card"><div class="card-h"><h3>Análisis de impacto</h3><div class="sp"></div><span class="muted" style="font-size:12px">calculado por el sistema</span></div><div class="card-b">
+        <div class="grid g3" style="margin-bottom:14px">
+          <div><div class="muted" style="font-size:12px">Plazo</div><div style="font-size:20px;font-weight:600">+4 días háb.</div><div class="muted" style="font-size:12px">A26 pasa de 16 a 20 días</div></div>
+          <div><div class="muted" style="font-size:12px">Costo</div><div style="font-size:20px;font-weight:600">+$736.000</div><div class="muted" style="font-size:12px">32 h Analista BI × $23.000</div></div>
+          <div><div class="muted" style="font-size:12px">Recursos</div><div style="font-size:20px;font-weight:600">BI 100 %</div><div class="muted" style="font-size:12px">sin sobreasignación</div></div>
+        </div>
+        <table class="t"><thead><tr><th>Línea base</th><th class="num">v1.2 vigente</th><th class="num">Propuesta v1.3</th><th class="num">Δ</th></tr></thead><tbody>
+          <tr><td>Fin del proyecto (H10)</td><td class="num mono">12-07-2027</td><td class="num mono">19-07-2027</td><td class="num" style="color:var(--crit)">+4 d</td></tr>
+          <tr><td>Reserva hasta 04-08-2027</td><td class="num mono">16 d</td><td class="num mono">12 d</td><td class="num" style="color:var(--crit)">−4 d</td></tr>
+          <tr><td>Costo base</td><td class="num mono">$212.809.000</td><td class="num mono">$213.545.000</td><td class="num">+0,35 %</td></tr>
+          <tr><td>Contingencia disponible</td><td class="num mono">$21.300.000</td><td class="num mono">$20.564.000</td><td class="num">−$736.000</td></tr>
+          <tr><td>Actividades afectadas</td><td class="num" colspan="2"><span class="dep">A26</span> <span class="dep">A31</span> <span class="dep">A32</span> <span class="dep">A33</span> <span class="dep">H07</span> <span class="dep">A39</span> <span class="dep">H08</span> <span class="dep">A40</span> <span class="dep">A41</span> <span class="dep">H09</span> <span class="dep">A04</span> <span class="dep">H10</span></td><td class="num">12</td></tr>
+        </tbody></table>
+        <div class="alert warn" style="margin-top:12px"><svg class="ico"><use href="#i-warn"/></svg><div>A26 está en la <b>ruta crítica</b>: todo atraso se traslada al cierre. Riesgo asociado: R-04 (aumento del alcance).</div></div>
+      </div></div>
+    </div>
+    <div class="grid">
+      <div class="card admin-only"><div class="card-h"><h3>Decisión del comité</h3></div><div class="card-b">
+        <div class="field"><label>Comentario</label><textarea>Se aprueba con cargo a contingencia. Mantener fecha comprometida 04-08-2027.</textarea></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ok">✓ Aprobar y aplicar</button><button class="btn danger">Rechazar</button><button class="btn">Diferir</button></div>
+        <div class="alert info" style="margin-top:12px"><svg class="ico"><use href="#i-info"/></svg><div>Al aprobar: se crea la <b>línea base v1.3</b>, se recalculan 12 actividades en la Gantt, se actualizan costos y los KPI P01–P08 y C01–C12.</div></div>
+      </div></div>
+      <div class="card"><div class="card-h"><h3>Evidencias</h3><div class="sp"></div><button class="btn sm">+ Adjuntar</button></div><div class="card-b" style="display:grid;gap:8px">
+        <div class="file"><div class="xls" style="background:#b8322a">PDF</div><div style="flex:1"><b>Correo_Gerencia_Operaciones.pdf</b><div class="muted" style="font-size:12px">Solicitud original · 08-01-2027</div></div></div>
+        <div class="file"><div class="xls">XLSX</div><div style="flex:1"><b>Estimacion_A26_exportacion.xlsx</b><div class="muted" style="font-size:12px">Analista BI · 11-01-2027</div></div></div>
+        <div class="file"><div class="xls" style="background:#2b5797">DOCX</div><div style="flex:1"><b>Minuta_comite_14-01.docx</b><div class="muted" style="font-size:12px">Comité directivo · 14-01-2027</div></div></div>
+      </div></div>
+      <div class="card"><div class="card-h"><h3>Trazabilidad</h3></div><div class="card-b">
+        <div class="ev"><span class="when">08-01 09:12</span><span><b>Registrada</b> por Gerencia de Operaciones</span></div>
+        <div class="ev"><span class="when">08-01 15:40</span><span><b>Revisión inicial</b> completa · K. Henríquez</span></div>
+        <div class="ev"><span class="when">11-01 10:05</span><span><b>Clasificada</b>: alcance · prioridad media</span></div>
+        <div class="ev"><span class="when">12-01 17:20</span><span><b>Impacto</b> evaluado: +4 d · +$736.000</span></div>
+        <div class="ev"><span class="when">14-01 11:00</span><span>Enviada a <b>comité directivo</b></span></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 TABLERO PROYECTO -->
+<section class="screen" id="tproy" data-title="Tablero del proyecto" data-group="Tableros">
+  <div class="sh"><div><div class="crumb">Tableros de comando</div><h1>Tablero del proyecto</h1></div><div class="sp"></div>
+    <select class="search" style="min-width:0"><option>Etapa: todas</option></select><select class="search" style="min-width:0"><option>Responsable: todos</option></select><select class="search" style="min-width:0"><option>Corte: 15-01-2027</option></select></div>
+  <div class="rub"><span class="tagm">Ind. 7</span> Avances, hitos, costos, recursos y atrasos, con filtros y <b>actualización dinámica</b> desde los módulos.</div>
+  <div class="grid g6" style="margin-bottom:16px" id="dpTiles"></div>
+  <div class="grid" style="grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);margin-bottom:16px;align-items:start">
+    <div class="card"><div class="card-h"><h3>Curva S · valor planificado, ganado y costo real</h3></div><div class="card-b" id="scurve"></div></div>
+    <div class="card"><div class="card-h"><h3>Avance por etapa</h3><div class="sp"></div><span class="muted" style="font-size:12px">plan (gris) vs real</span></div><div class="card-b bars-h" id="etBars"></div></div>
+  </div>
+  <div class="grid g2" style="align-items:start">
+    <div class="card"><div class="card-h"><h3>Actividades con atraso</h3></div><div class="scroll"><table class="t" id="lateTbl"><thead><tr><th>ID</th><th>Actividad</th><th class="num">Plan</th><th class="num">Real</th><th>Fin proy.</th><th>Crítica</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="card"><div class="card-h"><h3>Alertas</h3></div><div class="card-b grid" style="gap:8px" id="dpAlerts"></div></div>
+  </div>
+</section>
+
+<!-- 13 TABLERO CAMBIO -->
+<section class="screen" id="tcambio" data-title="Tablero del cambio" data-group="Tableros">
+  <div class="sh"><div><div class="crumb">Tableros de comando</div><h1>Tablero de gestión del cambio</h1></div><div class="sp"></div>
+    <select class="search" style="min-width:0"><option>Tipo: todos</option></select><select class="search" style="min-width:0"><option>Periodo: proyecto completo</option></select></div>
+  <div class="rub"><span class="tagm">Ind. 7</span> Estados, riesgos, tiempos, <b>adopción</b> y alertas de las solicitudes de cambio.</div>
+  <div class="grid g6" style="margin-bottom:16px">
+    <div class="card kpi"><div class="l"><span class="dot d-info"></span>Solicitudes</div><div class="v">5</div><div class="s">3 abiertas · 2 cerradas</div></div>
+    <div class="card kpi"><div class="l"><span class="dot d-ok"></span>Tasa de aprobación</div><div class="v">50 %</div><div class="s">1 aprobada / 2 decididas</div></div>
+    <div class="card kpi"><div class="l"><span class="dot d-warn"></span>Tiempo medio de ciclo</div><div class="v">6,5 d</div><div class="s">meta ≤ 7 días</div></div>
+    <div class="card kpi"><div class="l"><span class="dot d-warn"></span>Impacto plazo aprobado</div><div class="v">+2 d</div><div class="s">+4 d en evaluación</div></div>
+    <div class="card kpi"><div class="l"><span class="dot d-ok"></span>Contingencia usada</div><div class="v">6,6 %</div><div class="s">$1.400.000 de $21.300.000</div></div>
+    <div class="card kpi"><div class="l"><span class="dot d-info"></span>Adopción (R1)</div><div class="v">—</div><div class="s">inicia 15-03-2027 · capacitación 0/42</div></div>
+  </div>
+  <div class="grid g3" style="align-items:start;margin-bottom:16px">
+    <div class="card"><div class="card-h"><h3>Solicitudes por etapa del flujo</h3></div><div class="card-b funnel" id="funnel"></div></div>
+    <div class="card"><div class="card-h"><h3>Riesgo de los cambios</h3></div><div class="card-b">
+      <div class="matrix">
+        <div class="ax">Alto</div><div class="cell" style="background:#fbefd2"></div><div class="cell" style="background:#f8e0dc"><span class="pin">SC-04</span></div><div class="cell" style="background:#f3c9c2"></div>
+        <div class="ax">Med.</div><div class="cell" style="background:#dcf0e3"><span class="pin">SC-03</span></div><div class="cell" style="background:#fbefd2"><span class="pin">SC-05</span></div><div class="cell" style="background:#f8e0dc"><span class="pin">SC-02</span></div>
+        <div class="ax">Bajo</div><div class="cell" style="background:#dcf0e3"></div><div class="cell" style="background:#dcf0e3"><span class="pin">SC-01</span></div><div class="cell" style="background:#fbefd2"></div>
+        <div></div><div class="ax">Baja</div><div class="ax">Media</div><div class="ax">Alta</div>
+      </div>
+      <div class="muted" style="font-size:11.5px;margin-top:6px">Vertical: impacto en plazo/costo · Horizontal: probabilidad de afectar la ruta crítica</div>
+    </div></div>
+    <div class="card"><div class="card-h"><h3>Alertas</h3></div><div class="card-b grid" style="gap:8px">
+      <div class="alert crit"><svg class="ico"><use href="#i-x"/></svg><div><b>SC-05</b> lleva 9 días sin pasar a evaluación (SLA 5 días).</div></div>
+      <div class="alert warn"><svg class="ico"><use href="#i-warn"/></svg><div><b>SC-03</b> no tiene evidencias adjuntas.</div></div>
+      <div class="alert warn"><svg class="ico"><use href="#i-warn"/></svg><div><b>SC-04</b> afecta la ruta crítica: deja 12 días de reserva.</div></div>
+      <div class="alert info"><svg class="ico"><use href="#i-info"/></svg><div>Plan de capacitación R1 (A35) inicia el 03-03-2027.</div></div>
+    </div></div>
+  </div>
+  <div class="grid g2" style="align-items:start">
+    <div class="card"><div class="card-h"><h3>Tiempo por etapa del flujo (promedio, días)</h3></div><div class="card-b bars-h" id="stageTime"></div></div>
+    <div class="card"><div class="card-h"><h3>Plan de adopción · piloto</h3></div><div class="card-b bars-h">
+      <div class="r"><span>Dispositivos entregados</span><div class="tr"><div class="a" style="width:25%"></div></div><span class="mono">3/12</span></div>
+      <div class="r"><span>Kits de conectividad</span><div class="tr"><div class="a" style="width:33%"></div></div><span class="mono">1/3</span></div>
+      <div class="r"><span>Usuarios capacitados R1</span><div class="tr"><div class="a" style="width:0"></div></div><span class="mono">0/42</span></div>
+      <div class="r"><span>Usuarios activos (30 d)</span><div class="tr"><div class="a" style="width:0"></div></div><span class="mono">—</span></div>
+      <div class="r"><span>Promotores por obra</span><div class="tr"><div class="a" style="width:67%"></div></div><span class="mono">2/3</span></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- 14 USUARIOS -->
+<section class="screen" id="usuarios" data-title="Usuarios y roles" data-group="Sistema">
+  <div class="sh"><div><div class="crumb">Sistema</div><h1>Usuarios y roles</h1></div><div class="sp"></div><button class="btn pri admin-only">+ Invitar usuario</button></div>
+  <div class="rub"><span class="tagm">Ind. 8</span> Dos roles con permisos distintos; la interfaz oculta acciones según el rol (prueba el selector de rol arriba a la derecha).</div>
+  <div class="grid g2" style="align-items:start">
+    <div class="card scroll"><table class="t"><thead><tr><th>Usuario</th><th>Rol</th><th>Profesional vinculado</th><th>Último acceso</th></tr></thead><tbody>
+      <tr><td><b>Kevin Henríquez</b><div class="muted" style="font-size:12px">kevin.henriquez@duocuc.cl</div></td><td><span class="tag t-acc">Administrador</span></td><td>Jefe de Proyecto</td><td class="mono">hoy 09:14</td></tr>
+      <tr><td><b>Diego López</b><div class="muted" style="font-size:12px">diego.lopez@duocuc.cl</div></td><td><span class="tag t-info">Integrante</span></td><td>Desarrollador Backend</td><td class="mono">hoy 08:51</td></tr>
+      <tr><td><b>Christian Pérez</b><div class="muted" style="font-size:12px">chri.perezv@duocuc.cl</div></td><td><span class="tag t-info">Integrante</span></td><td>Desarrollador Frontend/Móvil</td><td class="mono">ayer 18:30</td></tr>
+      <tr><td><b>Docente evaluador</b><div class="muted" style="font-size:12px">invitado</div></td><td><span class="tag t-info">Integrante</span></td><td>—</td><td class="mono">—</td></tr>
+    </tbody></table></div>
+    <div class="card scroll"><table class="t perm"><thead><tr><th>Permiso</th><th style="text-align:center">Administrador</th><th style="text-align:center">Integrante</th></tr></thead><tbody>
+      <tr><td>Crear / editar / cerrar proyectos</td><td class="c yes">✓</td><td class="c no">—</td></tr>
+      <tr><td>Importar y editar EDT</td><td class="c yes">✓</td><td class="c no">—</td></tr>
+      <tr><td>Editar duraciones y precedencias</td><td class="c yes">✓</td><td class="c no">—</td></tr>
+      <tr><td>Asignar recursos y tarifas</td><td class="c yes">✓</td><td class="c no">—</td></tr>
+      <tr><td>Registrar avance y fechas reales</td><td class="c yes">✓</td><td class="c yes">Solo propias</td></tr>
+      <tr><td>Configurar KPI</td><td class="c yes">✓</td><td class="c no">—</td></tr>
+      <tr><td>Crear solicitudes de cambio</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+      <tr><td>Aprobar / rechazar cambios</td><td class="c yes">✓</td><td class="c no">—</td></tr>
+      <tr><td>Ver Gantt y tableros</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+    </tbody></table></div>
+  </div>
+</section>
+
+<!-- 15 CASO DE PRUEBA -->
+<section class="screen" id="caso" data-title="Caso de prueba" data-group="Sistema">
+  <div class="sh"><div><div class="crumb">Sistema · Demostración</div><h1>Verificación del caso de prueba</h1></div></div>
+  <div class="rub"><span class="tagm">Ind. 8 · 50 %</span> Checklist automático de la <b>evidencia mínima</b> y guion de los 3 escenarios que pide la rúbrica.</div>
+  <div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);align-items:start">
+    <div class="card"><div class="card-h"><h3>Evidencia mínima</h3><div class="sp"></div><span class="muted" style="font-size:12px">Horizonte Conecta</span></div><div class="card-b" id="checklist"></div></div>
+    <div>
+      <div class="flow">
+        <div class="fi"><span class="tag t-acc">Escenario 1</span><h4 style="margin-top:8px">Cambiar una duración</h4><ol><li>Abrir A17 en Actividades</li><li>Duración 22 → 27 días</li><li>Guardar y recalcular</li></ol>
+          <div class="ba"><span>A17 <b class="mono">22 d</b></span><span class="arrow">→</span><span><b class="mono">27 d</b> · H10 +5 d</span></div>
+          <p class="muted" style="font-size:12px;margin:8px 0 0">Ver en: Gantt (sucesoras se mueven), SPI, tablero del proyecto.</p></div>
+        <div class="fi"><span class="tag t-acc">Escenario 2</span><h4 style="margin-top:8px">Modificar recursos</h4><ol><li>Abrir A18 en Recursos</li><li>Desarrollador de Integraciones 1 → 2</li><li>Duración 17 → 9 días</li></ol>
+          <div class="ba"><span>Duración <b class="mono">17 → 9 d</b></span><span class="arrow">→</span><span>Carga <b class="mono">189 %</b></span></div>
+          <p class="muted" style="font-size:12px;margin:8px 0 0">Ver en: alerta de sobreasignación (dotación 1), Gantt, costos.</p></div>
+        <div class="fi"><span class="tag t-acc">Escenario 3</span><h4 style="margin-top:8px">Aprobar una solicitud</h4><ol><li>Abrir SC-04</li><li>Aprobar y aplicar</li><li>Se crea línea base v1.3</li></ol>
+          <div class="ba"><span>Costo <b class="mono">$212,8M</b></span><span class="arrow">→</span><span><b class="mono">$213,5M</b></span></div>
+          <p class="muted" style="font-size:12px;margin:8px 0 0">Ver en: Gantt, costos, KPI C01–C12, tablero del cambio.</p></div>
+      </div>
+      <div class="alert info" style="margin-top:14px"><svg class="ico"><use href="#i-info"/></svg><div>Cada escenario muestra un <b>antes / después</b> en pantalla: la demo debe explicar qué recalculó el sistema en Gantt, costos, KPI y tableros.</div></div>
+    </div>
+  </div>
+</section>
+
+      <div class="pager"><button class="btn" id="prev">← Anterior</button><span class="muted" id="pgInfo" style="align-self:center;font-size:12.5px"></span><button class="btn dark" id="next">Siguiente →</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ACTS = [{"id": "A01", "n": "Constituir equipo y comité directivo, y realizar kick-off", "pr": "", "d": 4, "role": "Jefe de Proyecto", "s": "2026-10-05", "e": "2026-10-08", "crit": true, "pk": "1.1.1", "h": 32, "nr": 1, "hol": 0}, {"id": "H01", "n": "Hito: Kick-off realizado", "pr": "A01", "d": 0, "role": "Hito", "s": "2026-10-08", "e": "2026-10-08", "crit": true, "pk": "1.1.1", "h": 0, "nr": 0, "hol": 0}, {"id": "A02", "n": "Elaborar y aprobar plan de dirección del proyecto", "pr": "H01", "d": 10, "role": "Jefe de Proyecto", "s": "2026-10-09", "e": "2026-10-23", "crit": false, "pk": "1.1.1", "h": 80, "nr": 1, "hol": 13}, {"id": "A03", "n": "Realizar seguimiento y control (comités quincenales, riesgos y cambios)", "pr": "A02", "d": 166, "role": "Jefe de Proyecto", "s": "2026-10-26", "e": "2027-06-22", "crit": false, "pk": "1.1.2", "h": 664, "nr": 1, "hol": "—"}, {"id": "A04", "n": "Elaborar informe final, lecciones aprendidas y acta de cierre", "pr": "H09, A42", "d": 4, "role": "Jefe de Proyecto", "s": "2027-07-07", "e": "2027-07-12", "crit": true, "pk": "1.1.3", "h": 32, "nr": 1, "hol": 0}, {"id": "H10", "n": "Hito: Cierre formal del proyecto", "pr": "A04", "d": 0, "role": "Hito", "s": "2027-07-12", "e": "2027-07-12", "crit": true, "pk": "1.1.3", "h": 0, "nr": 0, "hol": 0}, {"id": "A05", "n": "Levantar procesos en las 3 obras piloto y en oficina central", "pr": "H01", "d": 6, "role": "Analista Funcional / de Negocio + Diseñador UX/UI", "s": "2026-10-09", "e": "2026-10-19", "crit": true, "pk": "1.2.1", "h": 96, "nr": 2, "hol": 0}, {"id": "A06", "n": "Documentar diagnóstico y línea base de indicadores", "pr": "A05", "d": 4, "role": "Analista Funcional / de Negocio", "s": "2026-10-20", "e": "2026-10-23", "crit": true, "pk": "1.2.1", "h": 32, "nr": 1, "hol": 0}, {"id": "A07", "n": "Especificar requisitos e historias de usuario (incluye offline y seguridad)", "pr": "A06", "d": 11, "role": "Analista Funcional / de Negocio", "s": "2026-10-26", "e": "2026-11-09", "crit": false, "pk": "1.2.2", "h": 88, "nr": 1, "hol": 4}, {"id": "A08", "n": "Definir indicadores de las 6 preguntas de la gerencia y validarlos con Finanzas", "pr": "A06", "d": 7, "role": "Analista de Datos / BI", "s": "2026-10-26", "e": "2026-11-03", "crit": false, "pk": "1.2.2", "h": 56, "nr": 1, "hol": 8}, {"id": "A09", "n": "Priorizar backlog en Release 1 y 2 y aprobar el alcance en comité", "pr": "A07, A08", "d": 2, "role": "Analista Funcional / de Negocio + Jefe de Proyecto", "s": "2026-11-10", "e": "2026-11-11", "crit": false, "pk": "1.2.2", "h": 16, "nr": 2, "hol": 4}, {"id": "H02", "n": "Hito: Alcance aprobado", "pr": "A09", "d": 0, "role": "Hito", "s": "2026-11-11", "e": "2026-11-11", "crit": false, "pk": "1.2.2", "h": 0, "nr": 0, "hol": 4}, {"id": "A10", "n": "Probar la API del sistema de compras con el proveedor (prueba de concepto)", "pr": "H01", "d": 10, "role": "Desarrollador de Integraciones", "s": "2026-10-09", "e": "2026-10-23", "crit": true, "pk": "1.3.1", "h": 80, "nr": 1, "hol": 0}, {"id": "A11", "n": "Diseñar arquitectura, integraciones y modelo de datos, y aprobarlos con TI", "pr": "A06, A10", "d": 19, "role": "Arquitecto de Solución", "s": "2026-10-26", "e": "2026-11-19", "crit": true, "pk": "1.3.1", "h": 152, "nr": 1, "hol": 0}, {"id": "A12", "n": "Diseñar el prototipo UX/UI y validarlo con jefes de obra", "pr": "H02", "d": 19, "role": "Diseñador UX/UI", "s": "2026-11-12", "e": "2026-12-09", "crit": false, "pk": "1.3.2", "h": 152, "nr": 1, "hol": 4}, {"id": "H03", "n": "Hito: Diseño de solución aprobado", "pr": "A11, A12", "d": 0, "role": "Hito", "s": "2026-12-09", "e": "2026-12-09", "crit": false, "pk": "1.3.2", "h": 0, "nr": 0, "hol": 4}, {"id": "A13", "n": "Provisionar ambientes cloud, CI/CD, monitoreo y respaldos", "pr": "A11", "d": 15, "role": "Ingeniero DevOps / Cloud", "s": "2026-11-20", "e": "2026-12-11", "crit": true, "pk": "1.4.1", "h": 90, "nr": 1, "hol": 0}, {"id": "A14", "n": "Desarrollar núcleo: usuarios, roles por obra, auditoría y maestros", "pr": "H03, A13", "d": 14, "role": "Desarrollador Backend", "s": "2026-12-14", "e": "2027-01-04", "crit": false, "pk": "1.4.2", "h": 224, "nr": 2, "hol": 6}, {"id": "A15", "n": "Desarrollar la app móvil offline y probarla en terreno", "pr": "H03", "d": 18, "role": "Desarrollador Frontend/Móvil", "s": "2026-12-10", "e": "2027-01-06", "crit": false, "pk": "1.4.2", "h": 288, "nr": 2, "hol": 4}, {"id": "H04", "n": "Hito: Plataforma base operativa", "pr": "A14, A15, A16", "d": 0, "role": "Hito", "s": "2027-01-08", "e": "2027-01-08", "crit": false, "pk": "1.4.2", "h": 0, "nr": 0, "hol": 2}, {"id": "A16", "n": "Integrar el inicio de sesión corporativo (SSO) y el repositorio documental Microsoft", "pr": "A13, A10", "d": 18, "role": "Desarrollador de Integraciones", "s": "2026-12-14", "e": "2027-01-08", "crit": true, "pk": "1.5.1", "h": 144, "nr": 1, "hol": 0}, {"id": "A17", "n": "Integrar el sistema de compras (API) y validarlo con Adquisiciones", "pr": "A16", "d": 22, "role": "Desarrollador de Integraciones", "s": "2027-01-11", "e": "2027-02-09", "crit": true, "pk": "1.5.2", "h": 176, "nr": 1, "hol": 0}, {"id": "A18", "n": "Integrar el ERP en modo lectura y conciliar montos con Finanzas", "pr": "A17", "d": 17, "role": "Desarrollador de Integraciones", "s": "2027-02-10", "e": "2027-03-04", "crit": true, "pk": "1.5.2", "h": 136, "nr": 1, "hol": 0}, {"id": "A19", "n": "Desarrollar importación de programación, cálculo de avance y alertas de bloqueo", "pr": "H04", "d": 27, "role": "Desarrollador Backend", "s": "2027-01-11", "e": "2027-02-16", "crit": false, "pk": "1.6.1", "h": 216, "nr": 1, "hol": 2}, {"id": "A20", "n": "Desarrollar el registro móvil de avance por partida con fotos", "pr": "H04", "d": 22, "role": "Desarrollador Frontend/Móvil", "s": "2027-01-11", "e": "2027-02-09", "crit": false, "pk": "1.6.1", "h": 176, "nr": 1, "hol": 7}, {"id": "A21", "n": "Desarrollar el módulo de observaciones con fotos y flujo de cierre", "pr": "H04", "d": 14, "role": "Desarrollador Backend + Desarrollador Frontend/Móvil", "s": "2027-01-11", "e": "2027-01-28", "crit": false, "pk": "1.6.2", "h": 224, "nr": 2, "hol": 4}, {"id": "A22", "n": "Desarrollar el catálogo y el visor offline de planos vigentes", "pr": "A21, A16", "d": 11, "role": "Desarrollador Backend + Desarrollador Frontend/Móvil", "s": "2027-01-29", "e": "2027-02-12", "crit": false, "pk": "1.6.3", "h": 176, "nr": 2, "hol": 4}, {"id": "A23", "n": "Desarrollar el módulo de materiales (OC, recepción móvil y conciliación con facturas)", "pr": "A29, A17", "d": 16, "role": "Desarrollador Backend + Desarrollador Frontend/Móvil", "s": "2027-03-03", "e": "2027-03-24", "crit": false, "pk": "1.7.1", "h": 256, "nr": 2, "hol": 2}, {"id": "A24", "n": "Desarrollar el módulo de subcontratos y estados de pago", "pr": "A22", "d": 18, "role": "Desarrollador Backend + Desarrollador Frontend/Móvil", "s": "2027-02-15", "e": "2027-03-10", "crit": false, "pk": "1.7.2", "h": 288, "nr": 2, "hol": 12}, {"id": "A25", "n": "Construir el modelo analítico con cargas diarias", "pr": "H04, A08", "d": 17, "role": "Analista de Datos / BI", "s": "2027-01-11", "e": "2027-02-02", "crit": false, "pk": "1.7.3", "h": 136, "nr": 1, "hol": 22}, {"id": "A26", "n": "Desarrollar el tablero ejecutivo y validarlo con Gerencia y Finanzas", "pr": "A25, A18", "d": 16, "role": "Analista de Datos / BI", "s": "2027-03-05", "e": "2027-03-29", "crit": true, "pk": "1.7.3", "h": 128, "nr": 1, "hol": 0}, {"id": "A27", "n": "Elaborar el plan y los casos de prueba", "pr": "H02", "d": 12, "role": "Analista QA", "s": "2026-11-12", "e": "2026-11-27", "crit": false, "pk": "1.8.1", "h": 96, "nr": 1, "hol": 56}, {"id": "A28", "n": "Apoyar los sprints: refinamiento, diseño de detalle, QA continuo, ambientes y revisión técnica", "pr": "H04", "d": 43, "role": "Analista Funcional / de Negocio + Diseñador UX/UI + Analista QA + Ingeniero DevOps / Cloud + Arquitecto de Solución", "s": "2027-01-11", "e": "2027-03-10", "crit": false, "pk": "1.8.1", "h": 860, "nr": 5, "hol": "—"}, {"id": "A29", "n": "Ejecutar pruebas de sistema de Release 1 y corregir defectos", "pr": "A19, A20, A22, A27", "d": 10, "role": "Analista QA + Desarrollador Backend + Desarrollador Frontend/Móvil", "s": "2027-02-17", "e": "2027-03-02", "crit": false, "pk": "1.8.2", "h": 240, "nr": 3, "hol": 2}, {"id": "A30", "n": "Realizar la prueba de aceptación (UAT) de Release 1 con usuarios de obra", "pr": "A29", "d": 5, "role": "Analista QA + Analista Funcional / de Negocio", "s": "2027-03-03", "e": "2027-03-09", "crit": false, "pk": "1.8.2", "h": 40, "nr": 2, "hol": 13}, {"id": "H05", "n": "Hito: Release 1 aceptada", "pr": "A30", "d": 0, "role": "Hito", "s": "2027-03-09", "e": "2027-03-09", "crit": false, "pk": "1.8.2", "h": 0, "nr": 0, "hol": 13}, {"id": "A31", "n": "Ejecutar pruebas de sistema de Release 2 (con regresión) y corregir defectos", "pr": "A23, A24, A26, H05", "d": 10, "role": "Analista QA + Desarrollador Backend + Desarrollador Frontend/Móvil", "s": "2027-03-30", "e": "2027-04-12", "crit": true, "pk": "1.8.3", "h": 480, "nr": 6, "hol": 0}, {"id": "A32", "n": "Ejecutar la prueba de seguridad externa y corregir hallazgos", "pr": "A31", "d": 8, "role": "Ingeniero DevOps / Cloud", "s": "2027-04-13", "e": "2027-04-22", "crit": true, "pk": "1.8.3", "h": 24, "nr": 1, "hol": 0}, {"id": "A33", "n": "Realizar la UAT de Release 2 con obra y oficina central", "pr": "A31", "d": 5, "role": "Analista QA + Analista Funcional / de Negocio", "s": "2027-04-13", "e": "2027-04-19", "crit": false, "pk": "1.8.3", "h": 40, "nr": 2, "hol": 3}, {"id": "H07", "n": "Hito: Release 2 aceptada", "pr": "A33, A32", "d": 0, "role": "Hito", "s": "2027-04-22", "e": "2027-04-22", "crit": true, "pk": "1.8.3", "h": 0, "nr": 0, "hol": 0}, {"id": "A34", "n": "Elaborar el plan de cambio, comprar dispositivos y cargar datos maestros de las obras", "pr": "H04", "d": 20, "role": "Especialista Gestión del Cambio y Capacitación + Ingeniero DevOps / Cloud", "s": "2027-01-11", "e": "2027-02-05", "crit": false, "pk": "1.9.1", "h": 120, "nr": 2, "hol": 79}, {"id": "A35", "n": "Capacitar a los usuarios de obra en Release 1 (sesiones cortas en obra)", "pr": "A29, A34", "d": 8, "role": "Especialista Gestión del Cambio y Capacitación", "s": "2027-03-03", "e": "2027-03-12", "crit": false, "pk": "1.9.2", "h": 64, "nr": 1, "hol": 62}, {"id": "A36", "n": "Desplegar Release 1 en producción", "pr": "H05, A35", "d": 1, "role": "Ingeniero DevOps / Cloud", "s": "2027-03-15", "e": "2027-03-15", "crit": false, "pk": "1.9.2", "h": 6, "nr": 1, "hol": 62}, {"id": "H06", "n": "Hito: Release 1 en operación en las 3 obras", "pr": "A36", "d": 0, "role": "Hito", "s": "2027-03-15", "e": "2027-03-15", "crit": false, "pk": "1.9.2", "h": 0, "nr": 0, "hol": 62}, {"id": "A37", "n": "Acompañar la operación asistida de Release 1 en terreno", "pr": "H06", "d": 19, "role": "Especialista Gestión del Cambio y Capacitación + Analista Funcional / de Negocio", "s": "2027-03-16", "e": "2027-04-12", "crit": false, "pk": "1.9.2", "h": 152, "nr": 2, "hol": 62}, {"id": "A38", "n": "Capacitar a los usuarios en Release 2", "pr": "A31", "d": 6, "role": "Especialista Gestión del Cambio y Capacitación", "s": "2027-04-13", "e": "2027-04-20", "crit": false, "pk": "1.9.3", "h": 48, "nr": 1, "hol": 2}, {"id": "A39", "n": "Desplegar Release 2 en producción", "pr": "H07, A38", "d": 1, "role": "Ingeniero DevOps / Cloud", "s": "2027-04-23", "e": "2027-04-23", "crit": true, "pk": "1.9.3", "h": 6, "nr": 1, "hol": 0}, {"id": "H08", "n": "Hito: Release 2 en operación en las 3 obras", "pr": "A39", "d": 0, "role": "Hito", "s": "2027-04-23", "e": "2027-04-23", "crit": true, "pk": "1.9.3", "h": 0, "nr": 0, "hol": 0}, {"id": "A40", "n": "Acompañar la operación asistida de Release 2 durante 2 ciclos mensuales de EP", "pr": "H08", "d": 40, "role": "Especialista Gestión del Cambio y Capacitación + Analista Funcional / de Negocio + Desarrollador Backend + Desarrollador Frontend/Móvil", "s": "2027-04-26", "e": "2027-06-22", "crit": true, "pk": "1.9.3", "h": 640, "nr": 4, "hol": 0}, {"id": "A41", "n": "Medir resultados del piloto y elaborar el plan de escalamiento", "pr": "A40", "d": 9, "role": "Jefe de Proyecto + Analista Funcional / de Negocio + Analista de Datos / BI", "s": "2027-06-23", "e": "2027-07-06", "crit": true, "pk": "1.9.4", "h": 108, "nr": 3, "hol": 0}, {"id": "H09", "n": "Hito: Evaluación del piloto aprobada", "pr": "A41", "d": 0, "role": "Hito", "s": "2027-07-06", "e": "2027-07-06", "crit": true, "pk": "1.9.4", "h": 0, "nr": 0, "hol": 0}, {"id": "A42", "n": "Elaborar documentación y manuales, y traspasar la operación a TI", "pr": "H08", "d": 12, "role": "Arquitecto de Solución + Ingeniero DevOps / Cloud + Especialista Gestión del Cambio y Capacitación", "s": "2027-04-26", "e": "2027-05-11", "crit": false, "pk": "1.10.1", "h": 144, "nr": 3, "hol": 37}];
+const CUT = '2027-01-15';
+const ETAPAS = {'1.1':'Gestión del proyecto','1.2':'Diagnóstico y requisitos','1.3':'Diseño de la solución','1.4':'Plataforma base','1.5':'Integraciones corporativas','1.6':'Release 1: operación de obra','1.7':'Release 2: control económico','1.8':'Pruebas y calidad','1.9':'Piloto y gestión del cambio','1.10':'Transición a operación'};
+const PKGS = {'1.1.1':'Inicio y planificación','1.1.2':'Seguimiento y control','1.1.3':'Cierre del proyecto','1.2.1':'Diagnóstico de procesos actuales','1.2.2':'Requisitos, indicadores y backlog','1.3.1':'Arquitectura, integraciones y datos','1.3.2':'Diseño UX/UI','1.4.1':'Ambientes cloud','1.4.2':'Núcleo y app móvil offline','1.5.1':'Identidad y repositorio Microsoft','1.5.2':'Sistema de compras y ERP','1.6.1':'Módulo de avance de obra','1.6.2':'Módulo de observaciones técnicas','1.6.3':'Módulo de planos vigentes','1.7.1':'Módulo de materiales','1.7.2':'Módulo de subcontratos y estados de pago','1.7.3':'Tablero ejecutivo','1.8.1':'Plan de pruebas y calidad por sprint','1.8.2':'Pruebas de Release 1','1.8.3':'Pruebas de Release 2','1.9.1':'Gestión del cambio y preparación de obras','1.9.2':'Puesta en marcha de Release 1','1.9.3':'Puesta en marcha de Release 2','1.9.4':'Evaluación del piloto','1.10.1':'Documentación y traspaso a TI'};
+const TAR = {'Jefe de Proyecto':[30000,1],'Analista Funcional / de Negocio':[22000,1],'Arquitecto de Solución':[32000,1],'Diseñador UX/UI':[21000,1],'Desarrollador Backend':[24000,2],'Desarrollador Frontend/Móvil':[24000,2],'Desarrollador de Integraciones':[26000,1],'Analista de Datos / BI':[23000,1],'Analista QA':[18500,2],'Ingeniero DevOps / Cloud':[27000,1],'Especialista Gestión del Cambio y Capacitación':[19500,1]};
+const NL = [
+ ['Infraestructura cloud (dev, QA, prod)','Infraestructura y licencias',10,'mes',850000,['A13','A28']],
+ ['Licencias de herramientas del proyecto','Infraestructura y licencias',140,'usuario-mes',22000,['A03']],
+ ['Licencias de tablero BI (piloto)','Infraestructura y licencias',175,'usuario-mes',13000,['A25','A26','A40']],
+ ['Tablets rugerizadas para obra','Equipamiento',12,'unidad',480000,['A34']],
+ ['Kits de conectividad para obras','Equipamiento',3,'kit',950000,['A34']],
+ ['Soporte proveedor sistema de compras','Servicio externo',120,'hora',35000,['A10','A17']],
+ ['Soporte proveedor del ERP','Servicio externo',60,'hora',38000,['A18']],
+ ['Prueba de seguridad externa','Servicio externo',1,'servicio',4800000,['A32']],
+ ['Traslados y viáticos a obras piloto','Servicio externo',1,'global',3600000,['A05','A12','A35','A37','A40']]
+];
+const HOL = new Set(['2026-10-12','2026-12-08','2026-12-25','2027-01-01','2027-03-26','2027-05-21','2027-06-21','2027-06-28','2027-07-16']);
+// avance real simulado al corte
+const REAL = {A14:{re:'2027-01-06'},A17:{p:5},A19:{p:20},A20:{p:15},A21:{p:25},A25:{p:10},A28:{p:10},A34:{p:20},A03:{p:30}};
+const ACF = {A10:.95,A11:1.03,A12:.98,A13:1.06,A14:1.07,A15:1.02,A16:1.04,A07:1.05,A05:1.08,A21:1.1,A17:1.12};
+
+// ---------- fechas ----------
+const D = s => new Date(s+'T00:00:00Z');
+const iso = d => d.toISOString().slice(0,10);
+const fmt = s => s ? s.slice(8,10)+'-'+s.slice(5,7)+'-'+s.slice(2,4) : '—';
+const fmtL = s => s ? s.slice(8,10)+'-'+s.slice(5,7)+'-'+s.slice(0,4) : '—';
+const isW = d => { const w=d.getUTCDay(); return w>0 && w<6 && !HOL.has(iso(d)); };
+const addDays = (s,n) => { const d=D(s); d.setUTCDate(d.getUTCDate()+n); return iso(d); };
+function nextW(s){ let x=addDays(s,1); while(!isW(D(x))) x=addDays(x,1); return x; }
+function addW(s,n){ // s es día hábil de inicio; devuelve fin con n días hábiles incluido s
+  let x=s; while(!isW(D(x))) x=addDays(x,1); let c=1; while(c<n){ x=nextW(x); c++; } return x; }
+function wdCount(a,b){ if(b<a) return 0; let c=0,x=a; while(x<=b){ if(isW(D(x))) c++; x=addDays(x,1);} return c; }
+const money = n => (n<0?'−':'')+'$'+Math.abs(Math.round(n)).toLocaleString('es-CL');
+const mM = n => (n<0?'−':'')+'$'+(Math.abs(n)/1e6).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+'M';
+const pct = n => (Math.round(n*10)/10).toLocaleString('es-CL')+' %';
+
+// ---------- modelo ----------
+const byId = {}; ACTS.forEach(a=>{ byId[a.id]=a; a.ms = a.id[0]==='H'; a.preds = a.pr ? a.pr.split(',').map(x=>({id:x.trim(),t:'FS',lag:0})) : []; a.roles = a.ms?[]:a.role.split('+').map(r=>r.trim()); });
+// costo plan
+ACTS.forEach(a=>{ a.cost=0; a.roles.forEach(r=>{ a.cost += a.h/a.roles.length*TAR[r][0]; }); });
+NL.forEach(n=>{ const tot=n[2]*n[4]; n[5].forEach(id=>byId[id].cost += tot/n[5].length); });
+// % plan al corte
+function planPct(a,cut){ if(a.ms) return cut>=a.e?100:0; if(cut<a.s) return 0; if(cut>=a.e) return 100; return Math.min(100, wdCount(a.s,cut)/a.d*100); }
+ACTS.forEach(a=>{ a.pp = planPct(a,CUT); const r=REAL[a.id]||{}; a.p = r.p!=null ? r.p : (a.e<=CUT?100:(a.s>CUT?0:Math.round(a.pp))); if(a.ms) a.p = a.e<=CUT?100:0; a.rs = a.p>0 ? (r.rs||a.s) : null; a.re = a.p===100 ? (r.re||a.e) : null; });
+// programación proyectada (pase hacia adelante)
+for(let pass=0;pass<80;pass++){ let ch=false;
+  ACTS.forEach(a=>{ let ps, pe;
+    if(a.id==='A03'){ ps=a.s; pe=a.e; }
+    else if(a.p===100){ ps=a.rs||a.s; pe=a.re||a.e; if(a.ms){ let m=a.e; a.preds.forEach(p=>{const q=byId[p.id]; if(q&&q.pe&&q.pe>m) m=q.pe;}); ps=pe=m; } }
+    else if(a.p>0){ ps=a.rs; const rem=Math.max(1,Math.ceil(a.d*(1-a.p/100))); pe=addW(nextW(CUT),rem); if(pe<a.e && a.id!=='A28') pe=a.e; }
+    else { let es=a.s; a.preds.forEach(p=>{ const q=byId[p.id]; if(!q||!q.pe) return; const c = (q.ms||a.ms) ? (a.ms?q.pe:nextW(q.pe)) : nextW(q.pe); if(c>es) es=c; }); if(a.ms){ ps=pe=es; } else { ps=es; pe=addW(ps,a.d); } }
+    if(ps!==a.ps||pe!==a.pe){ a.ps=ps; a.pe=pe; ch=true; } });
+  if(!ch) break; }
+ACTS.forEach(a=>{ a.slip = a.pe>a.e ? wdCount(nextW(a.e),a.pe) : 0;
+  a.st = a.p===100 ? (a.re && a.re>a.e ? 'late-done':'done') : (a.p>0 ? (a.p < a.pp-8 ? 'late':'curso') : (a.slip>0?'risk':'pend'));
+  a.ev = a.cost*a.p/100; a.pv = a.cost*a.pp/100; a.ac = a.ev*(ACF[a.id]||1); });
+const STAT = {done:['Completada','t-ok'],'late-done':['Completada con atraso','t-warn'],curso:['En curso','t-info'],late:['Atrasada','t-crit'],risk:['Desplazada','t-warn'],pend:['No iniciada','t-mute']};
+const stTag = a => { const s = a.ms ? (a.p===100?(a.slip>0||a.e<a.pe?['Cumplido con atraso','t-warn']:['Cumplido','t-ok']):(a.slip>0?['En riesgo','t-warn']:['Pendiente','t-mute'])) : STAT[a.st]; return `<span class="tag ${s[1]}">${s[0]}</span>`; };
+// consolidación
+function cons(list){ const r={s:'9999',e:'0000',ps:'9999',pe:'0000',cost:0,ev:0,ac:0,pv:0,h:0}; list.forEach(a=>{ if(a.s<r.s) r.s=a.s; if(a.e>r.e) r.e=a.e; if(a.ps<r.ps) r.ps=a.ps; if(a.pe>r.pe) r.pe=a.pe; r.cost+=a.cost; r.ev+=a.ev; r.ac+=a.ac; r.pv+=a.pv; r.h+=a.h; }); r.p = r.cost? r.ev/r.cost*100 : 0; r.pp = r.cost? r.pv/r.cost*100:0; r.d = wdCount(r.s,r.e); return r; }
+const etOf = pk => pk.split('.').slice(0,2).join('.');
+const TOT = cons(ACTS);
+const SPI = TOT.ev/TOT.pv, CPI = TOT.ev/TOT.ac;
+const H10 = byId.H10;
+// código EDT de subactividad
+const cnt={}; ACTS.forEach(a=>{ if(a.ms) return; cnt[a.pk]=(cnt[a.pk]||0)+1; a.code=a.pk+'.'+cnt[a.pk]; });
+
+// ---------- navegación ----------
+const screens=[...document.querySelectorAll('.screen')];
+const nav=document.getElementById('nav'); let grp='';
+screens.forEach((s,i)=>{ if(s.dataset.group!==grp){ grp=s.dataset.group; nav.insertAdjacentHTML('beforeend',`<div class="nav-group">${grp}</div>`);} nav.insertAdjacentHTML('beforeend',`<a href="#${s.id}" data-i="${i}"><span class="n">${String(i+1).padStart(2,'0')}</span>${s.dataset.title}</a>`); });
+let cur=0;
+function show(i){ cur=Math.max(0,Math.min(screens.length-1,i)); screens.forEach((s,j)=>s.classList.toggle('on',j===cur)); nav.querySelectorAll('a').forEach((a,j)=>a.classList.toggle('on',j===cur)); document.getElementById('pgInfo').textContent=`Mockup ${cur+1} de ${screens.length} · ${screens[cur].dataset.title}`; if(location.hash!=='#'+screens[cur].id) history.replaceState(null,'','#'+screens[cur].id); window.scrollTo(0,0); if(screens[cur].id==='gantt') requestAnimationFrame(()=>{drawLinks(); scrollGanttToCut();}); }
+nav.addEventListener('click',e=>{ const a=e.target.closest('a'); if(!a) return; e.preventDefault(); show(+a.dataset.i); });
+document.getElementById('prev').onclick=()=>show(cur-1); document.getElementById('next').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{ if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return; if(e.key==='ArrowRight') show(cur+1); if(e.key==='ArrowLeft') show(cur-1); });
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(screens.findIndex(s=>s.id===b.dataset.go)));
+document.querySelectorAll('.role [data-role]').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.role [data-role]').forEach(x=>x.classList.toggle('on',x===b)); document.body.classList.toggle('consulta',b.dataset.role==='consulta'); document.getElementById('av').textContent = b.dataset.role==='consulta'?'DL':'KH'; });
+
+// ---------- bindings ----------
+const bind=(k,v,attr)=>document.querySelectorAll(`[data-bind="${k}"]`).forEach(el=> attr? el.style[attr]=v : el.textContent=v);
+bind('avw',TOT.p+'%','width'); bind('avr',pct(TOT.p));
+bind('a17pe',fmtL(byId.A17.pe));
+const succ = new Set(); (function walk(id){ ACTS.forEach(a=>{ if(a.preds.some(p=>p.id===id) && !succ.has(a.id)){ succ.add(a.id); walk(a.id);} }); })('A17');
+bind('nsucc',succ.size);
+
+// ---------- importar: vista previa ----------
+(function(){ const tb=document.querySelector('#prevTbl tbody'); let h='';
+  [['1.4','Etapa','Plataforma base'],['1.4.1','Actividad','Ambientes cloud'],['1.4.1.1','Subactividad','A13 · Provisionar ambientes cloud, CI/CD…',15],['1.4.2','Actividad','Núcleo y app móvil offline'],['1.4.2.1','Subactividad','A14 · Desarrollar núcleo: usuarios, roles…',14],['1.4.2.2','Subactividad','A15 · Desarrollar la app móvil offline…',18],['1.4.2','Hito','H04 · Plataforma base operativa',0],['1.5','Etapa','Integraciones corporativas'],['1.5.1','Actividad','Identidad y repositorio Microsoft'],['1.5.1.1','Subactividad','A16 · Integrar SSO y repositorio documental',18]].forEach(r=>{
+    const t={Etapa:'t-acc',Actividad:'t-info',Subactividad:'t-mute',Hito:'t-warn'}[r[1]];
+    h+=`<tr><td class="mono">${r[0]}</td><td><span class="tag ${t}">${r[1]}</span></td><td>${r[2]}</td><td class="num mono">${r[3]!=null?r[3]:'∑'}</td></tr>`; });
+  tb.innerHTML=h; })();
+
+// ---------- EDT ----------
+let edtOpen = new Set(['1.5','1.6']);
+function renderEDT(){
+  const tb=document.querySelector('#edtTbl tbody'); let h='';
+  const tr=(code,name,lvl,resp,c,isMs,ref)=>{ const lv={1:'Etapa',2:'Actividad',3:'Subactividad'}[lvl]; const tg = isMs?'<span class="tag t-warn">Hito</span>':`<span class="tag ${['','t-acc','t-info','t-mute'][lvl]}">${lv}</span>`;
+    const pad=(lvl-1)*18; const tog = lvl===1?`<button class="tg" data-et="${code}">${edtOpen.has(code)?'▾':'▸'}</button>`:'';
+    const lateC = c.p < c.pp-5 ? 'style="background:var(--warn)"':'';
+    return `<tr${lvl===1?' style="background:#faf8f4"':''}><td class="mono">${tog}${code}</td><td style="padding-left:${10+pad}px;${lvl<3?'font-weight:'+(lvl===1?600:500):''}">${name}</td><td>${tg}</td><td style="font-size:12.5px">${resp}</td><td class="num mono">${isMs?'0':c.d}</td><td class="mono">${fmt(c.s)}</td><td class="mono">${fmt(c.e)}</td><td class="num mono">${isMs?'—':money(c.cost)}</td><td class="num mono">${isMs?'—':money(c.ac)}</td><td><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="flex:1"><i ${lateC} style="width:${c.p}%${c.p<c.pp-5?';background:var(--warn)':''}"></i></div><span class="mono" style="width:38px;text-align:right">${Math.round(c.p)}%</span></div></td></tr>`; };
+  h += `<tr style="background:#f1eee8"><td class="mono"><b>1.0</b></td><td><b>Horizonte Conecta – Plataforma de gestión operacional de obras</b></td><td><span class="tag t-mute">Proyecto</span></td><td style="font-size:12.5px">Kevin Henríquez</td><td class="num mono">${TOT.d}</td><td class="mono">${fmt(TOT.s)}</td><td class="mono">${fmt(TOT.e)}</td><td class="num mono"><b>${money(TOT.cost)}</b></td><td class="num mono">${money(TOT.ac)}</td><td><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="flex:1"><i style="width:${TOT.p}%"></i></div><span class="mono" style="width:38px;text-align:right">${Math.round(TOT.p)}%</span></div></td></tr>`;
+  Object.keys(ETAPAS).forEach(et=>{ const la=ACTS.filter(a=>etOf(a.pk)===et); const c=cons(la);
+    h+=tr(et,ETAPAS[et],1,'—',c);
+    if(!edtOpen.has(et)) return;
+    Object.keys(PKGS).filter(k=>etOf(k)===et).forEach(pk=>{ const lp=ACTS.filter(a=>a.pk===pk); h+=tr(pk,PKGS[pk],2,'—',cons(lp));
+      lp.forEach(a=>{ h+=tr(a.ms?a.id:a.code,(a.ms?'':`<span class="mono muted" style="font-size:11.5px">${a.id}</span> `)+a.n,3,a.ms?'—':a.roles.map(r=>r.replace('Desarrollador','Dev.').replace('Especialista Gestión del Cambio y Capacitación','Esp. Gestión del Cambio')).join(' + '),{d:a.d,s:a.s,e:a.e,cost:a.cost,ac:a.ac,p:a.p,pp:a.pp},a.ms); }); }); });
+  tb.innerHTML=h;
+  tb.querySelectorAll('[data-et]').forEach(b=>b.onclick=()=>{ const k=b.dataset.et; edtOpen.has(k)?edtOpen.delete(k):edtOpen.add(k); renderEDT(); });
+}
+document.querySelector('[data-act="edt-toggle"]').onclick=e=>{ const all=edtOpen.size===10; edtOpen=new Set(all?[]:Object.keys(ETAPAS)); e.target.textContent=all?'Expandir todo':'Contraer todo'; renderEDT(); };
+document.getElementById('edtStats').innerHTML = [
+  ['Estructura','10 · 25 · 42','etapas · actividades · subactividades'],
+  ['Costo base consolidado',money(TOT.cost),'coincide con el presupuesto (sin contingencia)'],
+  ['Avance real vs plan',`${pct(TOT.p)} / ${pct(TOT.pp)}`,'ponderado por costo'],
+  ['Fin proyectado',fmtL(H10.pe),`base ${fmtL(H10.e)} · comprometida 04-08-2027`]
+].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="v" style="font-size:20px">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+renderEDT();
+
+// ---------- Actividades ----------
+let actF='all';
+function renderActs(){
+  const tb=document.querySelector('#actTbl tbody');
+  const L = ACTS.filter(a=> actF==='all' || (actF==='curso'&&a.p>0&&a.p<100) || (actF==='late'&&(a.st==='late'||a.st==='late-done'||a.slip>0)) || (actF==='crit'&&a.crit) || (actF==='ms'&&a.ms));
+  tb.innerHTML = L.map(a=>`<tr${a.id==='A17'?' style="background:#fff7ef"':''}><td class="mono"><b>${a.id}</b></td><td class="mono muted">${a.ms?a.pk:a.code}</td><td class="nm" title="${a.n}">${a.crit?'<span style="color:var(--crit)">●</span> ':''}${a.n.replace('Hito: ','')}</td><td class="num mono">${a.d}</td><td class="mono">${fmt(a.s)}</td><td class="mono">${fmt(a.e)}</td><td class="mono">${fmt(a.rs)}</td><td class="mono" ${a.pe>a.e?'style="color:var(--crit)"':''}>${a.re?fmt(a.re):(a.p>0||a.slip>0?fmt(a.pe)+' <span class="muted">p</span>':'—')}</td><td>${a.preds.map(p=>`<span class="dep">${p.id} ${p.t}</span>`).join(' ')||'<span class="muted">—</span>'}</td><td class="num mono">${a.hol}</td><td>${stTag(a)}</td></tr>`).join('');
+}
+document.getElementById('actFilters').addEventListener('click',e=>{ const b=e.target.closest('[data-f]'); if(!b) return; actF=b.dataset.f; document.querySelectorAll('#actFilters [data-f]').forEach(x=>x.classList.toggle('on',x===b)); renderActs(); });
+// holgura real desde el archivo
+(function(){ })();
+renderActs();
+
+// ---------- Gantt ----------
+const G0='2026-10-05', G1='2027-07-26', PX=4.2, LW=400, RH=28;
+const xOf = s => (D(s)-D(G0))/864e5*PX;
+const TLW = xOf(G1);
+let gOpen=new Set(['1.4','1.5','1.6','1.7']), gPkOpen=null, gBase=true, gLinks=true, gCritOnly=false;
+function ganttRows(){ const rows=[];
+  Object.keys(ETAPAS).forEach(et=>{ const la=ACTS.filter(a=>etOf(a.pk)===et); if(gCritOnly && !la.some(a=>a.crit)) return; rows.push({lv:1,code:et,name:ETAPAS[et],c:cons(la)});
+    if(!gOpen.has(et)) return;
+    Object.keys(PKGS).filter(k=>etOf(k)===et).forEach(pk=>{ const lp=ACTS.filter(a=>a.pk===pk&&(!gCritOnly||a.crit)); if(!lp.length) return; rows.push({lv:2,code:pk,name:PKGS[pk],c:cons(ACTS.filter(a=>a.pk===pk))}); lp.forEach(a=>rows.push({lv:3,a})); }); });
+  return rows; }
+function renderGantt(){
+  const w=document.getElementById('gwrap'); const rows=ganttRows();
+  let head=`<div class="ghead" style="height:40px"><div class="gl" style="height:40px"><span class="c1">EDT</span><span class="c2">Nombre</span><span class="c3">Días</span><span class="c4">%</span></div><div class="gr" style="width:${TLW}px;height:40px">`;
+  const MN=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  let m=D(G0); m.setUTCDate(1); while(iso(m)<G1){ const s=iso(m)<G0?G0:iso(m); head+=`<div class="gm" style="left:${xOf(s)}px">${MN[m.getUTCMonth()]} ${String(m.getUTCFullYear()).slice(2)}</div>`; m.setUTCMonth(m.getUTCMonth()+1); }
+  for(let x=G0;x<G1;x=addDays(x,7)) head+=`<div class="gw" style="left:${xOf(x)}px">${x.slice(8)}</div>`;
+  head+='</div></div>';
+  let grid=''; for(let x=G0;x<G1;x=addDays(x,7)) grid+=`<div class="gweek" style="left:${xOf(x)}px"></div>`;
+  HOL.forEach(h=>{ grid+=`<div class="ghol" style="left:${xOf(h)}px;width:${PX}px"></div>`; });
+  let body='';
+  rows.forEach((r,i)=>{ let L,R='';
+    if(r.lv<3){ const c=r.c; L=`<span class="c1">${r.lv===1?`<button class="tg" data-g="${r.code}">${gOpen.has(r.code)?'▾':'▸'}</button>`:''}${r.code}</span><span class="c2" title="${r.name}">${r.name}</span><span class="c3">${c.d}</span><span class="c4">${Math.round(c.p)}%</span>`;
+      R=`<div class="gsum ${r.lv===2?'pk':''}" style="left:${xOf(c.ps)}px;width:${Math.max(4,xOf(addDays(c.pe,1))-xOf(c.ps))}px"></div>`; if(gBase && r.lv===1) R+=`<div class="gbase" style="left:${xOf(c.s)}px;width:${xOf(addDays(c.e,1))-xOf(c.s)}px;top:21px;opacity:.6"></div>`; }
+    else { const a=r.a; L=`<span class="c1">${a.id}</span><span class="c2" title="${a.n}">${a.n.replace('Hito: ','')}</span><span class="c3">${a.d}</span><span class="c4" style="color:${a.st==='late'?'var(--crit)':'inherit'}">${a.p}%</span>`;
+      if(a.ms){ const cls = a.p===100?'done':(a.slip>0?'risk':''); R=`<div class="gms ${cls}" style="left:${xOf(a.pe)-2}px" title="${a.id} ${fmtL(a.pe)}"></div>`; if(gBase && a.pe!==a.e) R+=`<div class="gms" style="left:${xOf(a.e)-2}px;background:#fff;box-shadow:0 0 0 1px var(--plan);top:9px;width:10px;height:10px"></div>`; }
+      else { const x1=xOf(a.ps), x2=xOf(addDays(a.pe,1)); const cl = a.p===100 ? 'done'+(a.crit?' critb':'') : (a.st==='late'?'late':(a.crit?'crit':'')) + ' fut';
+        R=`<div class="gb ${cl}" style="left:${x1}px;width:${Math.max(4,x2-x1)}px" title="${a.id} · ${fmtL(a.ps)} → ${fmtL(a.pe)} · ${a.p}%"><i style="width:${a.p}%"></i></div>`;
+        if(gBase) R+=`<div class="gbase" style="left:${xOf(a.s)}px;width:${xOf(addDays(a.e,1))-xOf(a.s)}px"></div>`; } }
+    body+=`<div class="grow lv${r.lv}" data-row="${r.lv===3?r.a.id:''}"><div class="gl">${L}</div><div class="gr" style="width:${TLW}px">${R}</div></div>`; });
+  w.innerHTML = head.replace('<div class="ghead"','<div class="ghead" style="width:'+(LW+TLW)+'px"') + `<div style="position:relative;width:${LW+TLW}px" id="gbody"><div style="position:absolute;left:${LW}px;top:0;bottom:0;width:${TLW}px;pointer-events:none">${grid}<div class="gtoday" style="left:${xOf(CUT)}px"><span>corte 15-01</span></div></div>${body}<svg id="glinks" style="position:absolute;left:${LW}px;top:0;pointer-events:none;overflow:visible" width="${TLW}" height="${rows.length*RH}"></svg></div>`;
+  w.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{ const k=b.dataset.g; gOpen.has(k)?gOpen.delete(k):gOpen.add(k); renderGantt(); drawLinks(); });
+  document.getElementById('gInfo').innerHTML = `Fin proyectado <b class="mono">${fmtL(H10.pe)}</b> · base <span class="mono">${fmtL(H10.e)}</span> · desvío <b style="color:var(--crit)">+${H10.slip} d háb.</b>`;
+  if(screens[cur]&&screens[cur].id==='gantt') drawLinks();
+}
+function drawLinks(){ const svg=document.getElementById('glinks'); if(!svg) return; if(!gLinks){ svg.innerHTML=''; return; }
+  const idx={}; document.querySelectorAll('#gbody .grow').forEach((r,i)=>{ if(r.dataset.row) idx[r.dataset.row]=i; });
+  let p=''; ACTS.forEach(a=>{ if(idx[a.id]==null) return; a.preds.forEach(q=>{ const b=byId[q.id]; if(!b||idx[b.id]==null) return;
+    const y1=idx[b.id]*RH+14, y2=idx[a.id]*RH+14; const x1=xOf(addDays(b.pe,1))+(b.ms?4:0); const x2=xOf(a.ps)+(a.ms?3:0); const crit=a.crit&&b.crit;
+    const mid = Math.max(x1+6, Math.min(x2-6, x1+6));
+    p+=`<path d="M${x1} ${y1} H${mid} V${y2+(y2>y1?-6:6)} V${y2} H${x2-1}" fill="none" stroke="${crit?'#c23b2c':'#a7adb3'}" stroke-width="${crit?1.3:1}" opacity="${crit?.85:.6}" marker-end="url(#${crit?'arrc':'arr'})"/>`; }); });
+  svg.innerHTML=p; }
+function scrollGanttToCut(){ const w=document.getElementById('gwrap'); w.scrollLeft = Math.max(0, xOf('2026-11-16')); }
+document.getElementById('gBase').onclick=e=>{ gBase=!gBase; e.target.classList.toggle('on',gBase); e.target.textContent=(gBase?'✓ ':'')+'Línea base'; renderGantt(); };
+document.getElementById('gLinks').onclick=e=>{ gLinks=!gLinks; e.target.classList.toggle('on',gLinks); e.target.textContent=(gLinks?'✓ ':'')+'Vínculos'; drawLinks(); };
+document.getElementById('gCrit').onclick=e=>{ gCritOnly=!gCritOnly; e.target.classList.toggle('on',gCritOnly); if(gCritOnly) gOpen=new Set(Object.keys(ETAPAS)); renderGantt(); };
+document.querySelector('[data-act="g-expand"]').onclick=e=>{ const all=gOpen.size===10; gOpen=new Set(all?[]:Object.keys(ETAPAS)); e.target.textContent=all?'Expandir todo':'Contraer todo'; renderGantt(); };
+renderGantt();
+
+// ---------- Recursos ----------
+(function(){
+  const H={}; ACTS.forEach(a=>a.roles.forEach(r=>{ H[r]=(H[r]||0)+a.h/a.roles.length; }));
+  let lab=0; document.querySelector('#profTbl tbody').innerHTML = Object.keys(TAR).map(r=>{ const c=H[r]*TAR[r][0]; lab+=c; return `<tr><td>${r}</td><td class="num">${TAR[r][1]}</td><td class="num mono">${money(TAR[r][0])}</td><td class="num mono">${Math.round(H[r]).toLocaleString('es-CL')}</td><td class="num mono">${money(c)}</td></tr>`; }).join('') + `<tr><td colspan="4"><b>Total recursos humanos</b></td><td class="num mono"><b>${money(lab)}</b></td></tr>`;
+  let nl=0; const tc={'Equipamiento':'t-acc','Infraestructura y licencias':'t-info','Servicio externo':'t-warn'};
+  document.querySelector('#nlTbl tbody').innerHTML = NL.map(n=>{ const t=n[2]*n[4]; nl+=t; return `<tr><td>${n[0]}<div style="margin-top:3px"><span class="tag ${tc[n[1]]}">${n[1]}</span> <span class="muted mono" style="font-size:11px">${n[5].join(', ')}</span></div></td><td class="num mono" style="white-space:nowrap">${n[2]} ${n[3]}</td><td class="num mono">${money(n[4])}</td><td class="num mono">${money(t)}</td></tr>`; }).join('') + `<tr><td colspan="3"><b>Total no laborales</b></td><td class="num mono"><b>${money(nl)}</b></td></tr>`;
+  document.getElementById('costTiles').innerHTML = [
+    ['Costo base planificado',money(TOT.cost),`RR.HH. ${mM(lab)} · no laborales ${mM(nl)}`,'d-info'],
+    ['Valor planificado al corte (PV)',money(TOT.pv),pct(TOT.pp)+' del costo base','d-info'],
+    ['Costo real al corte (AC)',money(TOT.ac),`valor ganado (EV) ${money(TOT.ev)}`, CPI>=.95?'d-ok':'d-warn'],
+    ['Variación de costo (CV)',money(TOT.ev-TOT.ac),`CPI ${CPI.toFixed(2).replace('.',',')}`, CPI>=.95?'d-ok':'d-warn']
+  ].map(k=>`<div class="card kpi"><div class="l"><span class="dot ${k[3]}"></span>${k[0]}</div><div class="v" style="font-size:21px">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+  function renderHeat(sim){
+  const weeks=[]; for(let x='2026-12-28';x<'2027-04-12';x=addDays(x,7)) weeks.push(x);
+  const roles=Object.keys(TAR); const load={}; roles.forEach(r=>load[r]=weeks.map(()=>0));
+  ACTS.forEach(a=>{ if(a.ms||!a.d) return; let d=a.d, ps=a.ps, pe=a.pe, rl=a.roles;
+    if(sim && a.id==='A18'){ d=9; pe=addW(ps,9); rl=['Desarrollador de Integraciones']; }
+    const hpd=a.h/d; rl.forEach(r=>{ weeks.forEach((w,i)=>{ const we=addDays(w,4); const s=ps>w?ps:w, e=pe<we?pe:we; const n=wdCount(s,e); if(n>0) load[r][i]+=n*hpd/rl.length; }); }); });
+  let h='<tr><td></td>'+weeks.map(w=>`<td class="mono muted" style="font-size:10px;text-align:center;padding:2px">${w.slice(8)}/${w.slice(5,7)}</td>`).join('')+'</tr>'; const over=[];
+  roles.forEach(r=>{ h+=`<tr><td style="font-size:12px;padding-right:10px;white-space:nowrap">${r.replace('Especialista Gestión del Cambio y Capacitación','Esp. Gestión del Cambio')}</td>`+weeks.map((w,i)=>{ const cap=TAR[r][1]*8*wdCount(w,addDays(w,4)); const v=cap?load[r][i]/cap*100:0; if(v>100.5) over.push([r,w,v]); const bg = v===0?'#f4f2ee': v>100.5?'#e9897c': v>85?'#f4c870':'#b9dccf'; return `<td class="h" style="background:${bg};${v>100.5?'color:#fff;font-weight:600':''}">${v?Math.round(v):''}</td>`; }).join('')+'</tr>'; });
+  document.getElementById('heat').innerHTML=h;
+  const oa=document.getElementById('overAlert');
+  oa.innerHTML = (over.length ? `<div class="alert crit"><svg class="ico"><use href="#i-warn"/></svg><div><b>Sobreasignación:</b> Desarrollador de Integraciones (dotación 1) al <b>${Math.round(Math.max(...over.map(o=>o[2])))} %</b> entre ${fmt(over[0][1])} y ${fmt(addDays(over.at(-1)[1],4))} por A18 con 2 personas. Se sugiere contratar un 2° integrador o volver a 1 persona.</div></div>` : `<div class="alert ok"><svg class="ico"><use href="#i-ok"/></svg><div>Sin sobreasignación en el periodo con la planificación vigente.</div></div>`)
+   + `<div style="margin-top:8px"><button class="btn sm" id="simBtn">${sim?'↺ Volver a la planificación vigente':'▶ Simular escenario 2: A18 con 2 Desarrolladores de Integraciones'}</button></div>`;
+  document.getElementById('simBtn').onclick=()=>renderHeat(!sim);
+  }
+  renderHeat(false);
+  document.getElementById('holList').innerHTML=[...HOL].map(d=>`<span class="chip mono">${fmt(d)}</span>`).join('');
+})();
+
+// ---------- Hitos ----------
+(function(){ const M=ACTS.filter(a=>a.ms).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true}));
+  const crit={H01:'Acta de kick-off firmada',H02:'Acta de comité con línea base de alcance',H03:'Arquitectura y prototipo aprobados',H04:'Núcleo, app offline y SSO en QA',H05:'UAT Release 1 aprobada',H06:'R1 en producción en 3 obras',H07:'UAT R2 y prueba de seguridad aprobadas',H08:'R2 en producción en 3 obras',H09:'Informe de evaluación aprobado',H10:'Acta de cierre firmada'};
+  const ev={H01:'Acta_kickoff.pdf',H02:'Acta_alcance.pdf',H03:'Arquitectura_v1.pdf',H04:'Informe_QA_base.pdf'};
+  document.querySelector('#msTbl tbody').innerHTML = M.map(a=>`<tr><td class="mono"><b>${a.id}</b></td><td>${a.n.replace('Hito: ','')}</td><td class="mono muted">${a.pk}</td><td class="mono">${fmt(a.e)}</td><td class="mono" ${a.slip?'style="color:var(--crit)"':''}>${fmt(a.pe)}${a.p<100?' <span class="muted">p</span>':''}</td><td class="num mono">${a.slip?'+'+a.slip+' d':'0'}</td><td style="font-size:12.5px">${crit[a.id]}</td><td>${ev[a.id]?`<span class="dep">📎 ${ev[a.id]}</span>`:'<span class="muted">—</span>'}</td><td>${stTag(a)}</td></tr>`).join('');
+  const t0=D('2026-10-01'), t1=D('2027-07-31'); const pos=s=>((D(s)-t0)/(t1-t0)*100).toFixed(2);
+  document.getElementById('msTl').innerHTML = '<div class="ln"></div>'+M.map((a,i)=>`<div class="m ${a.p===100?'done':(a.slip?'risk':'')} ${i%2?'up':''}" style="left:${pos(a.pe)}%">${i%2?`<b>${a.id}</b><span class="muted">${fmt(a.pe)}</span><div class="dm"></div>`:`<div class="dm"></div><b>${a.id}</b><span class="muted">${fmt(a.pe)}</span>`}</div>`).join('');
+  const done=M.filter(a=>a.p===100), ontime=done.filter(a=>a.pe<=a.e), risk=M.filter(a=>a.p<100&&a.slip>0);
+  document.getElementById('msTiles').innerHTML = [
+    ['Hitos cumplidos',`${done.length} / ${M.length}`,'al corte 15-01-2027','d-info'],
+    ['Cumplidos a tiempo',pct(ontime.length/done.length*100),`${ontime.length} de ${done.length} · meta ≥ 90 %`, ontime.length===done.length?'d-ok':'d-warn'],
+    ['Hitos en riesgo',risk.length,'desplazados por la ruta crítica', risk.length?'d-crit':'d-ok'],
+    ['Desviación de H10',`+${H10.slip} d`,`proyectado ${fmtL(H10.pe)}`, H10.slip?'d-warn':'d-ok']
+  ].map(k=>`<div class="card kpi"><div class="l"><span class="dot ${k[3]}"></span>${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+  window.MSK={done,ontime,risk,M};
+})();
+
+// ---------- KPI ----------
+const late = ACTS.filter(a=>!a.ms && a.st==='late');
+const started = ACTS.filter(a=>!a.ms && a.pp>0);
+const KP = [
+ ['P01','Índice de desempeño del cronograma (SPI)','EV / PV','≥ 0,95',SPI.toFixed(2).replace('.',','),SPI>=.95?'ok':SPI>=.9?'warn':'crit',[1,1,.99,1.01,.98,.97,.96,SPI]],
+ ['P02','Índice de desempeño de costo (CPI)','EV / AC','≥ 0,95',CPI.toFixed(2).replace('.',','),CPI>=.95?'ok':CPI>=.9?'warn':'crit',[1,.99,.98,.98,.97,.97,.96,CPI]],
+ ['P03','Variación del cronograma (SV)','EV − PV','≥ 0',mM(TOT.ev-TOT.pv),TOT.ev>=TOT.pv?'ok':'warn',[0,0,-.1,.1,-.2,-.4,-.6,(TOT.ev-TOT.pv)/1e6]],
+ ['P04','Variación de costo (CV)','EV − AC','≥ 0',mM(TOT.ev-TOT.ac),TOT.ev>=TOT.ac?'ok':'warn',[0,-.1,-.2,-.3,-.5,-.6,-.7,(TOT.ev-TOT.ac)/1e6]],
+ ['P05','Desviación de avance físico','% real − % plan','≥ −2 pp',(TOT.p-TOT.pp).toFixed(1).replace('.',',')+' pp',TOT.p-TOT.pp>=-2?'ok':'warn',[0,0,-.2,.1,-.4,-.8,-1.1,TOT.p-TOT.pp]],
+ ['P06','Actividades atrasadas','atrasadas / iniciadas × 100','≤ 10 %',pct(late.length/started.length*100),late.length/started.length<=.1?'ok':'warn',[0,0,5,0,4,4,7,late.length/started.length*100]],
+ ['P07','Hitos cumplidos a tiempo','hitos a tiempo / hitos vencidos × 100','≥ 90 %',pct(MSK.ontime.length/MSK.done.length*100),MSK.ontime.length===MSK.done.length?'ok':'warn',[100,100,100,100,100,100,100,MSK.ontime.length/MSK.done.length*100]],
+ ['P08','Desviación del hito de cierre','fecha proy. H10 − fecha base','0 días','+'+H10.slip+' d',H10.slip?'warn':'ok',[0,0,0,0,0,0,1,H10.slip]]
+];
+const KC = [
+ ['C01','Solicitudes registradas','count(solicitudes)','—','5','ok',[0,1,1,2,2,3,4,5]],
+ ['C02','Tasa de aprobación','aprobadas / decididas × 100','—','50 %','ok',[0,0,0,0,100,50,50,50]],
+ ['C03','Tasa de rechazo','rechazadas / decididas × 100','—','50 %','ok',[0,0,0,0,0,50,50,50]],
+ ['C04','Tiempo medio de ciclo','prom(fecha cierre − registro)','≤ 7 d','6,5 d','ok',[0,0,0,0,5,6,6.5,6.5]],
+ ['C05','Tiempo medio de evaluación de impacto','prom(fin etapa 4 − inicio etapa 4)','≤ 3 d','3,4 d','warn',[0,0,2,2,3,3,3.2,3.4]],
+ ['C06','Impacto acumulado en costo','Σ Δcosto aprobado','≤ 10 % contingencia','$1,4M','ok',[0,0,0,0,1.4,1.4,1.4,1.4]],
+ ['C07','Impacto acumulado en plazo','Σ Δplazo aprobado (días)','≤ 16 d (reserva)','+2 d','ok',[0,0,0,0,2,2,2,2]],
+ ['C08','Solicitudes con evidencia completa','con evidencias / total × 100','100 %','80 %','warn',[0,100,100,100,100,100,75,80]],
+ ['C09','Solicitudes fuera de SLA','abiertas con días en etapa > SLA','0','1','crit',[0,0,0,0,0,0,1,1]],
+ ['C10','Consumo de contingencia','Δcosto aprobado / contingencia × 100','≤ 50 %','6,6 %','ok',[0,0,0,0,6.6,6.6,6.6,6.6],'Adicional'],
+ ['C11','Índice de adopción','usuarios activos / usuarios capacitados × 100','≥ 80 %','—','info',[0,0,0,0,0,0,0,0],'Adicional'],
+ ['C12','Cobertura de capacitación','usuarios capacitados / usuarios objetivo × 100','100 % antes de R1','0 %','info',[0,0,0,0,0,0,0,0],'Adicional']
+];
+function spark(v,st){ const mx=Math.max(...v.map(Math.abs))||1, mn=Math.min(...v,0); const W=80,H=22; const xs=v.map((_,i)=>i/(v.length-1)*W); const ys=v.map(x=> H-2-((x-mn)/((mx-mn)||1))*(H-4)); const col={ok:'#2f8a57',warn:'#c98a10',crit:'#c23b2c',info:'#2f63a0'}[st]; return `<svg width="${W}" height="${H}"><polyline fill="none" stroke="${col}" stroke-width="1.5" points="${xs.map((x,i)=>x+','+ys[i].toFixed(1)).join(' ')}"/><circle cx="${xs.at(-1)}" cy="${ys.at(-1)}" r="2.5" fill="${col}"/></svg>`; }
+function renderKPI(set){ const L=set==='p'?KP:KC; const nm={ok:['En meta','t-ok'],warn:['Alerta','t-warn'],crit:['Crítico','t-crit'],info:['Sin datos aún','t-info']};
+  document.querySelector('#kpiTbl tbody').innerHTML = L.map(k=>`<tr${k[0]==='P02'?' style="background:#fff7ef"':''}><td class="mono"><b>${k[0]}</b></td><td>${k[1]}${k[7]?` <span class="tag t-acc" style="margin-left:4px">${k[7]}</span>`:''}</td><td class="mono" style="font-size:11.5px">${k[2]}</td><td class="mono" style="font-size:12px">${k[3]}</td><td class="num mono"><b>${k[4]}</b></td><td>${spark(k[6],k[5])}</td><td><span class="tag ${nm[k[5]][1]}">${nm[k[5]][0]}</span></td></tr>`).join(''); }
+document.querySelectorAll('[data-kt]').forEach(b=>b.onclick=()=>{ document.querySelectorAll('[data-kt]').forEach(x=>x.classList.toggle('on',x===b)); renderKPI(b.dataset.kt); });
+renderKPI('p');
+(function(){ const v=KP[1][6], lb=['20-11','04-12','18-12','25-12','01-01','08-01','11-01','15-01']; document.getElementById('cpiHist').innerHTML=v.map(x=>`<div style="height:${(x-.85)/.2*100}%;background:${x>=.95?'#9fd0b4':x>=.9?'#f1cf7d':'#e9897c'}"><span>${x.toFixed(2).replace('.',',')}</span></div>`).join(''); document.getElementById('cpiHistL').innerHTML=lb.map(l=>`<span style="font-size:9.5px">${l}</span>`).join(''); })();
+
+// ---------- Cambios ----------
+const STAGES=['Registro','Revisión inicial','Clasificación y prioridad','Análisis de impacto','Revisión del comité','Decisión','Planificación del cambio','Implementación','Verificación','Cierre y línea base'];
+const SC=[
+ ['SC-01','Incorporar módulo de Prevención de Riesgos','Alcance','Media','Prevención de Riesgos','K. Henríquez',10,'+38 d','+$18,4M',3,['Rechazada','t-crit'],true],
+ ['SC-02','Soporte adicional del proveedor de compras para A17','Recursos','Alta','Desarrollador de Integraciones','K. Henríquez',10,'+2 d','+$1,4M',4,['Cerrada · aplicada','t-ok']],
+ ['SC-03','Agregar 2 tablets para la obra industrial','Costo','Baja','Jefe de obra Rancagua','D. López',4,'0 d','+$960.000',0,['En evaluación','t-info']],
+ ['SC-04','Tablero ejecutivo exportable a PDF para el Directorio','Alcance','Media','Gerencia de Operaciones','K. Henríquez',5,'+4 d','+$736.000',3,['En comité','t-warn']],
+ ['SC-05','Notificaciones push de observaciones abiertas','Alcance','Media','Oficina técnica','C. Pérez',2,'—','—',1,['Registrada','t-mute']]
+];
+document.querySelector('#scTbl tbody').innerHTML = SC.map(s=>`<tr${s[0]==='SC-04'?' style="background:#fff7ef;cursor:pointer" data-go2="cambio"':''}><td class="mono"><b>${s[0]}</b></td><td style="max-width:280px">${s[1]}</td><td><span class="tag t-acc">${s[2]}</span></td><td>${s[3]}</td><td style="font-size:12.5px">${s[4]}</td><td style="font-size:12.5px">${s[5]}</td><td><div style="display:flex;align-items:center;gap:8px"><div class="bar" style="width:70px"><i style="width:${s[6]*10}%;background:${s[11]?'var(--crit)':'var(--info)'}"></i></div><span class="mono" style="font-size:11.5px">${s[6]}/10</span></div><div class="muted" style="font-size:11px">${STAGES[s[6]-1]}</div></td><td class="num mono">${s[7]}</td><td class="num mono">${s[8]}</td><td class="num mono">${s[9]}</td><td><span class="tag ${s[10][1]}">${s[10][0]}</span></td></tr>`).join('');
+document.querySelectorAll('[data-go2]').forEach(r=>r.onclick=()=>show(screens.findIndex(s=>s.id==='cambio')));
+document.getElementById('flow10').innerHTML = STAGES.map(s=>`<div class="st">${s}</div>`).join('');
+document.getElementById('flowSC').innerHTML = STAGES.map((s,i)=>`<div class="st ${i<4?'done':i===4?'cur':''}">${s}</div>`).join('');
+const fc=[0,1,0,1,1,0,0,0,0,2]; const fmax=Math.max(...fc);
+document.getElementById('funnel').innerHTML = STAGES.map((s,i)=>`<div class="r"><span class="lbl-n">${i+1}</span><div class="b"><i style="width:${fc[i]?Math.max(18,fc[i]/fmax*100):0}%"></i><span style="color:${fc[i]?'#fff':'var(--muted)'}">${s}</span></div><span class="mono" style="text-align:right">${fc[i]}</span></div>`).join('');
+document.getElementById('stageTime').innerHTML = [['Revisión inicial',.8],['Clasificación',1.2],['Análisis de impacto',3.4],['Comité',1.5],['Implementación',4],['Verificación y cierre',1]].map(r=>`<div class="r"><span>${r[0]}</span><div class="tr"><div class="a ${r[1]>3?'late':''}" style="width:${r[1]/5*100}%"></div></div><span class="mono">${r[1].toLocaleString('es-CL')} d</span></div>`).join('');
+
+// ---------- Tablero del proyecto ----------
+(function(){
+  const tiles=[
+   ['Avance real',pct(TOT.p),`plan ${pct(TOT.pp)}`,TOT.p>=TOT.pp-1?'d-ok':'d-warn'],
+   ['SPI',SPI.toFixed(2).replace('.',','),'meta ≥ 0,95',SPI>=.95?'d-ok':'d-warn'],
+   ['CPI',CPI.toFixed(2).replace('.',','),'meta ≥ 0,95',CPI>=.95?'d-ok':'d-warn'],
+   ['Costo real',mM(TOT.ac),`de ${mM(TOT.cost)} base`,'d-info'],
+   ['Hitos a tiempo',`${MSK.ontime.length}/${MSK.done.length}`,`${MSK.risk.length} en riesgo`,MSK.risk.length?'d-warn':'d-ok'],
+   ['Atrasadas',late.length,`fin proy. ${fmt(H10.pe)}`,late.length?'d-crit':'d-ok']];
+  document.getElementById('dpTiles').innerHTML=tiles.map(k=>`<div class="card kpi"><div class="l"><span class="dot ${k[3]}"></span>${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+  // curva S
+  const pts=[]; for(let m=D('2026-10-31'); iso(m)<'2027-08-01'; m=new Date(Date.UTC(m.getUTCFullYear(),m.getUTCMonth()+2,0))) pts.push(iso(m));
+  pts.push(CUT,'2026-10-05'); pts.sort();
+  const pv=pts.map(t=>ACTS.reduce((s,a)=>s+a.cost*planPct(a,t)/100,0));
+  const evS=pts.map(t=> t>CUT?null: ACTS.reduce((s,a)=>s+a.cost*Math.min(planPct(a,t),a.p)/100,0));
+  const acS=pts.map((t,i)=> evS[i]==null?null: ACTS.reduce((s,a)=>s+a.cost*Math.min(planPct(a,t),a.p)/100*(ACF[a.id]||1),0));
+  const W=640,Hh=230,pl=56,pb=26,pt=10; const mx=TOT.cost; const T0=D('2026-10-05'),T1=D(pts.at(-1)); const X=i=>pl+(D(pts[i])-T0)/(T1-T0)*(W-pl-10); const Y=v=>pt+(1-v/mx)*(Hh-pt-pb);
+  const line=(arr,col,dash)=>`<polyline fill="none" stroke="${col}" stroke-width="2.2" ${dash?'stroke-dasharray="5 4"':''} points="${arr.map((v,i)=>v==null?null:X(i)+','+Y(v).toFixed(1)).filter(Boolean).join(' ')}"/>`;
+  let g=''; [0,.25,.5,.75,1].forEach(f=>{ g+=`<line x1="${pl}" x2="${W-10}" y1="${Y(mx*f)}" y2="${Y(mx*f)}" stroke="#ece8e1"/><text x="${pl-8}" y="${Y(mx*f)+4}" text-anchor="end" font-size="10" fill="#6c737a" font-family="IBM Plex Mono">${Math.round(mx*f/1e6)}M</text>`; });
+  const MN=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  pts.forEach((t,i)=>{ if(t!==CUT&&t!=='2026-10-05') g+=`<text x="${X(i)}" y="${Hh-8}" text-anchor="middle" font-size="10" fill="#6c737a">${MN[+t.slice(5,7)-1]}</text>`; });
+  const ci=pts.indexOf(CUT);
+  g+=`<line x1="${X(ci)}" x2="${X(ci)}" y1="${pt}" y2="${Hh-pb}" stroke="#d96a17" stroke-dasharray="3 3"/><text x="${X(ci)+4}" y="${pt+10}" font-size="10" fill="#9a4a0e" font-family="IBM Plex Mono">corte</text>`;
+  g+=line(pv,'#9aa1a8',true)+line(evS,'#2e7d6b')+line(acS,'#d96a17');
+  document.getElementById('scurve').innerHTML=`<svg viewBox="0 0 ${W} ${Hh}" width="100%">${g}</svg><div class="legend" style="border:0;padding:4px 0 0"><span><i class="lg" style="background:#9aa1a8;height:3px"></i>PV planificado</span><span><i class="lg" style="background:#2e7d6b;height:3px"></i>EV ganado ${mM(TOT.ev)}</span><span><i class="lg" style="background:#d96a17;height:3px"></i>AC real ${mM(TOT.ac)}</span></div>`;
+  // barras por etapa
+  document.getElementById('etBars').innerHTML = Object.keys(ETAPAS).map(et=>{ const c=cons(ACTS.filter(a=>etOf(a.pk)===et)); return `<div class="r"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span class="mono muted">${et}</span> ${ETAPAS[et]}</span><div class="tr"><div class="p" style="width:${c.pp}%"></div><div class="a ${c.p<c.pp-3?'late':''}" style="width:${c.p}%"></div></div><span class="mono" style="text-align:right">${Math.round(c.p)}%</span></div>`; }).join('');
+  const LT=[...ACTS.filter(a=>a.st==='late'), ...ACTS.filter(a=>a.st!=='late'&&a.slip>0&&!a.ms&&a.p<100&&a.crit).sort((x,y)=>x.ps.localeCompare(y.ps))].slice(0,7);
+  document.querySelector('#lateTbl tbody').innerHTML=LT.map(a=>`<tr><td class="mono"><b>${a.id}</b></td><td style="font-size:12.5px;max-width:240px">${a.n}</td><td class="num mono">${Math.round(a.pp)}%</td><td class="num mono">${a.p}%</td><td class="mono" style="color:var(--crit)">${fmt(a.pe)}</td><td>${a.crit?'<span class="tag t-crit">Sí</span>':'<span class="tag t-mute">No</span>'}</td></tr>`).join('');
+  document.getElementById('dpAlerts').innerHTML = [
+    ['crit',`<b>A17</b> (ruta crítica, riesgo R-01) lleva ${byId.A17.p} % contra ${Math.round(byId.A17.pp)} % planificado: el cierre se desplaza al <b>${fmtL(H10.pe)}</b>.`],
+    ['warn',`<b>A21</b> atrasada (${byId.A21.p} % vs ${Math.round(byId.A21.pp)} %): A22 y el módulo de planos podrían moverse.`],
+    ['warn',`<b>A14</b> terminó 2 días tarde (absorbido por holgura); el CPI está en ${CPI.toFixed(2).replace('.',',')}.`],
+    ['info',`Reserva restante hasta la fecha comprometida: <b>${wdCount(nextW(H10.pe),'2027-08-04')} días hábiles</b>.`]
+  ].map(a=>`<div class="alert ${a[0]}"><svg class="ico"><use href="#i-${a[0]==='crit'?'x':a[0]==='info'?'info':'warn'}"/></svg><div>${a[1]}</div></div>`).join('');
+})();
+
+// ---------- Checklist ----------
+document.getElementById('checklist').innerHTML = [
+ ['Etapas','10','≥ 4','y'],['Actividades','25','≥ 12','y'],['Subactividades','42','≥ 20','y'],
+ ['Tipos de dependencia','1 de 4 (solo FS)','4','w'],['Profesionales','14 (11 roles)','≥ 5','y'],['Tipos de recursos','4','4','y'],
+ ['Hitos','10','≥ 6','y'],['KPI de proyecto e hitos','8','8','y'],['Solicitudes de cambio','5','5','y'],
+ ['KPI de gestión del cambio','12','12','y'],['Tableros de comando','2','2','y'],['Roles','2','2','y']
+].map(c=>`<div class="check"><span class="ci ${c[3]}">${c[3]==='y'?'✓':'!'}</span><span>${c[0]}</span><span class="cnt">${c[1]} <span style="opacity:.6">/ ${c[2]}</span></span></div>`).join('') + `<div class="alert warn" style="margin-top:12px"><svg class="ico"><use href="#i-warn"/></svg><div>Tu cronograma usa solo <b>FS</b>. Para la demo hay que definir al menos un vínculo <b>SS</b>, uno <b>FF</b> y uno <b>SF</b> (p. ej. A28 SS H04, A03 FF A40).</div></div>`;
+
+// init
+const start = screens.findIndex(s=>'#'+s.id===location.hash); show(start>=0?start:0);
+</script>
+</body>
+</html>

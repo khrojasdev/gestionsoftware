@@ -1,0 +1,41 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage.xml
+htmlcov/
+
+# Node.js
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+.eslintcache
+
+# Environment and local credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Docker and local state
+docker-data/
+*.pid
+*.log
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+
+# Generated project data
+seeds/generated/
+docs/generated/

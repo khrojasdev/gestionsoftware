@@ -1,0 +1,12 @@
+clave,valor
+codigo,SEED-B-MINIMO
+nombre,Caso de prueba mínimo
+cliente,Constructora Horizonte
+responsable,Jefe de Proyecto
+fecha_inicio,2026-01-05
+fecha_comprometida,2026-06-30
+presupuesto,45000000
+contingencia_pct,10
+horas_por_dia,8
+dias_laborales,L-V
+fecha_corte,2026-03-31

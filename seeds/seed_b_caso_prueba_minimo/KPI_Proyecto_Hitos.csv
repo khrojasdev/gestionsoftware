@@ -1,0 +1,9 @@
+codigo,nombre,formula,ambito,meta
+SPI,Índice de desempeño de plazo,EV / PV,PROYECTO,1
+CPI,Índice de desempeño de costo,EV / AC,PROYECTO,1
+SV,Variación de plazo,EV - PV,PROYECTO,1
+CV,Variación de costo,EV - AC,PROYECTO,1
+ADVANCE_GAP,Desviación de avance físico,avance_real - avance_plan,PROYECTO,1
+LATE_TASKS,Actividades atrasadas,count(actividades_atrasadas) / count(actividades),PROYECTO,1
+MILESTONE_ON_TIME,Hitos cumplidos a tiempo,count(hitos_a_tiempo) / count(hitos),HITO,1
+CLOSE_VARIANCE,Desviación del hito de cierre,fecha_cierre_real - fecha_cierre_base,HITO,1

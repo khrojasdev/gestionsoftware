@@ -1,0 +1,12 @@
+clave,valor
+codigo,EJEMPLO-001
+nombre,Proyecto de ejemplo
+cliente,Cliente
+responsable,Jefe de Proyecto
+fecha_inicio,2026-01-05
+fecha_comprometida,2026-01-30
+presupuesto,1000000
+contingencia_pct,10
+horas_por_dia,8
+dias_laborales,L-V
+fecha_corte,2026-01-05

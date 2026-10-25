@@ -1,0 +1,109 @@
+{
+  "checklist": "F9 Seeds mínimo, Horizonte y demo",
+  "passed": true,
+  "seed_a": {
+    "path": "seeds\\Horizonte_Conecta_Carta_Gantt.xlsx",
+    "valid": true,
+    "errors": 0,
+    "warnings": 11,
+    "rows": {
+      "Proyecto": 11,
+      "Calendario": 9,
+      "Gantt": 87,
+      "Recursos": 19,
+      "Asignaciones": 70,
+      "Criterios": 10,
+      "Hitos_Tareas": 14
+    },
+    "persisted": true,
+    "baseline_version": "v1.0"
+  },
+  "seed_b_xlsx": {
+    "path": "seeds\\Seed_B_Caso_Prueba_Minimo.xlsx",
+    "valid": true,
+    "errors": 0,
+    "warnings": 5,
+    "rows": {
+      "Proyecto": 11,
+      "Calendario": 1,
+      "Gantt": 42,
+      "Recursos": 8,
+      "Asignaciones": 23,
+      "Criterios": 6,
+      "Hitos_Tareas": 6,
+      "Etapas_Cambio": 10,
+      "Cambios": 5,
+      "KPI_Proyecto_Hitos": 8,
+      "KPI_Cambio": 12,
+      "Tableros": 2
+    },
+    "persisted": true,
+    "baseline_version": "v1.0"
+  },
+  "seed_b_csv": {
+    "path": "seeds\\seed_b_caso_prueba_minimo",
+    "valid": true,
+    "errors": 0,
+    "warnings": 5,
+    "rows": {
+      "Asignaciones": 23,
+      "Calendario": 1,
+      "Cambios": 5,
+      "Criterios": 6,
+      "Etapas_Cambio": 10,
+      "Gantt": 42,
+      "Hitos_Tareas": 6,
+      "KPI_Cambio": 12,
+      "KPI_Proyecto_Hitos": 8,
+      "Proyecto": 11,
+      "Recursos": 8,
+      "Tableros": 2
+    },
+    "persisted": true,
+    "baseline_version": "v1.0"
+  },
+  "seed_b_counts": {
+    "checks": {
+      "etapas": true,
+      "actividades": true,
+      "subactividades": true,
+      "dependencias_fs_ss_ff_sf": true,
+      "profesionales": true,
+      "tipos_recurso": true,
+      "hitos": true,
+      "criterio_por_hito": true,
+      "cambios": true,
+      "kpi_proyecto_hitos": true,
+      "kpi_cambio": true,
+      "tableros": true
+    },
+    "counts": {
+      "gantt": {
+        "ETAPA": 4,
+        "ACTIVIDAD": 12,
+        "SUBACTIVIDAD": 20,
+        "HITO": 6
+      },
+      "recursos": 8,
+      "profesionales": 5,
+      "tipos_recurso": [
+        "EQUIPAMIENTO",
+        "HUMANO",
+        "INFRAESTRUCTURA_LICENCIA",
+        "SERVICIO_EXTERNO"
+      ],
+      "criterios": 6,
+      "cambios": 5,
+      "kpi_proyecto_hitos": 8,
+      "kpi_cambio": 12,
+      "tableros": 2,
+      "dependencias": [
+        "FF",
+        "FS",
+        "SF",
+        "SS"
+      ]
+    },
+    "passed": true
+  }
+}

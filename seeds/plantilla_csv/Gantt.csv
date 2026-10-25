@@ -1,0 +1,5 @@
+id,tipo,nombre,padre_id,inicio_plan,fin_plan,duracion_dias,predecesoras,avance_pct,inicio_real,fin_real,costo_real
+E1,ETAPA,Planificación,,,,,,,,,
+AC1,ACTIVIDAD,Preparación,E1,,,,,,,,
+A01,SUBACTIVIDAD,Definir alcance,AC1,2026-01-05,2026-01-05,1,,0,,,
+H01,HITO,Alcance aprobado,AC1,2026-01-06,2026-01-06,0,A01,0,,,

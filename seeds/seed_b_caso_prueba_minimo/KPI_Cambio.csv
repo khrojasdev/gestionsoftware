@@ -1,0 +1,13 @@
+codigo,nombre,formula,ambito,meta
+CHG-01,solicitudes registradas,valor_01,PROYECTO,1
+CHG-02,tasa de aprobación,valor_02,PROYECTO,1
+CHG-03,tasa de rechazo,valor_03,PROYECTO,1
+CHG-04,tiempo medio de ciclo,valor_04,PROYECTO,1
+CHG-05,tiempo medio de evaluación de impacto,valor_05,PROYECTO,1
+CHG-06,impacto acumulado en costo,valor_06,PROYECTO,1
+CHG-07,impacto acumulado en plazo,valor_07,PROYECTO,1
+CHG-08,% con evidencia completa,valor_08,PROYECTO,1
+CHG-09,solicitudes fuera de SLA,valor_09,PROYECTO,1
+CHG-10,consumo de contingencia,valor_10,PROYECTO,1
+CHG-11,índice de adopción,valor_11,PROYECTO,1
+CHG-12,cobertura de capacitación,valor_12,PROYECTO,1
