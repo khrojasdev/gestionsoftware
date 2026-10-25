@@ -15,4 +15,6 @@ También puedes iniciar y detener desde cualquier ubicación:
 & ".\scripts\stop-local.ps1"
 ```
 
-Los scripts de carga y conversión de datos se incorporarán en las fases F2 y posteriores. No deben modificar `insumos/`.
+La carga final se realiza desde la UI con un archivo XLSX/CSV multipart. Los
+scripts de seeds reconstruyen y verifican datos, pero no cargan rutas del host en
+la API ni modifican `insumos/`.

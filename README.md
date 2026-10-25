@@ -82,7 +82,9 @@ npm run build
 - [Manual de usuario](docs/manual-usuario.md)
 - [Guion de demo F9](docs/f9-guion-demo.md)
 - [Guion manual F18](docs/f18-guion-trazabilidad.md)
+- [Referencia técnica F19–F21](docs/f19-f21-api-ui.md)
 - [ADR-007: Gantt, dependencias y decisión de no EDT](docs/adr/ADR-007-gantt-dependencias.md)
+- [ADR-008: contratos persistentes y cambio transaccional](docs/adr/ADR-008-contratos-f19-f21.md)
 
 La jerarquía etapa → actividad → subactividad vive dentro de la Carta Gantt;
 no existe un módulo EDT separado. La evidencia automática cubre tests de motor,
@@ -92,3 +94,9 @@ una suite E2E de navegador ni una prueba automatizada que levante Docker complet
 Docker es el entorno local reproducible documentado.
 
 Los insumos académicos en `insumos/` son de solo lectura y no son modificados por los scripts de desarrollo.
+
+La UI F19–F21 consume contratos persistentes: carga multipart de XLSX/CSV (no
+rutas locales), Gantt jerárquico con línea base/dependencias, dashboard y
+snapshots KPI, y operaciones F7 de *what-if*, comparación y aplicación. Docker
+requiere `AUTH_SECRET` explícito. No se declara una suite E2E de navegador ni un
+job automatizado que levante el `docker compose` completo.

@@ -19,6 +19,9 @@ pendiente, no como evidencia cumplida.
 | Verificar el caso mínimo: 4 etapas, 12 actividades, 20 subactividades, 4 dependencias, 5 profesionales, 4 recursos, 6 hitos, 8+12 KPI, 5 cambios y 2 tableros | F13 — verificación | `backend/tests/test_seed_checklist.py`, `docs/f9-seeds-checklist.md` | Ind.5, Ind.6, Ind.7, Ind.8 |
 | Demostrar cambio de duración, recurso y solicitud aprobada, observando propagación | F13/F18 — demo y trazabilidad | `docs/f9-guion-demo.md`, `docs/f18-guion-trazabilidad.md` (ejecución manual) | Ind.3–Ind.8 |
 | Entregar documentación, manual, ADR y trazabilidad sin modificar `insumos/` | F18 — documentación | Este documento, `docs/manual-usuario.md`, `docs/adr/ADR-007-gantt-dependencias.md`, `git diff -- insumos` | Ind.8 |
+| Exponer dashboard, snapshots KPI y líneas base persistentes para la UI | F19 — contratos de lectura | `backend/tests/test_f21_contracts.py`, endpoints `dashboard`, `kpis/snapshots` y `baselines` | Ind.5, Ind.7, Ind.8 |
+| Consumir contratos persistentes desde la UI y mostrar jerarquía, dependencias, línea base y proyección | F20 — integración UI | `frontend/src/api.ts`, `frontend/src/F5Views.tsx`, `frontend/src/App.tsx`, revisión manual F18 | Ind.2–Ind.8 |
+| Publicar y ejecutar what-if, comparación y aplicación transaccional sin campos de actor controlados por cliente | F21 — contratos F7 | `backend/tests/test_f21_contracts.py`, endpoints `/impact`, `/compare` y `/apply` | Ind.6–Ind.8 |
 
 ## Lectura de cobertura
 
@@ -26,7 +29,7 @@ pendiente, no como evidencia cumplida.
   contratos API, salud, checklist, integridad, RBAC y seguridad KPI.
 - **Cubiertos por evidencia manual:** recorrido visual del Gantt, filtros,
   paneles, actualización de tableros y los tres escenarios de demostración.
-- **Pendiente de fortalecer:** no hay suite E2E browser ni un test que levante
+- **Límites explícitos:** no hay suite E2E browser ni un test que levante
   Docker completo; la matriz no los presenta como realizados.
 
 ## Criterio de consistencia

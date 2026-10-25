@@ -27,12 +27,11 @@
 
 ## Escenario 3 — Aprobar un cambio
 
-1. Abrir `CR-005`, que parte en estado **APROBADA**, y mostrar la trazabilidad
-   de sus cinco solicitudes y sus etapas.
-2. Para la demostración interactiva, crear o seleccionar `CR-002` (agregar
-   tablet), revisar el impacto simulado de `$350.000` y pasar por revisión de
-   comité.
-3. Ejecutar **Aprobar y aplicar**. La aplicación debe crear la nueva línea
+1. Abrir el panel F7 de **Gestión de cambios**, seleccionar una solicitud
+   autorizada y mostrar la trazabilidad de sus etapas.
+2. Seleccionar `CR-002` (agregar tablet), si está presente en el seed, revisar
+   el impacto simulado y comparar con la línea base vigente.
+3. Ejecutar **Aplicar cambio** después de la transición autorizada. La aplicación debe crear la nueva línea
    base, registrar la transición, actualizar costo/contingencia y recalcular
    Gantt, KPI y **Tablero de gestión del cambio**.
 4. Cerrar mostrando el contador de solicitudes, la tasa de aprobación, el
