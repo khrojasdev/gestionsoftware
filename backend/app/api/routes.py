@@ -7,13 +7,15 @@
 from __future__ import annotations
 
 import uuid
+import tempfile
+from contextlib import contextmanager
 from datetime import UTC, date, datetime, time
 from decimal import Decimal
 from pathlib import Path
 from typing import Annotated, Any
 
 import sqlalchemy as sa
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, File, UploadFile
 from sqlalchemy.orm import Session
 
 from app.api.errors import ApiError
@@ -23,7 +25,6 @@ from app.api.schemas import (
     ChangeTransitionCreate,
     GanttCreate,
     GanttUpdate,
-    ImportRequest,
     KpiCreate,
     KpiUpdate,
     KpiVariableCreate,
@@ -45,6 +46,9 @@ from app.models import (
     ChangeStageStatus,
     ChangeStatus,
     Dashboard,
+    Baseline,
+    BaselineElement,
+    Dependency,
     GanttElement,
     Kpi,
     KpiFormulaVersion,
@@ -108,6 +112,28 @@ def _import_source(source_path: str) -> Path:
     if source.is_dir() and not source.name:
         raise ApiError("INVALID_IMPORT_SOURCE", "El origen de importación no es válido")
     return source
+
+
+MAX_IMPORT_BYTES = 25 * 1024 * 1024
+
+
+@contextmanager
+def _uploaded_source(upload: UploadFile) -> Any:
+    """Materialize an upload privately; never resolve a client path."""
+    suffix = Path(upload.filename or "").suffix.casefold()
+    if suffix not in {".xlsx", ".csv"}:
+        raise ApiError("INVALID_IMPORT_FILE", "Solo se aceptan archivos XLSX o CSV")
+    content = upload.file.read(MAX_IMPORT_BYTES + 1)
+    if len(content) > MAX_IMPORT_BYTES:
+        raise ApiError("IMPORT_FILE_TOO_LARGE", "El archivo de importación excede 25 MB")
+    temporary = tempfile.NamedTemporaryFile(prefix="trazo-import-", suffix=suffix, delete=False)
+    path = Path(temporary.name)
+    try:
+        temporary.write(content)
+        temporary.close()
+        yield path
+    finally:
+        path.unlink(missing_ok=True)
 
 
 def _project(project: Project) -> dict[str, Any]:
@@ -185,6 +211,35 @@ def _validate_project_closure(session: Session, project: Project) -> None:
 
 def _element(session: Session, element: GanttElement) -> dict[str, Any]:
     parent = session.get(GanttElement, element.parent_id) if element.parent_id else None
+    baseline = session.scalar(
+        sa.select(BaselineElement)
+        .join(Baseline, BaselineElement.baseline_id == Baseline.id)
+        .where(
+            Baseline.project_id == element.project_id,
+            Baseline.status == "VIGENTE",
+            BaselineElement.external_id == element.external_id,
+        )
+    )
+    dependencies = session.scalars(
+        sa.select(Dependency).where(
+            Dependency.project_id == element.project_id,
+            Dependency.successor_id == element.id,
+        )
+    ).all()
+    predecessor_ids = {
+        dependency.predecessor_id: dependency
+        for dependency in dependencies
+    }
+    predecessors = [
+        {
+            "id": dependency.id,
+            "predecessor_id": dependency.predecessor_id,
+            "predecessor_external_id": session.get(GanttElement, dependency.predecessor_id).external_id,
+            "type": dependency.dependency_type.value,
+            "lag_days": dependency.lag_days,
+        }
+        for dependency in predecessor_ids.values()
+    ]
     return {
         "id": element.id,
         "external_id": element.external_id,
@@ -204,6 +259,14 @@ def _element(session: Session, element: GanttElement) -> dict[str, Any]:
         "total_slack_days": element.total_slack_days,
         "free_slack_days": element.free_slack_days,
         "is_critical": element.is_critical,
+        "baseline_start": baseline.planned_start if baseline else None,
+        "baseline_finish": baseline.planned_finish if baseline else None,
+        "baseline_duration_days": baseline.duration_days if baseline else None,
+        "baseline_cost": baseline.planned_cost if baseline else None,
+        "projected_start": element.planned_start,
+        "projected_finish": element.planned_finish,
+        "dependencies": predecessors,
+        "dependency_ids": [item["predecessor_external_id"] for item in predecessors],
     }
 
 
@@ -281,13 +344,16 @@ def update_project(project_id: uuid.UUID, payload: ProjectUpdate, session: Sessi
 
 
 @router.post("/projects/import/preview", tags=["imports"])
-def preview_import(payload: ImportRequest, _: CurrentUser) -> dict[str, Any]:
+def preview_import(file: UploadFile = File(...), _: CurrentUser = None) -> dict[str, Any]:
     from trazo_importer.service import ImportService
 
     try:
-        result = ImportService().preview(_import_source(payload.source_path))
-    except (FileNotFoundError, ValueError) as exc:
-        raise ApiError("INVALID_IMPORT_SOURCE", str(exc)) from exc
+        with _uploaded_source(file) as source:
+            result = ImportService().preview(source)
+    except ApiError:
+        raise
+    except (FileNotFoundError, ValueError, KeyError) as exc:
+        raise ApiError("INVALID_IMPORT_FILE", str(exc)) from exc
     return _ok(
         {
             "valid": result.report.valid,
@@ -300,9 +366,10 @@ def preview_import(payload: ImportRequest, _: CurrentUser) -> dict[str, Any]:
 
 
 @router.post("/projects/import", status_code=201, tags=["imports"])
-def import_project(payload: ImportRequest, session: Session = Depends(get_db), _: Manager = None) -> dict[str, Any]:
+def import_project(file: UploadFile = File(...), session: Session = Depends(get_db), _: Manager = None) -> dict[str, Any]:
     try:
-        result = import_workbook(session, _import_source(payload.source_path))
+        with _uploaded_source(file) as source:
+            result = import_workbook(session, source)
     except (FileNotFoundError, ValueError, KeyError) as exc:
         session.rollback()
         raise ApiError("INVALID_IMPORT", str(exc)) from exc
@@ -326,11 +393,12 @@ def import_project(payload: ImportRequest, session: Session = Depends(get_db), _
 
 @router.post("/projects/{project_id}/imports", tags=["imports"])
 def import_project_version(
-    project_id: uuid.UUID, payload: ImportRequest, session: Session = Depends(get_db), _: Manager = None
+    project_id: uuid.UUID, file: UploadFile = File(...), session: Session = Depends(get_db), _: Manager = None
 ) -> dict[str, Any]:
     require_project(session, project_id)
     try:
-        result = import_workbook(session, _import_source(payload.source_path), project_id)
+        with _uploaded_source(file) as source:
+            result = import_workbook(session, source, project_id)
     except (FileNotFoundError, ValueError, KeyError) as exc:
         session.rollback()
         raise ApiError("INVALID_IMPORT", str(exc)) from exc
@@ -810,8 +878,11 @@ def update_kpi(project_id: uuid.UUID, kpi_id: uuid.UUID, payload: KpiUpdate, ses
     return _ok(_kpi(kpi))
 
 
-@router.post("/projects/{project_id}/kpis/recalculate", tags=["kpis"])
-def recalculate_kpis(project_id: uuid.UUID, cutoff_at: datetime | None = None, session: Session = Depends(get_db), _: Manager = None) -> dict[str, Any]:
+def recalculate_project_kpis(
+    session: Session, project_id: uuid.UUID, cutoff_at: datetime | None = None
+) -> list[dict[str, Any]]:
+    """Recalculate and persist the KPI snapshot without committing the transaction."""
+
     project = require_project(session, project_id)
     tasks, _, _ = _calculation_inputs(session, project)
     cutoff = project.cutoff_date or date.today()
@@ -839,6 +910,13 @@ def recalculate_kpis(project_id: uuid.UUID, cutoff_at: datetime | None = None, s
             existing.breakdown = breakdown
             existing.calculated_at = now
         values.append({"kpi_id": kpi.id, "code": kpi.code, "value": value, "cutoff_at": snapshot_at, "breakdown": breakdown})
+    return values
+
+
+@router.post("/projects/{project_id}/kpis/recalculate", tags=["kpis"])
+def recalculate_kpis(project_id: uuid.UUID, cutoff_at: datetime | None = None, session: Session = Depends(get_db), _: Manager = None) -> dict[str, Any]:
+    values = recalculate_project_kpis(session, project_id, cutoff_at)
+    snapshot_at = values[0]["cutoff_at"] if values else cutoff_at
     session.commit()
     return _ok(values, cutoff_at=snapshot_at)
 
@@ -867,6 +945,20 @@ def list_kpi_snapshots(project_id: uuid.UUID, session: Session = Depends(get_db)
         ],
         total=len(rows),
     )
+
+
+@router.get("/projects/{project_id}/baselines", tags=["baselines"])
+def list_baselines(project_id: uuid.UUID, session: Session = Depends(get_db), _: CurrentUser = None) -> dict[str, Any]:
+    """Expose immutable project baselines so clients can execute comparisons."""
+
+    require_project(session, project_id)
+    rows = session.scalars(
+        sa.select(Baseline).where(Baseline.project_id == project_id).order_by(Baseline.created_at.desc())
+    ).all()
+    return _ok([
+        {"id": row.id, "version": row.version, "status": row.status, "created_at": row.created_at, "approved_at": row.approved_at}
+        for row in rows
+    ], total=len(rows))
 
 
 @router.get("/projects/{project_id}/kpis/{kpi_id}/versions", tags=["kpis"])
@@ -997,11 +1089,21 @@ def dashboard(project_id: uuid.UUID, session: Session = Depends(get_db), _: Curr
     project = require_project(session, project_id)
     elements = project_elements(session, project_id)
     resources = project_resources(session, project_id)
+    persisted = session.scalars(sa.select(Dashboard).where(Dashboard.project_id == project_id).order_by(Dashboard.external_id)).all()
+    latest_snapshots = session.scalars(
+        sa.select(KpiValue).join(Kpi, KpiValue.kpi_id == Kpi.id)
+        .where(Kpi.project_id == project_id)
+        .order_by(KpiValue.cutoff_at.desc())
+    ).all()
     return _ok({
         "project": _project(project),
         "gantt": {"total": len(elements), "completed": sum(item.progress_pct == 100 for item in elements), "critical": sum(item.is_critical for item in elements)},
         "resources": {"total": len(resources)},
         "changes": {"open": session.scalar(sa.select(sa.func.count(ChangeRequest.id)).where(ChangeRequest.project_id == project_id, ChangeRequest.status == ChangeStatus.OPEN)) or 0},
         "kpis": {"total": session.scalar(sa.select(sa.func.count(Kpi.id)).where(Kpi.project_id == project_id)) or 0},
-        "dashboards": {"total": session.scalar(sa.select(sa.func.count(Dashboard.id)).where(Dashboard.project_id == project_id)) or 0},
+        "dashboards": {
+            "total": len(persisted),
+            "items": [{"id": item.id, "external_id": item.external_id, "name": item.name, "dashboard_type": item.dashboard_type, "kpi_codes": item.kpi_codes} for item in persisted],
+        },
+        "kpi_snapshots": [{"id": row.id, "kpi_id": row.kpi_id, "cutoff_at": row.cutoff_at, "value": row.value, "breakdown": row.breakdown} for row in latest_snapshots],
     })

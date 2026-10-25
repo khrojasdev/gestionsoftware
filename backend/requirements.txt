@@ -6,4 +6,5 @@ alembic==1.14.1
 pydantic-settings==2.7.1
 pytest==8.3.4
 httpx==0.28.1
+python-multipart==0.0.20
 ruff==0.9.2

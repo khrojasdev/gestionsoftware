@@ -75,4 +75,20 @@ npm run typecheck
 npm run build
 ```
 
+## Documentación y trazabilidad
+
+- [Documentación técnica](docs/README.md)
+- [Matriz F18: requisito → tarea → test → Ind.1–8](docs/matriz-trazabilidad.md)
+- [Manual de usuario](docs/manual-usuario.md)
+- [Guion de demo F9](docs/f9-guion-demo.md)
+- [Guion manual F18](docs/f18-guion-trazabilidad.md)
+- [ADR-007: Gantt, dependencias y decisión de no EDT](docs/adr/ADR-007-gantt-dependencias.md)
+
+La jerarquía etapa → actividad → subactividad vive dentro de la Carta Gantt;
+no existe un módulo EDT separado. La evidencia automática cubre tests de motor,
+importación, API, integridad, roles, KPI y checklist. La revisión visual de los
+tres escenarios se realiza con los guiones manuales. El repositorio no declara
+una suite E2E de navegador ni una prueba automatizada que levante Docker completo;
+Docker es el entorno local reproducible documentado.
+
 Los insumos académicos en `insumos/` son de solo lectura y no son modificados por los scripts de desarrollo.

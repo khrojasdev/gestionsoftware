@@ -30,7 +30,7 @@ from ..models import Baseline, BaselineElement
 from ..models import BaselineStatus, ChangeImpact, ChangeRequest, ChangeRequestStage
 from ..models import ChangeStage, ChangeStageStatus, ChangeStatus, ChangeTransition
 from ..models import CriterionStatus, Dependency, GanttElement, GanttElementType
-from ..models import Evidence, Milestone, Project, Resource
+from ..models import Dashboard, Evidence, Milestone, Project, Resource
 from .calculation_engine import DeterministicCalculationEngine
 from .costs import CostReport
 from .persistence import project_calendar, recalculate_project
@@ -715,6 +715,16 @@ class ChangeControlService:
         self._persist_proposal(project, tasks, resources, assignments, proposal_updates)
         recalculate_project(self.session, project)
         new_baseline = self._snapshot_baseline(project, baseline, user_id)
+        kpi_values = self._propagate_kpis(project, user_id)
+        self._refresh_dashboards(project, user_id, len(kpi_values))
+        self._audit(
+            "RECALCULATE",
+            "Project",
+            project.id,
+            None,
+            {"baseline": new_baseline.version, "kpi_snapshot_count": len(kpi_values)},
+            user_id,
+        )
         request.status = ChangeStatus.CLOSED
         request.closed_at = datetime.now(UTC)
         self._audit(
@@ -727,6 +737,44 @@ class ChangeControlService:
         )
         self.session.flush()
         return new_baseline
+
+    def _propagate_kpis(self, project: Project, user_id: uuid.UUID | None) -> list[dict[str, object]]:
+        """Persist a KPI snapshot after the applied plan is recalculated."""
+
+        # Kept at call time to avoid coupling the domain service's import graph to
+        # the HTTP adapter. The helper deliberately does not commit.
+        from ..api.routes import recalculate_project_kpis
+
+        values = recalculate_project_kpis(self.session, project.id)
+        for value in values:
+            self._audit(
+                "RECALCULATE",
+                "KpiValue",
+                value["kpi_id"],
+                None,
+                {"code": value["code"], "cutoff_at": str(value["cutoff_at"]), "value": str(value["value"])},
+                user_id,
+            )
+        return values
+
+    def _refresh_dashboards(self, project: Project, user_id: uuid.UUID | None, snapshot_count: int) -> None:
+        """Invalidate persisted dashboard timestamps and record the propagation."""
+
+        now = datetime.now(UTC)
+        dashboards = self.session.scalars(
+            sa.select(Dashboard).where(Dashboard.project_id == project.id)
+        ).all()
+        for dashboard in dashboards:
+            before = {"updated_at": dashboard.updated_at.isoformat()}
+            dashboard.updated_at = now
+            self._audit(
+                "INVALIDATE",
+                "Dashboard",
+                dashboard.id,
+                before,
+                {"updated_at": now.isoformat(), "kpi_snapshot_count": snapshot_count},
+                user_id,
+            )
 
     def add_evidence(
         self,
