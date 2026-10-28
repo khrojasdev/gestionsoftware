@@ -1,102 +1,152 @@
-# Trazo
+# Trazo · Planificación y control de proyectos
 
-Plataforma de planificación y control de proyectos basada en Carta Gantt.
+Aplicación web para el **Caso 3 · Constructora Horizonte («Horizonte Conecta»)**
+de Gestión de Proyectos de Software (Duoc UC). Importa la Carta Gantt, calcula
+fechas, ruta crítica y costos, controla hitos y KPI, y gestiona solicitudes de
+cambio con un flujo de 10 etapas que genera nuevas líneas base.
 
-## Requisitos
+- **Frontend:** React 19 + TypeScript + Vite (sin librerías de gráficos: Gantt y gráficos en SVG propio).
+- **Backend:** Python 3.12, FastAPI, SQLAlchemy 2, Alembic.
+- **Base de datos:** PostgreSQL 16.
+- **Un solo contenedor** sirve la API y la aplicación web compilada.
 
-- Windows 11 con Docker Desktop y Docker Compose v2.
-- Python 3.12+ para ejecutar el backend fuera de Docker.
-- Node.js 20+ para ejecutar el frontend fuera de Docker.
+## Inicio rápido en Windows (Docker Desktop)
 
-## Inicio local con Docker
+Requisitos: Docker Desktop iniciado. No necesitas Python ni Node para esta opción.
 
-Desde la raíz del repositorio (la ruta puede contener espacios):
+1. Abre la carpeta del repositorio.
+2. Haz doble clic en **`iniciar-trazo.bat`** (o en CMD: `docker compose up --build -d`).
+3. La primera vez tarda unos minutos (descarga imágenes, compila y carga la demo).
+   Se abre solo `http://localhost:8000`.
 
-```powershell
-Copy-Item ".env.example" ".env"
-docker compose up --build
-```
+| Usuario | Rol | Qué puede hacer |
+|---|---|---|
+| `admin@trazo.cl` | Administrador | Todo, incluido gestionar usuarios y eliminar proyectos |
+| `kevin.henriquez@trazo.cl` | Jefe de Proyecto | Importar, planificar, recursos, KPI, aprobar y aplicar cambios |
+| `diego.lopez@trazo.cl` | Integrante | Registrar avance de sus tareas, crear solicitudes, consultar |
+| `christian.perez@trazo.cl` | Integrante | Igual que el anterior |
 
-Servicios disponibles:
+Contraseña de todos: **`Trazo2026!`** (la pantalla de ingreso tiene botones para completarla).
 
-- Frontend: http://localhost:5173
-- API y documentación OpenAPI: http://localhost:8000/docs
-- Health check: http://localhost:8000/health
-- PostgreSQL de Trazo: localhost:5433, base `trazo_db`
+Otros archivos útiles en la raíz:
 
-La base de datos de Trazo usa el volumen Docker nombrado `trazo_postgres_data` y es independiente de la base de datos de Lemoria.
+- `detener-trazo.bat` – detiene los contenedores (los datos se conservan).
+- `reiniciar-demo.bat` – borra los proyectos y vuelve a cargar la demostración.
+- `docker compose logs -f app` – ver registros si algo falla.
+- `docker compose down -v` – borrar también la base de datos.
 
-Las migraciones Alembic se aplican automáticamente al iniciar el contenedor
-`backend`. Para ejecutarlas manualmente fuera de Docker:
+> Si la carpeta está en OneDrive, pausa la sincronización mientras trabajas o
+> mueve el repositorio fuera de OneDrive: la sincronización puede bloquear archivos
+> de `node_modules` y del volumen.
 
-```powershell
-python -m alembic -c "backend\alembic.ini" upgrade head
-```
+## Datos de demostración
 
-Para detener los servicios sin borrar datos:
+Al iniciar con la base vacía se cargan dos proyectos:
 
-```powershell
-docker compose down
-```
+1. **Horizonte Conecta** (desde `insumos/Caso3_Horizonte_Planificacion_Gantt.xlsx`, o
+   `seeds/Horizonte_Conecta_Carta_Gantt.xlsx` si no está): 10 etapas, 25 actividades,
+   42 subactividades, 10 hitos, 14 profesionales y 9 recursos no humanos, fecha de
+   corte 15‑01‑2027, línea base v2, 5 solicitudes de cambio (SC‑01 a SC‑05) en distintas
+   etapas, 20 KPI y su historial semanal.
+2. **Caso de prueba mínimo · App de inspecciones** (`seeds/Seed_B_Caso_Prueba_Minimo.xlsx`):
+   cumple exactamente la evidencia mínima de la rúbrica (4 tipos de precedencia, 5
+   profesionales, recursos no humanos, 6 hitos, 5 solicitudes).
 
-Para eliminar también el volumen local de PostgreSQL:
+La pantalla **Caso de prueba** muestra el checklist automático y el guion de los
+3 escenarios. El guion completo está en [docs/guion-demo.md](docs/guion-demo.md).
 
-```powershell
-docker compose down -v
-```
+## Pantallas
+
+| # | Pantalla | Contenido |
+|---|---|---|
+| 01 | Proyectos | Tarjetas con avance real vs plan, SPI/CPI, término proyectado, crear/editar/cerrar |
+| 02 | Importar Carta Gantt | Arrastrar archivo → revisión de hojas y columnas → validación → confirmar; descarga de plantilla |
+| 03 | Actividades y precedencias | Tabla filtrable, editor de duración, precedencias FS/SS/FF/SF con desfase, avance real; muestra el antes/después del recálculo |
+| 04 | Carta Gantt | Jerarquía plegable, plan vs línea base vs proyección, hitos, fecha de corte, flechas de precedencia, ruta crítica, zoom |
+| 05 | Recursos y costos | Por recurso, por tarea (horas, h/día, costo), carga semanal con detalle, sobreasignaciones, costos por tipo y etapa, calendario |
+| 06 | Hitos | Línea de tiempo, tareas del hito y criterios de aceptación con evidencias (acordeón) |
+| 07 | Administrador de KPI | Fórmula visible y editable, sustitución de valores, variables, umbrales, prueba de fórmula, versiones, tendencia |
+| 08 | Solicitudes de cambio | Listado, filtros y registro; detalle con 10 etapas, SLA, propuesta, simulación de impacto, aprobación, aplicación y trazabilidad |
+| 09 | Tablero del proyecto | Avance, EVM, curva S, avance por etapa, KPI, alertas, atrasos, hitos y carga |
+| 10 | Tablero del cambio | Embudo, tiempos vs SLA, matriz impacto × probabilidad, KPI C01–C12, alertas |
+| 11 | Usuarios y roles | Administración de usuarios y matriz de permisos de los 3 roles |
+| 12 | Caso de prueba | Checklist de evidencia mínima y guion de escenarios |
 
 ## Desarrollo sin Docker
 
-Backend:
+```bat
+:: Base de datos (solo el contenedor de PostgreSQL)
+docker compose up -d db
 
-```powershell
-python -m venv ".venv"
-& ".venv\Scripts\Activate.ps1"
-python -m pip install -r "backend\requirements.txt"
-python -m uvicorn app.main:app --reload --app-dir "backend"
-```
+:: Backend (CMD, desde la raíz)
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r backend\requirements.txt
+copy .env.example backend\.env
+:: edita backend\.env y define AUTH_SECRET (mínimo 32 caracteres)
+cd backend
+python -m alembic upgrade head
+python -m app.demo
+python -m uvicorn app.main:app --reload
 
-Frontend:
-
-```powershell
-Set-Location "frontend"
+:: Frontend (otra ventana, desde la raíz)
+cd frontend
 npm install
 npm run dev
 ```
 
+El frontend de desarrollo queda en `http://localhost:5173` y envía `/api` al
+backend en `http://localhost:8000` (proxy de Vite). La documentación interactiva
+de la API está en `http://localhost:8000/docs`.
+
+## Despliegue
+
+El `Dockerfile` de la raíz construye una imagen única. Instrucciones para Render
+(blueprint `render.yaml`), Railway u otro servidor en
+[docs/despliegue.md](docs/despliegue.md).
+
 ## Calidad
 
-```powershell
-python -m pytest "backend\tests"
-python -m ruff check "backend"
-Set-Location "frontend"
+```bat
+cd backend
+ruff check .
+pytest
+:: Pruebas de integración con PostgreSQL (recargan la demo; no usar con datos reales)
+set TRAZO_DB_TESTS=1
+pytest
+
+cd ..\frontend
 npm run lint
 npm run typecheck
 npm run build
 ```
 
-## Documentación y trazabilidad
+La integración continua (`.github/workflows/ci.yml`) ejecuta lint, pruebas unitarias,
+pruebas de integración contra PostgreSQL (los 3 escenarios, permisos, ciclos y
+criterios de hitos), la compilación del frontend y la construcción de la imagen Docker.
 
-- [Documentación técnica](docs/README.md)
-- [Matriz F18: requisito → tarea → test → Ind.1–8](docs/matriz-trazabilidad.md)
+## Estructura
+
+```
+backend/        API FastAPI, motor de cálculo, importador, migraciones y pruebas
+frontend/       Aplicación React
+seeds/          Datos de demostración y plantilla de importación
+insumos/        Documentos del curso (solo lectura)
+docs/           Manual, guion de demo, despliegue y documentación técnica
+Dockerfile      Imagen única (frontend compilado + API)
+docker-compose.yml  PostgreSQL + aplicación para uso local
+render.yaml     Blueprint para Render
+```
+
+## Documentación
+
 - [Manual de usuario](docs/manual-usuario.md)
-- [Guion de demo F9](docs/f9-guion-demo.md)
-- [Guion manual F18](docs/f18-guion-trazabilidad.md)
-- [Referencia técnica F19–F21](docs/f19-f21-api-ui.md)
-- [ADR-007: Gantt, dependencias y decisión de no EDT](docs/adr/ADR-007-gantt-dependencias.md)
-- [ADR-008: contratos persistentes y cambio transaccional](docs/adr/ADR-008-contratos-f19-f21.md)
+- [Guion de la demostración](docs/guion-demo.md)
+- [Despliegue](docs/despliegue.md)
+- [Importación de la Carta Gantt](docs/importacion-carta-gantt.md)
+- [Modelo de datos](docs/modelo-datos.md)
+- [Matriz de trazabilidad](docs/matriz-trazabilidad.md)
+- [Decisiones de arquitectura](docs/adr/)
 
-La jerarquía etapa → actividad → subactividad vive dentro de la Carta Gantt;
-no existe un módulo EDT separado. La evidencia automática cubre tests de motor,
-importación, API, integridad, roles, KPI y checklist. La revisión visual de los
-tres escenarios se realiza con los guiones manuales. El repositorio no declara
-una suite E2E de navegador ni una prueba automatizada que levante Docker completo;
-Docker es el entorno local reproducible documentado.
-
-Los insumos académicos en `insumos/` son de solo lectura y no son modificados por los scripts de desarrollo.
-
-La UI F19–F21 consume contratos persistentes: carga multipart de XLSX/CSV (no
-rutas locales), Gantt jerárquico con línea base/dependencias, dashboard y
-snapshots KPI, y operaciones F7 de *what-if*, comparación y aplicación. Docker
-requiere `AUTH_SECRET` explícito. No se declara una suite E2E de navegador ni un
-job automatizado que levante el `docker compose` completo.
+La jerarquía etapa → actividad → subactividad → hito vive dentro de la Carta Gantt;
+no existe un módulo EDT separado (ver ADR‑007).

@@ -1,41 +1,229 @@
-import { useCallback, useEffect, useMemo, useState, type ReactElement } from "react";
-import { ApiError, applyChange, compareBaseline, getBaselines, getCurrentUser, getF6Data, PROJECT_ID, simulateImpact, transitionChange, type AuthUser, type Baseline, type BaselineComparison, type ChangeCard, type ImpactResult, type Kpi, type Resource, type Task, type ViewKey } from "./api";
-import { F5App } from "./F5Views";
-import { F8App } from "./F8Views";
+import { useEffect, useState, type ReactNode } from "react";
 
-type Role = "Administrador" | "Gestor de proyecto" | "Consulta";
-type AppView = ViewKey | "gantt" | "import";
-const nav: { key: AppView; icon: string; label: string }[] = [{ key: "overview", icon: "▦", label: "Resumen" }, { key: "gantt", icon: "▥", label: "Carta Gantt" }, { key: "import", icon: "⇧", label: "Importar Gantt" }, { key: "resources", icon: "♙", label: "Recursos y costos" }, { key: "kpis", icon: "◔", label: "KPI" }, { key: "boards", icon: "⊞", label: "Tableros" }, { key: "users", icon: "♙", label: "Usuarios y auditoría" }];
+import { AuthProvider, useAuth } from "./auth";
+import { ErrorBox, Icon, Loading, ToastProvider } from "./components/ui";
+import { d, initials, PROJECT_STATUS_LABEL, ROLE_LABEL, statusTag } from "./format";
+import { ProjectProvider, useProject } from "./project";
+import { go, href, useRoute } from "./router";
+import ActivitiesPage from "./pages/Activities";
+import ChangeDashboardPage from "./pages/ChangeDashboard";
+import ChangeDetailPage from "./pages/ChangeDetail";
+import ChangesPage from "./pages/Changes";
+import ChecklistPage from "./pages/Checklist";
+import GanttPage from "./pages/Gantt";
+import ImportPage from "./pages/Import";
+import KpiPage from "./pages/Kpis";
+import LoginPage from "./pages/Login";
+import MilestonesPage from "./pages/Milestones";
+import ProjectDashboardPage from "./pages/ProjectDashboard";
+import ProjectsPage from "./pages/Projects";
+import ResourcesPage from "./pages/Resources";
+import UsersPage from "./pages/Users";
 
-function App(): ReactElement {
-  const [view, setView] = useState<AppView>("gantt"); const [user, setUser] = useState<AuthUser | null>(null); const [token, setToken] = useState<string | undefined>(() => localStorage.getItem("trazo_token") ?? undefined); const [data, setData] = useState<{ resources: Resource[]; tasks: Task[]; kpis: Kpi[]; changes: Record<string, ChangeCard[]>; dashboard: import("./api").DashboardData } | null>(null); const [loading, setLoading] = useState(true); const [error, setError] = useState(""); const [search, setSearch] = useState("");
-  const role: Role = user?.roles.includes("ADMINISTRADOR") ? "Administrador" : user?.roles.includes("JEFE_DE_PROYECTO") ? "Gestor de proyecto" : "Consulta";
-  const load = useCallback(async () => { setLoading(true); setError(""); try { const result = await getF6Data(PROJECT_ID, token); setData({ ...result, changes: result.changeCards }); } catch (reason) { setError(reason instanceof ApiError ? `${reason.message}${reason.status === 401 ? " Inicia sesión desde Usuarios y auditoría." : ""}` : "No se pudieron cargar los datos del proyecto"); } finally { setLoading(false); } }, [token]);
-  useEffect(() => { void Promise.resolve().then(load); }, [load]);
-  useEffect(() => { const sync = () => setToken(localStorage.getItem("trazo_token") ?? undefined); window.addEventListener("trazo-auth", sync); return () => window.removeEventListener("trazo-auth", sync); }, []);
-  useEffect(() => { if (token) void getCurrentUser(token).then(setUser).catch(() => { localStorage.removeItem("trazo_token"); setUser(null); window.dispatchEvent(new Event("trazo-auth")); }); }, [token]);
-  const filteredTasks = useMemo(() => (data?.tasks ?? []).filter((task) => `${task.name} ${task.resource}`.toLowerCase().includes(search.toLowerCase())), [data?.tasks, search]);
-  const sessionChanged = (nextToken: string | null, nextUser: AuthUser | null) => { setToken(nextToken ?? undefined); setUser(nextUser); };
-  if (view === "gantt" || view === "import") return <F5App key={view} initialMode={view} projectId={PROJECT_ID} token={token} role={role} onImported={() => { void load(); }} />;
-  if (view === "users") return <div className="app"><AppSidebar view={view} setView={setView} /><main className="main"><AppTopbar role={role} search={search} setSearch={setSearch} /><F8App onSessionChange={sessionChanged} /></main></div>;
-  return <div className="app"><AppSidebar view={view} setView={setView} /><main className="main"><AppTopbar role={role} search={search} setSearch={setSearch} /><main className="content">{loading && <LoadingState />}{!loading && error && <ErrorState error={error} retry={() => void load()} />}{!loading && !error && data && <>{view === "overview" && <Overview tasks={filteredTasks} kpis={data.kpis} resources={data.resources} dashboard={data.dashboard} />}{view === "resources" && <ResourcesView resources={data.resources} tasks={filteredTasks} />}{view === "kpis" && (role === "Administrador" ? <KpisView kpis={data.kpis} onRefresh={() => void load()} /> : <AccessDenied />)}{view === "boards" && <BoardsView changes={data.changes} tasks={filteredTasks} role={role} token={token} onRefresh={() => void load()} />}</>}</main></main></div>;
+type NavItem = { page: string; label: string; group: string; managerOnly?: boolean; needsProject?: boolean };
+
+const NAV: NavItem[] = [
+  { page: "proyectos", label: "Proyectos", group: "General" },
+  { page: "importar", label: "Importar Carta Gantt", group: "Planificación", managerOnly: true },
+  { page: "actividades", label: "Actividades y precedencias", group: "Planificación", needsProject: true },
+  { page: "gantt", label: "Carta Gantt", group: "Planificación", needsProject: true },
+  { page: "recursos", label: "Recursos y costos", group: "Planificación", needsProject: true },
+  { page: "hitos", label: "Hitos", group: "Planificación", needsProject: true },
+  { page: "kpi", label: "Administrador de KPI", group: "Control", needsProject: true },
+  { page: "cambios", label: "Solicitudes de cambio", group: "Control", needsProject: true },
+  { page: "tablero", label: "Tablero del proyecto", group: "Tableros", needsProject: true },
+  { page: "tablero-cambio", label: "Tablero del cambio", group: "Tableros", needsProject: true },
+  { page: "usuarios", label: "Usuarios y roles", group: "Sistema" },
+  { page: "caso", label: "Caso de prueba", group: "Sistema", needsProject: true },
+];
+
+export default function App() {
+  return (
+    <ToastProvider>
+      <AuthProvider>
+        <Gate />
+      </AuthProvider>
+    </ToastProvider>
+  );
 }
 
-function AppSidebar({ view, setView }: { view: AppView; setView: (view: AppView) => void }): ReactElement { return <aside className="sidebar" aria-label="Navegación principal"><div className="brand"><span className="brand-mark">✦</span> trazo</div><div className="workspace"><small>PROYECTO ACTIVO</small><strong>Horizonte Conecta</strong></div><nav className="nav">{nav.map((item) => <button key={item.key} className={view === item.key ? "active" : ""} onClick={() => setView(item.key)} aria-current={view === item.key ? "page" : undefined}><span className="nav-icon" aria-hidden="true">{item.icon}</span>{item.label}</button>)}</nav><div className="sidebar-bottom"><div className="profile"><span className="avatar">KH</span><div className="profile-text">Sesión API<span>Proyecto persistente</span></div></div></div></aside>; }
-function AppTopbar({ role, search, setSearch }: { role: Role; search: string; setSearch: (value: string) => void }): ReactElement { return <header className="topbar"><div className="crumb"><strong>Proyectos</strong><b>/</b>Horizonte Conecta</div><div className="top-actions"><input className="search" aria-label="Buscar tareas o recursos" placeholder="⌕  Buscar en el proyecto" value={search} onChange={(event) => setSearch(event.target.value)} /><span className="authenticated-role" aria-label="Rol autenticado">{role}</span></div></header>; }
-function LoadingState(): ReactElement { return <div className="loading-state"><strong>Cargando datos persistentes</strong><p>Consultando Gantt, recursos, KPI y cambios en FastAPI…</p></div>; }
-function ErrorState({ error, retry }: { error: string; retry: () => void }): ReactElement { return <div className="access-denied" role="alert"><strong>No se pudo cargar el proyecto</strong><p>{error}</p><button className="btn btn-primary" onClick={retry}>Reintentar</button></div>; }
-function PageHeading({ eyebrow, heading, description, action }: { eyebrow: string; heading: string; description: string; action?: ReactElement }): ReactElement { return <div className="page-head"><div><p className="eyebrow">{eyebrow}</p><h1>{heading}</h1><p>{description}</p></div>{action && <div className="head-actions">{action}</div>}</div>; }
-function MetricCard({ kpi, mark }: { kpi: Kpi; mark: string }): ReactElement { return <div className="card metric-card"><span className="metric-label">{kpi.label}</span><span className="metric-mark" aria-hidden="true">{mark}</span><div className="metric-value">{kpi.value}</div><span className={`trend ${kpi.trend}`}>{kpi.change}</span></div>; }
-function Overview({ tasks, kpis, resources, dashboard }: { tasks: Task[]; kpis: Kpi[]; resources: Resource[]; dashboard: import("./api").DashboardData }): ReactElement { return <><PageHeading eyebrow="VISTA GENERAL · API" heading="Resumen del proyecto" description="Estado consolidado desde la base de datos persistente." /><div className="cards">{kpis.length ? kpis.map((kpi, index) => <MetricCard key={kpi.id} kpi={kpi} mark={["◒", "◈", "↗", "♙"][index % 4]} />) : <EmptyState text="No hay KPI configurados para este proyecto." />}</div><div className="grid-2"><section className="section-card"><div className="section-title"><div><h2>Estado operativo</h2><p>{dashboard.dashboards.total} dashboard(s) persistido(s) · {dashboard.kpi_snapshots.length} snapshots KPI</p></div></div><div className="overview-stats"><strong>{tasks.length}<small>elementos Gantt</small></strong><strong>{resources.length}<small>recursos</small></strong><strong>{tasks.filter((task) => task.progress >= 100).length}<small>completados</small></strong></div><div className="api-note">{dashboard.dashboards.items.map((item) => <span key={item.id}>{item.name}: {item.kpi_codes.join(", ") || "sin KPI"} </span>)}{dashboard.dashboards.items.length === 0 && "No hay dashboards persistidos."}</div></section><section className="section-card"><div className="section-title"><div><h2>Snapshots KPI</h2><p>Valores históricos entregados por el dashboard persistido</p></div></div>{dashboard.kpi_snapshots.length ? <div className="overview-stats">{dashboard.kpi_snapshots.slice(0, 4).map((snapshot) => <strong key={snapshot.id}>{Number(snapshot.value).toFixed(2)}<small>{new Date(snapshot.cutoff_at).toLocaleDateString("es-CL")}</small></strong>)}</div> : <EmptyState text="No hay snapshots calculados." />}</section></div><section className="section-card"><div className="section-title"><div><h2>Actividad de tareas</h2><p>Elementos persistidos recientemente</p></div></div><TaskTable tasks={tasks.slice(0, 5)} /></section></>; }
-function TaskTable({ tasks }: { tasks: Task[] }): ReactElement { return <div className="table-wrap"><table><thead><tr><th>TAREA</th><th>RESPONSABLE</th><th>ESTADO</th><th>AVANCE</th><th>COSTO PLAN</th><th>FECHA LÍMITE</th></tr></thead><tbody>{tasks.length === 0 ? <tr><td colSpan={6}>No hay tareas persistidas.</td></tr> : tasks.map((task) => <tr key={task.apiId}><td>{task.name}</td><td>{task.resource}</td><td><Status status={task.status} /></td><td>{task.progress}%</td><td>${task.planCost.toLocaleString("en-US")}</td><td>{task.due}</td></tr>)}</tbody></table></div>; }
-function Status({ status }: { status: Task["status"] }): ReactElement { return <span className={`pill ${status === "Completada" ? "green" : status === "Riesgo" ? "red" : status === "En curso" ? "yellow" : "gray"}`}>{status}</span>; }
-function ResourcesView({ resources, tasks }: { resources: Resource[]; tasks: Task[] }): ReactElement { return <><PageHeading eyebrow="F6 · CONTROL OPERATIVO · API" heading="Recursos y costos" description="Recursos persistidos y asignaciones disponibles en el backend." /><section className="section-card"><div className="section-title"><div><h2>Capacidad por recurso</h2><p>La asignación detallada se obtiene al registrar asignaciones en el API.</p></div></div>{resources.length === 0 ? <EmptyState text="No hay recursos registrados." /> : <div className="resource-list">{resources.map((resource) => <div className="resource-row" key={resource.id}><div className="resource-identity"><span className="avatar" style={{ background: `${resource.color}18`, color: resource.color }}>{resource.initials}</span><div><strong>{resource.name}</strong><span>{resource.role}</span></div></div><div className="resource-bar"><div className="progress-bar"><div className="progress-fill" style={{ width: `${Math.min(resource.assigned / Math.max(resource.capacity, 1) * 100, 100)}%`, background: resource.color }} /></div><small>{resource.assigned}h asignadas</small></div><div className="resource-cost">{resource.capacity}h<span>capacidad semanal</span></div></div>)}</div>}</section><section className="section-card table-card"><div className="section-title"><div><h2>Tareas y recursos</h2><p>Las tareas sin asignación se muestran explícitamente.</p></div></div><TaskTable tasks={tasks} /></section></>; }
-function KpisView({ kpis, onRefresh }: { kpis: Kpi[]; onRefresh: () => void }): ReactElement { return <><PageHeading eyebrow="F6 · MEDICIÓN · API" heading="Indicadores clave (KPI)" description="Configuración persistida. Los valores se calculan en el backend." action={<button className="btn btn-primary" onClick={onRefresh}>↻ Actualizar</button>} /><div className="cards">{kpis.map((kpi) => <div className="card kpi-card" key={kpi.id}><span className="metric-label">{kpi.label}</span><div className="metric-value">{kpi.value}</div><span className="trend steady">{kpi.formula}</span><small>Objetivo: {kpi.target}</small></div>)}</div>{kpis.length === 0 && <EmptyState text="No hay KPI configurados." />}<div className="api-note">Limitación conocida: el endpoint de lectura de KPI aún no expone valores históricos; esta pantalla muestra la configuración persistida.</div></>; }
-function BoardsView({ changes, tasks, role, token, onRefresh }: { changes: Record<string, ChangeCard[]>; tasks: Task[]; role: Role; token?: string; onRefresh: () => void }): ReactElement { const [tab, setTab] = useState<"proyecto" | "cambios">("proyecto"); const [working, setWorking] = useState(""); const [actionError, setActionError] = useState(""); const approve = async (change: ChangeCard) => { setWorking(change.id); setActionError(""); try { await transitionChange(PROJECT_ID, change.id, "APROBADA", token); onRefresh(); } catch (reason) { setActionError(reason instanceof ApiError ? reason.message : "No se pudo aprobar la solicitud"); } finally { setWorking(""); } }; const columns: [string, string][] = [["incoming", "Entrantes"], ["analysis", "En análisis"], ["approved", "Aprobados"], ["rejected", "Rechazados"]]; return <><PageHeading eyebrow="F6 · SEGUIMIENTO · API" heading="Tableros" description="Tareas y solicitudes de cambio sincronizadas con el backend." /><div className="subnav"><button className={tab === "proyecto" ? "active" : ""} onClick={() => setTab("proyecto")}>Tablero proyecto</button><button className={tab === "cambios" ? "active" : ""} onClick={() => setTab("cambios")}>Gestión de cambios</button></div>{actionError && <div className="api-error" role="alert">{actionError}</div>}{tab === "proyecto" ? <div className="board board-tasks">{tasks.map((task) => <article className="board-item" key={task.apiId}><h3>{task.name}</h3><Status status={task.status} /><div className="board-meta"><span>{task.progress}% avance</span><span>{task.due}</span></div></article>)}{tasks.length === 0 && <EmptyState text="No hay tareas para el tablero." />}</div> : <><F7Panel changes={changes} tasks={tasks} role={role} token={token} onError={setActionError} /><div className="board">{columns.map(([key, label]) => <div className="board-column" key={key}><div className="board-column-header">{label}<span>{(changes[key] ?? []).length}</span></div>{(changes[key] ?? []).map((change) => <article className="board-item" key={change.id}><h3>{change.title}</h3><span className={`pill ${change.priority === "Alta" ? "red" : change.priority === "Media" ? "yellow" : "gray"}`}>{change.priority}</span><div className="impact">{change.description}</div><div className="board-meta"><span>{change.age}</span>{key === "incoming" && role !== "Consulta" && <button className="link-button" disabled={working === change.id} onClick={() => void approve(change)}>{working === change.id ? "Aprobando…" : "Aprobar"}</button>}</div></article>)}{(changes[key] ?? []).length === 0 && <p className="empty-state">Sin solicitudes.</p>}</div>)}</div></>}</>; }
+function Gate() {
+  const { user, ready } = useAuth();
+  if (!ready) return <Loading text="Iniciando Trazo…" />;
+  if (!user) return <LoginPage />;
+  return (
+    <ProjectProvider>
+      <Shell />
+    </ProjectProvider>
+  );
+}
 
-function F7Panel({ changes, tasks, role, token, onError }: { changes: Record<string, ChangeCard[]>; tasks: Task[]; role: Role; token?: string; onError: (message: string) => void }): ReactElement { const allChanges = Object.values(changes).flat(); const [changeId, setChangeId] = useState(allChanges[0]?.id ?? ""); const [taskId, setTaskId] = useState(tasks[0]?.id ?? ""); const [duration, setDuration] = useState(1); const [baseline, setBaseline] = useState<Baseline | null>(null); const [impact, setImpact] = useState<ImpactResult | null>(null); const [comparison, setComparison] = useState<BaselineComparison | null>(null); const [applied, setApplied] = useState<Baseline | null>(null); const [working, setWorking] = useState(""); useEffect(() => { void getBaselines(PROJECT_ID, token).then((items) => setBaseline(items.find((item) => item.status === "VIGENTE") ?? items[0] ?? null)).catch((reason) => onError(reason instanceof ApiError ? reason.message : "No se pudieron cargar las líneas base")); }, [token, onError]); const updates = [{ task_id: taskId, duration_days: duration }]; const run = async (operation: "impact" | "compare" | "apply") => { if (!changeId || !taskId || role === "Consulta" || (operation === "compare" && !baseline)) return; setWorking(operation); onError(""); try { if (operation === "impact") setImpact(await simulateImpact(changeId, updates, token)); if (operation === "compare" && baseline) setComparison(await compareBaseline(PROJECT_ID, baseline.id, updates, token)); if (operation === "apply") setApplied(await applyChange(changeId, updates, token)); } catch (reason) { onError(reason instanceof ApiError ? reason.message : "No se pudo ejecutar la operación F7"); } finally { setWorking(""); } }; return <section className="section-card f7-panel"><div className="section-title"><div><h2>F7 · Simulación y control de cambios</h2><p>Contrato ejecutable: what-if, comparación contra línea base y aplicación.</p></div></div><div className="f7-controls"><label>Solicitud<select value={changeId} onChange={(event) => setChangeId(event.target.value)}>{allChanges.map((change) => <option key={change.id} value={change.id}>{change.title}</option>)}</select></label><label>Elemento<select value={taskId} onChange={(event) => setTaskId(event.target.value)}>{tasks.map((task) => <option key={task.id} value={task.id}>{task.id} · {task.name}</option>)}</select></label><label>Duración propuesta<input type="number" min="0" value={duration} onChange={(event) => setDuration(Number(event.target.value))} /></label></div><div className="f7-actions"><button className="btn btn-primary" disabled={!changeId || working !== "" || role === "Consulta"} onClick={() => void run("impact")}>What-if</button><button className="btn" disabled={!baseline || working !== "" || role === "Consulta"} onClick={() => void run("compare")}>Comparar {baseline?.version ?? "línea base"}</button><button className="btn" disabled={!changeId || working !== "" || role === "Consulta"} onClick={() => void run("apply")}>Aplicar cambio</button></div>{(impact || comparison || applied) && <div className="f7-results"><strong>Resultado persistido/ejecutado</strong>{impact && <p>What-if: <b>{impact.delta_schedule_days} días</b> · costo <b>{impact.delta_cost}</b> · reserva <b>{impact.delta_contingency}</b></p>}{comparison && <p>Comparación {comparison.baseline_version}: <b>{comparison.changes.length} delta(s)</b></p>}{applied && <p>Aplicado: nueva línea base <b>{applied.version}</b></p>}</div>}</section>; }
-function AccessDenied(): ReactElement { return <div className="access-denied"><strong>Vista restringida</strong><p>La administración de KPI está disponible únicamente para el rol Administrador.</p></div>; }
-function EmptyState({ text }: { text: string }): ReactElement { return <div className="empty-state">{text}</div>; }
+function BrandMark() {
+  return (
+    <div className="brand-mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M2 4h10M2 9h14M2 14h7" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" />
+      </svg>
+    </div>
+  );
+}
 
-export default App;
+function Shell() {
+  const route = useRoute();
+  const { user, logout, isManager, primaryRole } = useAuth();
+  const { projects, project, select, loading, error, refresh } = useProject();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const routeKey = `${route.page}/${route.param ?? ""}`;
+  const [lastRoute, setLastRoute] = useState(routeKey);
+  if (lastRoute !== routeKey) {
+    setLastRoute(routeKey);
+    setMenuOpen(false);
+  }
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [routeKey]);
+
+  const items = NAV.filter((item) => !item.managerOnly || isManager);
+  const groups = Array.from(new Set(items.map((item) => item.group)));
+  const active = route.page === "cambio" ? "cambios" : route.page;
+
+  let page: ReactNode;
+  const navItem = NAV.find((item) => item.page === route.page);
+  if (loading) page = <Loading />;
+  else if (error) page = <ErrorBox error={error} onRetry={() => void refresh()} />;
+  else if ((navItem?.needsProject || route.page === "cambio") && !project)
+    page = (
+      <div className="card card-b empty">
+        No hay un proyecto seleccionado. {isManager ? <a href={href("importar")}>Importa una Carta Gantt</a> : "Pide al Jefe de Proyecto que importe uno."}
+      </div>
+    );
+  else page = renderPage(route.page, route.param);
+
+  return (
+    <div className="app">
+      <aside className="side">
+        <div className="brand">
+          <BrandMark />
+          <div>
+            <b>Trazo</b>
+            <small>Planificación y control</small>
+          </div>
+        </div>
+        <nav className="nav" aria-label="Secciones">
+          {groups.map((group) => (
+            <div key={group}>
+              <div className="nav-group">{group}</div>
+              {items
+                .filter((item) => item.group === group)
+                .map((item) => (
+                  <a key={item.page} href={href(item.page)} className={active === item.page ? "on" : ""}>
+                    <span className="n">{String(NAV.indexOf(item) + 1).padStart(2, "0")}</span>
+                    {item.label}
+                  </a>
+                ))}
+            </div>
+          ))}
+        </nav>
+        <div className="side-foot">
+          <span>{ROLE_LABEL[primaryRole ?? "INTEGRANTE"]}</span>
+          <a href="/docs" target="_blank" rel="noreferrer">
+            API
+          </a>
+        </div>
+      </aside>
+      <div className="main">
+        <header className="top">
+          <label className="proj-sel">
+            <span className="muted" style={{ fontSize: 12 }}>
+              Proyecto
+            </span>
+            <select value={project?.id ?? ""} onChange={(event) => select(event.target.value)} aria-label="Proyecto activo">
+              {!projects.length && <option value="">Sin proyectos</option>}
+              {projects.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+            {project && <span className={`tag ${statusTag(project.status)}`}>{PROJECT_STATUS_LABEL[project.status]}</span>}
+          </label>
+          {project && (
+            <>
+              <span className="cut">
+                Fecha de corte <b>{d(project.cutoff_date)}</b>
+              </span>
+              <span className="cut">
+                Línea base <b>{project.baseline_version ?? "—"}</b>
+              </span>
+            </>
+          )}
+          <div className="sp" />
+          <div className="user-menu">
+            <button className="user-btn" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen}>
+              <span className="who">
+                <b>{user?.full_name}</b>
+                <small>{ROLE_LABEL[primaryRole ?? "INTEGRANTE"]}</small>
+              </span>
+              <span className="avatar">{initials(user?.full_name)}</span>
+            </button>
+            {menuOpen && (
+              <div className="menu card">
+                <div className="muted" style={{ fontSize: 12, padding: "4px 8px 8px" }}>
+                  {user?.email}
+                </div>
+                <button
+                  className="btn sm"
+                  onClick={() => {
+                    logout();
+                    go("proyectos");
+                  }}
+                >
+                  <Icon name="logout" size={14} /> Cerrar sesión
+                </button>
+              </div>
+            )}
+          </div>
+        </header>
+        <main className="content">{page}</main>
+      </div>
+    </div>
+  );
+}
+
+function renderPage(page: string, param: string | null): ReactNode {
+  switch (page) {
+    case "proyectos":
+      return <ProjectsPage />;
+    case "importar":
+      return <ImportPage />;
+    case "actividades":
+      return <ActivitiesPage focus={param} />;
+    case "gantt":
+      return <GanttPage focus={param} />;
+    case "recursos":
+      return <ResourcesPage focus={param} />;
+    case "hitos":
+      return <MilestonesPage focus={param} />;
+    case "kpi":
+      return <KpiPage focus={param} />;
+    case "cambios":
+      return <ChangesPage />;
+    case "cambio":
+      return param ? <ChangeDetailPage id={param} /> : <ChangesPage />;
+    case "tablero":
+      return <ProjectDashboardPage />;
+    case "tablero-cambio":
+      return <ChangeDashboardPage />;
+    case "usuarios":
+      return <UsersPage />;
+    case "caso":
+      return <ChecklistPage />;
+    default:
+      return (
+        <div className="card card-b empty">
+          Página no encontrada. <a href={href("proyectos")}>Volver a proyectos</a>
+        </div>
+      );
+  }
+}

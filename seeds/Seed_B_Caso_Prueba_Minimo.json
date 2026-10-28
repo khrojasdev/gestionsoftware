@@ -1,20 +1,16 @@
 {
   "metadata": {
     "seed": "B",
-    "nombre": "Caso de prueba mínimo",
-    "version": "1.0",
-    "formato_importacion": "Carta Gantt canónica",
-    "reset_command": "python seeds/build_seed_b.py",
-    "load_command": "python seeds/verificar_f9.py"
+    "cutoff": "2026-10-30"
   },
   "Proyecto": [
     {
       "clave": "codigo",
-      "valor": "SEED-B-MINIMO"
+      "valor": "CASO-PRUEBA"
     },
     {
       "clave": "nombre",
-      "valor": "Caso de prueba mínimo"
+      "valor": "Caso de prueba mínimo · App de inspecciones"
     },
     {
       "clave": "cliente",
@@ -22,19 +18,19 @@
     },
     {
       "clave": "responsable",
-      "valor": "Jefe de Proyecto"
+      "valor": "Kevin Henríquez"
     },
     {
       "clave": "fecha_inicio",
-      "valor": "2026-01-05"
+      "valor": "2026-09-07"
     },
     {
       "clave": "fecha_comprometida",
-      "valor": "2026-06-30"
+      "valor": "2027-01-29"
     },
     {
       "clave": "presupuesto",
-      "valor": "45000000"
+      "valor": "30287400"
     },
     {
       "clave": "contingencia_pct",
@@ -50,22 +46,76 @@
     },
     {
       "clave": "fecha_corte",
-      "valor": "2026-03-31"
+      "valor": "2026-10-30"
     }
   ],
   "Calendario": [
     {
-      "fecha": "2026-05-01",
+      "fecha": "2026-09-18",
       "tipo": "FERIADO",
       "recurso_id": "",
-      "descripcion": "Día del Trabajo"
+      "descripcion": "Feriado nacional"
+    },
+    {
+      "fecha": "2026-09-19",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional"
+    },
+    {
+      "fecha": "2026-10-12",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional"
+    },
+    {
+      "fecha": "2026-10-31",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional"
+    },
+    {
+      "fecha": "2026-11-01",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional"
+    },
+    {
+      "fecha": "2026-12-08",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional"
+    },
+    {
+      "fecha": "2026-12-25",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional"
+    },
+    {
+      "fecha": "2027-01-01",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional"
+    },
+    {
+      "fecha": "2027-03-26",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional"
+    },
+    {
+      "fecha": "2027-03-27",
+      "tipo": "FERIADO",
+      "recurso_id": "",
+      "descripcion": "Feriado nacional"
     }
   ],
   "Gantt": [
     {
-      "id": "E01",
+      "id": "E1",
       "tipo": "ETAPA",
-      "nombre": "Inicio y definición",
+      "nombre": "Inicio y requisitos",
       "padre_id": "",
       "inicio_plan": "",
       "fin_plan": "",
@@ -77,7 +127,119 @@
       "costo_real": ""
     },
     {
-      "id": "E02",
+      "id": "AC1.1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Inicio del proyecto",
+      "padre_id": "E1",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A01",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Realizar kick-off y plan de trabajo",
+      "padre_id": "AC1.1",
+      "inicio_plan": "2026-09-07",
+      "fin_plan": "2026-09-09",
+      "duracion_dias": 3,
+      "predecesoras": "",
+      "avance_pct": 100,
+      "inicio_real": "2026-09-07",
+      "fin_real": "2026-09-09",
+      "costo_real": 984000
+    },
+    {
+      "id": "AC1.2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Levantamiento en obra",
+      "padre_id": "E1",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A02",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Entrevistar a jefes de obra e inspectores",
+      "padre_id": "AC1.2",
+      "inicio_plan": "2026-09-10",
+      "fin_plan": "2026-09-16",
+      "duracion_dias": 5,
+      "predecesoras": "A01FS",
+      "avance_pct": 100,
+      "inicio_real": "2026-09-10",
+      "fin_real": "2026-09-16",
+      "costo_real": 968000
+    },
+    {
+      "id": "A03",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Redactar historias de usuario",
+      "padre_id": "AC1.2",
+      "inicio_plan": "2026-09-14",
+      "fin_plan": "2026-09-22",
+      "duracion_dias": 6,
+      "predecesoras": "A02SS+2",
+      "avance_pct": 100,
+      "inicio_real": "2026-09-14",
+      "fin_real": "2026-09-22",
+      "costo_real": 888000
+    },
+    {
+      "id": "AC1.3",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Alcance y backlog",
+      "padre_id": "E1",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A04",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Priorizar backlog con el cliente",
+      "padre_id": "AC1.3",
+      "inicio_plan": "2026-09-23",
+      "fin_plan": "2026-09-24",
+      "duracion_dias": 2,
+      "predecesoras": "A03FS",
+      "avance_pct": 100,
+      "inicio_real": "2026-09-23",
+      "fin_real": "2026-09-24",
+      "costo_real": 416000
+    },
+    {
+      "id": "H01",
+      "tipo": "HITO",
+      "nombre": "Alcance aprobado",
+      "padre_id": "AC1.3",
+      "inicio_plan": "2026-09-24",
+      "fin_plan": "2026-09-24",
+      "duracion_dias": 0,
+      "predecesoras": "A04FS",
+      "avance_pct": 100,
+      "inicio_real": "2026-09-24",
+      "fin_real": "2026-09-24",
+      "costo_real": ""
+    },
+    {
+      "id": "E2",
       "tipo": "ETAPA",
       "nombre": "Diseño y construcción",
       "padre_id": "",
@@ -91,7 +253,161 @@
       "costo_real": ""
     },
     {
-      "id": "E03",
+      "id": "AC2.1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Diseño de la solución",
+      "padre_id": "E2",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A05",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Diseñar prototipo UX de inspección",
+      "padre_id": "AC2.1",
+      "inicio_plan": "2026-09-25",
+      "fin_plan": "2026-10-06",
+      "duracion_dias": 8,
+      "predecesoras": "H01FS",
+      "avance_pct": 100,
+      "inicio_real": "2026-09-25",
+      "fin_real": "2026-09-30",
+      "costo_real": 1729600
+    },
+    {
+      "id": "A06",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Diseñar arquitectura y modelo de datos",
+      "padre_id": "AC2.1",
+      "inicio_plan": "2026-09-28",
+      "fin_plan": "2026-10-05",
+      "duracion_dias": 6,
+      "predecesoras": "A05SS+1",
+      "avance_pct": 100,
+      "inicio_real": "2026-09-28",
+      "fin_real": "2026-10-05",
+      "costo_real": 820800
+    },
+    {
+      "id": "H02",
+      "tipo": "HITO",
+      "nombre": "Diseño de solución aprobado",
+      "padre_id": "AC2.1",
+      "inicio_plan": "2026-10-06",
+      "fin_plan": "2026-10-06",
+      "duracion_dias": 0,
+      "predecesoras": "A05FS;A06FS",
+      "avance_pct": 100,
+      "inicio_real": "2026-10-06",
+      "fin_real": "2026-10-06",
+      "costo_real": ""
+    },
+    {
+      "id": "AC2.2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Construcción backend",
+      "padre_id": "E2",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A07",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Construir API de inspecciones",
+      "padre_id": "AC2.2",
+      "inicio_plan": "2026-10-07",
+      "fin_plan": "2026-10-21",
+      "duracion_dias": 10,
+      "predecesoras": "H02FS",
+      "avance_pct": 100,
+      "inicio_real": "2026-10-07",
+      "fin_real": "2026-10-21",
+      "costo_real": 3620000
+    },
+    {
+      "id": "A08",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Construir reportes y exportación",
+      "padre_id": "AC2.2",
+      "inicio_plan": "2026-10-22",
+      "fin_plan": "2026-10-29",
+      "duracion_dias": 6,
+      "predecesoras": "A07FS",
+      "avance_pct": 100,
+      "inicio_real": "2026-10-22",
+      "fin_real": "2026-10-29",
+      "costo_real": 1152000
+    },
+    {
+      "id": "AC2.3",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Construcción app móvil",
+      "padre_id": "E2",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A09",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Construir app móvil offline",
+      "padre_id": "AC2.3",
+      "inicio_plan": "2026-10-09",
+      "fin_plan": "2026-10-27",
+      "duracion_dias": 12,
+      "predecesoras": "A07SS+2",
+      "avance_pct": 70,
+      "inicio_real": "2026-10-09",
+      "fin_real": "",
+      "costo_real": 1612800
+    },
+    {
+      "id": "A10",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Integrar captura de fotos georreferenciadas",
+      "padre_id": "AC2.3",
+      "inicio_plan": "2026-10-21",
+      "fin_plan": "2026-10-27",
+      "duracion_dias": 5,
+      "predecesoras": "A09FF",
+      "avance_pct": 40,
+      "inicio_real": "2026-10-21",
+      "fin_real": "",
+      "costo_real": 192000
+    },
+    {
+      "id": "H03",
+      "tipo": "HITO",
+      "nombre": "Release candidata lista",
+      "padre_id": "AC2.3",
+      "inicio_plan": "2026-10-29",
+      "fin_plan": "2026-10-29",
+      "duracion_dias": 0,
+      "predecesoras": "A08FS;A10FS",
+      "avance_pct": 0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "E3",
       "tipo": "ETAPA",
       "nombre": "Integración y pruebas",
       "padre_id": "",
@@ -105,7 +421,133 @@
       "costo_real": ""
     },
     {
-      "id": "E04",
+      "id": "AC3.1",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Integraciones",
+      "padre_id": "E3",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A11",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Integrar inicio de sesión corporativo (SSO)",
+      "padre_id": "AC3.1",
+      "inicio_plan": "2026-10-30",
+      "fin_plan": "2026-11-04",
+      "duracion_dias": 4,
+      "predecesoras": "H03FS",
+      "avance_pct": 0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A12",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Integrar ERP en modo lectura",
+      "padre_id": "AC3.1",
+      "inicio_plan": "2026-11-05",
+      "fin_plan": "2026-11-12",
+      "duracion_dias": 6,
+      "predecesoras": "A11FS",
+      "avance_pct": 0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC3.2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Pruebas técnicas",
+      "padre_id": "E3",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A13",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Ejecutar pruebas de sistema",
+      "padre_id": "AC3.2",
+      "inicio_plan": "2026-11-13",
+      "fin_plan": "2026-11-20",
+      "duracion_dias": 6,
+      "predecesoras": "A12FS",
+      "avance_pct": 0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A14",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Ejecutar prueba de seguridad externa",
+      "padre_id": "AC3.2",
+      "inicio_plan": "2026-11-18",
+      "fin_plan": "2026-11-20",
+      "duracion_dias": 3,
+      "predecesoras": "A13SS+3",
+      "avance_pct": 0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC3.3",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Aceptación usuaria",
+      "padre_id": "E3",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "A15",
+      "tipo": "SUBACTIVIDAD",
+      "nombre": "Realizar UAT con jefes de obra",
+      "padre_id": "AC3.3",
+      "inicio_plan": "2026-11-23",
+      "fin_plan": "2026-11-26",
+      "duracion_dias": 4,
+      "predecesoras": "A13FS;A14FS",
+      "avance_pct": 0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H04",
+      "tipo": "HITO",
+      "nombre": "UAT aprobada",
+      "padre_id": "AC3.3",
+      "inicio_plan": "2026-11-26",
+      "fin_plan": "2026-11-26",
+      "duracion_dias": 0,
+      "predecesoras": "A15FS",
+      "avance_pct": 0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "E4",
       "tipo": "ETAPA",
       "nombre": "Despliegue y cierre",
       "padre_id": "",
@@ -119,379 +561,15 @@
       "costo_real": ""
     },
     {
-      "id": "AC11",
+      "id": "AC4.1",
       "tipo": "ACTIVIDAD",
-      "nombre": "Alineamiento inicial",
-      "padre_id": "E01",
+      "nombre": "Preparación de usuarios",
+      "padre_id": "E4",
       "inicio_plan": "",
       "fin_plan": "",
       "duracion_dias": "",
       "predecesoras": "",
       "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "AC12",
-      "tipo": "ACTIVIDAD",
-      "nombre": "Requisitos",
-      "padre_id": "E01",
-      "inicio_plan": "",
-      "fin_plan": "",
-      "duracion_dias": "",
-      "predecesoras": "",
-      "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "AC13",
-      "tipo": "ACTIVIDAD",
-      "nombre": "Plan de trabajo",
-      "padre_id": "E01",
-      "inicio_plan": "",
-      "fin_plan": "",
-      "duracion_dias": "",
-      "predecesoras": "",
-      "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "AC21",
-      "tipo": "ACTIVIDAD",
-      "nombre": "Diseño funcional",
-      "padre_id": "E02",
-      "inicio_plan": "",
-      "fin_plan": "",
-      "duracion_dias": "",
-      "predecesoras": "",
-      "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "AC22",
-      "tipo": "ACTIVIDAD",
-      "nombre": "Construcción núcleo",
-      "padre_id": "E02",
-      "inicio_plan": "",
-      "fin_plan": "",
-      "duracion_dias": "",
-      "predecesoras": "",
-      "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "AC23",
-      "tipo": "ACTIVIDAD",
-      "nombre": "Construcción móvil",
-      "padre_id": "E02",
-      "inicio_plan": "",
-      "fin_plan": "",
-      "duracion_dias": "",
-      "predecesoras": "",
-      "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "AC31",
-      "tipo": "ACTIVIDAD",
-      "nombre": "Integraciones",
-      "padre_id": "E03",
-      "inicio_plan": "",
-      "fin_plan": "",
-      "duracion_dias": "",
-      "predecesoras": "",
-      "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "AC32",
-      "tipo": "ACTIVIDAD",
-      "nombre": "Pruebas técnicas",
-      "padre_id": "E03",
-      "inicio_plan": "",
-      "fin_plan": "",
-      "duracion_dias": "",
-      "predecesoras": "",
-      "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "AC33",
-      "tipo": "ACTIVIDAD",
-      "nombre": "Aceptación usuaria",
-      "padre_id": "E03",
-      "inicio_plan": "",
-      "fin_plan": "",
-      "duracion_dias": "",
-      "predecesoras": "",
-      "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "AC41",
-      "tipo": "ACTIVIDAD",
-      "nombre": "Preparación productiva",
-      "padre_id": "E04",
-      "inicio_plan": "",
-      "fin_plan": "",
-      "duracion_dias": "",
-      "predecesoras": "",
-      "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "AC42",
-      "tipo": "ACTIVIDAD",
-      "nombre": "Adopción",
-      "padre_id": "E04",
-      "inicio_plan": "",
-      "fin_plan": "",
-      "duracion_dias": "",
-      "predecesoras": "",
-      "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "AC43",
-      "tipo": "ACTIVIDAD",
-      "nombre": "Cierre",
-      "padre_id": "E04",
-      "inicio_plan": "",
-      "fin_plan": "",
-      "duracion_dias": "",
-      "predecesoras": "",
-      "avance_pct": "",
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A01",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 01",
-      "padre_id": "AC11",
-      "inicio_plan": "2026-01-05",
-      "fin_plan": "2026-01-07",
-      "duracion_dias": 3,
-      "predecesoras": "",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A02",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 02",
-      "padre_id": "AC11",
-      "inicio_plan": "2026-01-08",
-      "fin_plan": "2026-01-13",
-      "duracion_dias": 4,
-      "predecesoras": "A01FS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A03",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 03",
-      "padre_id": "AC12",
-      "inicio_plan": "2026-01-14",
-      "fin_plan": "2026-01-20",
-      "duracion_dias": 5,
-      "predecesoras": "A02SS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A04",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 04",
-      "padre_id": "AC12",
-      "inicio_plan": "2026-01-21",
-      "fin_plan": "2026-01-23",
-      "duracion_dias": 3,
-      "predecesoras": "A03FF",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A05",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 05",
-      "padre_id": "AC13",
-      "inicio_plan": "2026-01-26",
-      "fin_plan": "2026-01-29",
-      "duracion_dias": 4,
-      "predecesoras": "A04SF",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A06",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 06",
-      "padre_id": "AC21",
-      "inicio_plan": "2026-01-30",
-      "fin_plan": "2026-02-05",
-      "duracion_dias": 5,
-      "predecesoras": "A05FS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A07",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 07",
-      "padre_id": "AC21",
-      "inicio_plan": "2026-02-06",
-      "fin_plan": "2026-02-10",
-      "duracion_dias": 3,
-      "predecesoras": "A06FS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A08",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 08",
-      "padre_id": "AC22",
-      "inicio_plan": "2026-02-11",
-      "fin_plan": "2026-02-16",
-      "duracion_dias": 4,
-      "predecesoras": "A07SS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A09",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 09",
-      "padre_id": "AC22",
-      "inicio_plan": "2026-02-17",
-      "fin_plan": "2026-02-23",
-      "duracion_dias": 5,
-      "predecesoras": "A08FS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A10",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 10",
-      "padre_id": "AC23",
-      "inicio_plan": "2026-02-24",
-      "fin_plan": "2026-02-26",
-      "duracion_dias": 3,
-      "predecesoras": "A09FF",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A11",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 11",
-      "padre_id": "AC31",
-      "inicio_plan": "2026-02-27",
-      "fin_plan": "2026-03-04",
-      "duracion_dias": 4,
-      "predecesoras": "A10SF",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A12",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 12",
-      "padre_id": "AC31",
-      "inicio_plan": "2026-03-05",
-      "fin_plan": "2026-03-11",
-      "duracion_dias": 5,
-      "predecesoras": "A11FS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A13",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 13",
-      "padre_id": "AC32",
-      "inicio_plan": "2026-03-12",
-      "fin_plan": "2026-03-16",
-      "duracion_dias": 3,
-      "predecesoras": "A12FS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A14",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 14",
-      "padre_id": "AC32",
-      "inicio_plan": "2026-03-17",
-      "fin_plan": "2026-03-20",
-      "duracion_dias": 4,
-      "predecesoras": "A13SS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "A15",
-      "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 15",
-      "padre_id": "AC33",
-      "inicio_plan": "2026-03-23",
-      "fin_plan": "2026-03-27",
-      "duracion_dias": 5,
-      "predecesoras": "A14FS",
-      "avance_pct": 0,
       "inicio_real": "",
       "fin_real": "",
       "costo_real": ""
@@ -499,13 +577,27 @@
     {
       "id": "A16",
       "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 16",
-      "padre_id": "AC41",
-      "inicio_plan": "2026-03-30",
-      "fin_plan": "2026-04-01",
-      "duracion_dias": 3,
-      "predecesoras": "A15FF",
+      "nombre": "Capacitar a usuarios de obra",
+      "padre_id": "AC4.1",
+      "inicio_plan": "2026-11-24",
+      "fin_plan": "2026-11-27",
+      "duracion_dias": 4,
+      "predecesoras": "A15SS+1;A17SF",
       "avance_pct": 0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC4.2",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Puesta en marcha",
+      "padre_id": "E4",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
       "inicio_real": "",
       "fin_real": "",
       "costo_real": ""
@@ -513,12 +605,26 @@
     {
       "id": "A17",
       "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 17",
-      "padre_id": "AC41",
-      "inicio_plan": "2026-04-02",
-      "fin_plan": "2026-04-07",
-      "duracion_dias": 4,
-      "predecesoras": "A16FS",
+      "nombre": "Desplegar en producción",
+      "padre_id": "AC4.2",
+      "inicio_plan": "2026-11-27",
+      "fin_plan": "2026-11-27",
+      "duracion_dias": 1,
+      "predecesoras": "H04FS",
+      "avance_pct": 0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "H05",
+      "tipo": "HITO",
+      "nombre": "Piloto en operación",
+      "padre_id": "AC4.2",
+      "inicio_plan": "2026-11-27",
+      "fin_plan": "2026-11-27",
+      "duracion_dias": 0,
+      "predecesoras": "A17FS",
       "avance_pct": 0,
       "inicio_real": "",
       "fin_real": "",
@@ -527,13 +633,27 @@
     {
       "id": "A18",
       "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 18",
-      "padre_id": "AC42",
-      "inicio_plan": "2026-04-08",
-      "fin_plan": "2026-04-14",
-      "duracion_dias": 5,
-      "predecesoras": "A17SF",
+      "nombre": "Acompañar operación asistida",
+      "padre_id": "AC4.2",
+      "inicio_plan": "2026-11-30",
+      "fin_plan": "2026-12-14",
+      "duracion_dias": 10,
+      "predecesoras": "A17FS",
       "avance_pct": 0,
+      "inicio_real": "",
+      "fin_real": "",
+      "costo_real": ""
+    },
+    {
+      "id": "AC4.3",
+      "tipo": "ACTIVIDAD",
+      "nombre": "Cierre del proyecto",
+      "padre_id": "E4",
+      "inicio_plan": "",
+      "fin_plan": "",
+      "duracion_dias": "",
+      "predecesoras": "",
+      "avance_pct": "",
       "inicio_real": "",
       "fin_real": "",
       "costo_real": ""
@@ -541,10 +661,10 @@
     {
       "id": "A19",
       "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 19",
-      "padre_id": "AC42",
-      "inicio_plan": "2026-04-15",
-      "fin_plan": "2026-04-17",
+      "nombre": "Evaluar resultados del piloto",
+      "padre_id": "AC4.3",
+      "inicio_plan": "2026-12-15",
+      "fin_plan": "2026-12-17",
       "duracion_dias": 3,
       "predecesoras": "A18FS",
       "avance_pct": 0,
@@ -555,82 +675,12 @@
     {
       "id": "A20",
       "tipo": "SUBACTIVIDAD",
-      "nombre": "Trabajo demostrable 20",
-      "padre_id": "AC43",
-      "inicio_plan": "2026-04-20",
-      "fin_plan": "2026-04-23",
-      "duracion_dias": 4,
+      "nombre": "Elaborar informe y acta de cierre",
+      "padre_id": "AC4.3",
+      "inicio_plan": "2026-12-18",
+      "fin_plan": "2026-12-21",
+      "duracion_dias": 2,
       "predecesoras": "A19FS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "H01",
-      "tipo": "HITO",
-      "nombre": "Acta de inicio aprobada",
-      "padre_id": "AC11",
-      "inicio_plan": "2026-01-13",
-      "fin_plan": "2026-01-13",
-      "duracion_dias": 0,
-      "predecesoras": "A02FS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "H02",
-      "tipo": "HITO",
-      "nombre": "Requisitos validados",
-      "padre_id": "AC12",
-      "inicio_plan": "2026-01-23",
-      "fin_plan": "2026-01-23",
-      "duracion_dias": 0,
-      "predecesoras": "A04FS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "H03",
-      "tipo": "HITO",
-      "nombre": "Diseño aprobado",
-      "padre_id": "AC21",
-      "inicio_plan": "2026-02-10",
-      "fin_plan": "2026-02-10",
-      "duracion_dias": 0,
-      "predecesoras": "A07FS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "H04",
-      "tipo": "HITO",
-      "nombre": "Integración disponible",
-      "padre_id": "AC31",
-      "inicio_plan": "2026-03-11",
-      "fin_plan": "2026-03-11",
-      "duracion_dias": 0,
-      "predecesoras": "A12FS",
-      "avance_pct": 0,
-      "inicio_real": "",
-      "fin_real": "",
-      "costo_real": ""
-    },
-    {
-      "id": "H05",
-      "tipo": "HITO",
-      "nombre": "UAT aprobada",
-      "padre_id": "AC33",
-      "inicio_plan": "2026-03-27",
-      "fin_plan": "2026-03-27",
-      "duracion_dias": 0,
-      "predecesoras": "A15FS",
       "avance_pct": 0,
       "inicio_real": "",
       "fin_real": "",
@@ -639,10 +689,10 @@
     {
       "id": "H06",
       "tipo": "HITO",
-      "nombre": "Cierre formal aprobado",
-      "padre_id": "AC43",
-      "inicio_plan": "2026-04-23",
-      "fin_plan": "2026-04-23",
+      "nombre": "Cierre formal del proyecto",
+      "padre_id": "AC4.3",
+      "inicio_plan": "2026-12-21",
+      "fin_plan": "2026-12-21",
       "duracion_dias": 0,
       "predecesoras": "A20FS",
       "avance_pct": 0,
@@ -653,44 +703,8 @@
   ],
   "Recursos": [
     {
-      "recurso_id": "R001",
-      "nombre": "Ana Analista",
-      "tipo": "HUMANO",
-      "rol": "Analista Funcional",
-      "tarifa": 22000,
-      "unidad": "hora",
-      "capacidad_h_dia": 8
-    },
-    {
-      "recurso_id": "R002",
-      "nombre": "Bruno Backend",
-      "tipo": "HUMANO",
-      "rol": "Desarrollador Backend",
-      "tarifa": 24000,
-      "unidad": "hora",
-      "capacidad_h_dia": 8
-    },
-    {
-      "recurso_id": "R003",
-      "nombre": "Carla Frontend",
-      "tipo": "HUMANO",
-      "rol": "Desarrollador Frontend/Móvil",
-      "tarifa": 24000,
-      "unidad": "hora",
-      "capacidad_h_dia": 8
-    },
-    {
-      "recurso_id": "R004",
-      "nombre": "Diego QA",
-      "tipo": "HUMANO",
-      "rol": "Analista QA",
-      "tarifa": 18500,
-      "unidad": "hora",
-      "capacidad_h_dia": 8
-    },
-    {
-      "recurso_id": "R005",
-      "nombre": "Elena Proyecto",
+      "recurso_id": "P1",
+      "nombre": "Kevin Henríquez",
       "tipo": "HUMANO",
       "rol": "Jefe de Proyecto",
       "tarifa": 30000,
@@ -698,29 +712,65 @@
       "capacidad_h_dia": 8
     },
     {
-      "recurso_id": "R006",
-      "nombre": "Kit tablets de obra",
+      "recurso_id": "P2",
+      "nombre": "María Soto",
+      "tipo": "HUMANO",
+      "rol": "Analista Funcional / de Negocio",
+      "tarifa": 22000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "P3",
+      "nombre": "Diego López",
+      "tipo": "HUMANO",
+      "rol": "Desarrollador Backend",
+      "tarifa": 24000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "P4",
+      "nombre": "Christian Pérez",
+      "tipo": "HUMANO",
+      "rol": "Desarrollador Frontend/Móvil",
+      "tarifa": 24000,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "P5",
+      "nombre": "Pedro Rivas",
+      "tipo": "HUMANO",
+      "rol": "Analista QA",
+      "tarifa": 18500,
+      "unidad": "hora",
+      "capacidad_h_dia": 8
+    },
+    {
+      "recurso_id": "R-EQ1",
+      "nombre": "Tablets rugerizadas",
       "tipo": "EQUIPAMIENTO",
-      "rol": "Dispositivo",
-      "tarifa": 350000,
+      "rol": "Equipamiento",
+      "tarifa": 480000,
       "unidad": "unidad",
       "capacidad_h_dia": ""
     },
     {
-      "recurso_id": "R007",
-      "nombre": "Nube de prueba",
+      "recurso_id": "R-IN1",
+      "nombre": "Infraestructura cloud QA y producción",
       "tipo": "INFRAESTRUCTURA_LICENCIA",
-      "rol": "Cloud",
-      "tarifa": 1200000,
+      "rol": "Infraestructura y licencias",
+      "tarifa": 850000,
       "unidad": "mes",
       "capacidad_h_dia": ""
     },
     {
-      "recurso_id": "R008",
-      "nombre": "Servicio API externo",
+      "recurso_id": "R-SE1",
+      "nombre": "Prueba de seguridad externa",
       "tipo": "SERVICIO_EXTERNO",
-      "rol": "Proveedor",
-      "tarifa": 3000000,
+      "rol": "Servicio externo",
+      "tarifa": 2400000,
       "unidad": "servicio",
       "capacidad_h_dia": ""
     }
@@ -728,15 +778,23 @@
   "Asignaciones": [
     {
       "tarea_id": "A01",
-      "recurso_id": "R001",
-      "horas_planificadas": 32,
+      "recurso_id": "P1",
+      "horas_planificadas": 24,
       "cantidad": "",
       "h_dia": 8,
       "tarifa_override": ""
     },
     {
+      "tarea_id": "A01",
+      "recurso_id": "P2",
+      "horas_planificadas": 12,
+      "cantidad": "",
+      "h_dia": 4,
+      "tarifa_override": ""
+    },
+    {
       "tarea_id": "A02",
-      "recurso_id": "R002",
+      "recurso_id": "P2",
       "horas_planificadas": 40,
       "cantidad": "",
       "h_dia": 8,
@@ -744,167 +802,231 @@
     },
     {
       "tarea_id": "A03",
-      "recurso_id": "R003",
+      "recurso_id": "P2",
       "horas_planificadas": 24,
       "cantidad": "",
-      "h_dia": 8,
+      "h_dia": 4,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A03",
+      "recurso_id": "P1",
+      "horas_planificadas": 12,
+      "cantidad": "",
+      "h_dia": 2,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A04",
-      "recurso_id": "R004",
-      "horas_planificadas": 32,
+      "recurso_id": "P1",
+      "horas_planificadas": 8,
       "cantidad": "",
-      "h_dia": 8,
+      "h_dia": 4,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A04",
+      "recurso_id": "P2",
+      "horas_planificadas": 8,
+      "cantidad": "",
+      "h_dia": 4,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A05",
-      "recurso_id": "R005",
-      "horas_planificadas": 40,
+      "recurso_id": "P4",
+      "horas_planificadas": 48,
       "cantidad": "",
-      "h_dia": 8,
+      "h_dia": 6,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A05",
+      "recurso_id": "P2",
+      "horas_planificadas": 16,
+      "cantidad": "",
+      "h_dia": 2,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A06",
-      "recurso_id": "R001",
-      "horas_planificadas": 24,
+      "recurso_id": "P3",
+      "horas_planificadas": 36,
       "cantidad": "",
-      "h_dia": 8,
+      "h_dia": 6,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A07",
-      "recurso_id": "R002",
-      "horas_planificadas": 32,
+      "recurso_id": "P3",
+      "horas_planificadas": 80,
       "cantidad": "",
       "h_dia": 8,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A08",
-      "recurso_id": "R003",
-      "horas_planificadas": 40,
+      "recurso_id": "P3",
+      "horas_planificadas": 48,
       "cantidad": "",
       "h_dia": 8,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A09",
-      "recurso_id": "R004",
-      "horas_planificadas": 24,
+      "recurso_id": "P4",
+      "horas_planificadas": 96,
       "cantidad": "",
       "h_dia": 8,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A10",
-      "recurso_id": "R005",
-      "horas_planificadas": 32,
+      "recurso_id": "P4",
+      "horas_planificadas": 20,
       "cantidad": "",
-      "h_dia": 8,
+      "h_dia": 4,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A11",
-      "recurso_id": "R001",
-      "horas_planificadas": 40,
+      "recurso_id": "P3",
+      "horas_planificadas": 32,
       "cantidad": "",
       "h_dia": 8,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A12",
-      "recurso_id": "R002",
-      "horas_planificadas": 24,
+      "recurso_id": "P3",
+      "horas_planificadas": 48,
       "cantidad": "",
       "h_dia": 8,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A13",
-      "recurso_id": "R003",
-      "horas_planificadas": 32,
+      "recurso_id": "P5",
+      "horas_planificadas": 48,
       "cantidad": "",
       "h_dia": 8,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A13",
+      "recurso_id": "P3",
+      "horas_planificadas": 24,
+      "cantidad": "",
+      "h_dia": 4,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A14",
-      "recurso_id": "R004",
-      "horas_planificadas": 40,
+      "recurso_id": "P5",
+      "horas_planificadas": 12,
       "cantidad": "",
-      "h_dia": 8,
+      "h_dia": 4,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A15",
-      "recurso_id": "R005",
+      "recurso_id": "P5",
       "horas_planificadas": 24,
       "cantidad": "",
-      "h_dia": 8,
+      "h_dia": 6,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A15",
+      "recurso_id": "P2",
+      "horas_planificadas": 24,
+      "cantidad": "",
+      "h_dia": 6,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A16",
-      "recurso_id": "R001",
-      "horas_planificadas": 32,
+      "recurso_id": "P2",
+      "horas_planificadas": 24,
       "cantidad": "",
-      "h_dia": 8,
+      "h_dia": 6,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A17",
-      "recurso_id": "R002",
-      "horas_planificadas": 40,
+      "recurso_id": "P3",
+      "horas_planificadas": 8,
       "cantidad": "",
       "h_dia": 8,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A18",
-      "recurso_id": "R003",
-      "horas_planificadas": 24,
+      "recurso_id": "P2",
+      "horas_planificadas": 40,
       "cantidad": "",
-      "h_dia": 8,
+      "h_dia": 4,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A18",
+      "recurso_id": "P4",
+      "horas_planificadas": 40,
+      "cantidad": "",
+      "h_dia": 4,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A19",
-      "recurso_id": "R004",
-      "horas_planificadas": 32,
+      "recurso_id": "P1",
+      "horas_planificadas": 18,
       "cantidad": "",
-      "h_dia": 8,
+      "h_dia": 6,
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A19",
+      "recurso_id": "P2",
+      "horas_planificadas": 12,
+      "cantidad": "",
+      "h_dia": 4,
       "tarifa_override": ""
     },
     {
       "tarea_id": "A20",
-      "recurso_id": "R005",
-      "horas_planificadas": 40,
+      "recurso_id": "P1",
+      "horas_planificadas": 16,
       "cantidad": "",
       "h_dia": 8,
       "tarifa_override": ""
     },
     {
-      "tarea_id": "A05",
-      "recurso_id": "R006",
+      "tarea_id": "A18",
+      "recurso_id": "R-EQ1",
+      "horas_planificadas": "",
+      "cantidad": 4,
+      "h_dia": "",
+      "tarifa_override": ""
+    },
+    {
+      "tarea_id": "A07",
+      "recurso_id": "R-IN1",
       "horas_planificadas": "",
       "cantidad": 2,
       "h_dia": "",
       "tarifa_override": ""
     },
     {
-      "tarea_id": "A10",
-      "recurso_id": "R007",
+      "tarea_id": "A17",
+      "recurso_id": "R-IN1",
       "horas_planificadas": "",
-      "cantidad": 1,
+      "cantidad": 2,
       "h_dia": "",
       "tarifa_override": ""
     },
     {
-      "tarea_id": "A15",
-      "recurso_id": "R008",
+      "tarea_id": "A14",
+      "recurso_id": "R-SE1",
       "horas_planificadas": "",
       "cantidad": 1,
       "h_dia": "",
@@ -915,66 +1037,102 @@
     {
       "hito_id": "H01",
       "criterio_id": "CR-H01-01",
-      "descripcion": "Evidencia aprobada del hito 01",
-      "forma_de_verificacion": "Acta firmada y revisión del entregable",
-      "responsable": "Jefe de Proyecto"
+      "descripcion": "Acta de alcance firmada por el cliente",
+      "forma_de_verificacion": "Revisión del entregable y del acta en comité",
+      "responsable": "Kevin Henríquez"
+    },
+    {
+      "hito_id": "H01",
+      "criterio_id": "CR-H01-02",
+      "descripcion": "Backlog priorizado publicado",
+      "forma_de_verificacion": "Revisión del entregable y del acta en comité",
+      "responsable": "Kevin Henríquez"
     },
     {
       "hito_id": "H02",
       "criterio_id": "CR-H02-01",
-      "descripcion": "Evidencia aprobada del hito 02",
-      "forma_de_verificacion": "Acta firmada y revisión del entregable",
-      "responsable": "Jefe de Proyecto"
+      "descripcion": "Prototipo validado con 3 jefes de obra",
+      "forma_de_verificacion": "Revisión del entregable y del acta en comité",
+      "responsable": "Kevin Henríquez"
+    },
+    {
+      "hito_id": "H02",
+      "criterio_id": "CR-H02-02",
+      "descripcion": "Arquitectura aprobada por TI",
+      "forma_de_verificacion": "Revisión del entregable y del acta en comité",
+      "responsable": "Kevin Henríquez"
     },
     {
       "hito_id": "H03",
       "criterio_id": "CR-H03-01",
-      "descripcion": "Evidencia aprobada del hito 03",
-      "forma_de_verificacion": "Acta firmada y revisión del entregable",
-      "responsable": "Jefe de Proyecto"
+      "descripcion": "API y app desplegadas en QA",
+      "forma_de_verificacion": "Revisión del entregable y del acta en comité",
+      "responsable": "Kevin Henríquez"
+    },
+    {
+      "hito_id": "H03",
+      "criterio_id": "CR-H03-02",
+      "descripcion": "Reportes exportan a PDF",
+      "forma_de_verificacion": "Revisión del entregable y del acta en comité",
+      "responsable": "Kevin Henríquez"
     },
     {
       "hito_id": "H04",
       "criterio_id": "CR-H04-01",
-      "descripcion": "Evidencia aprobada del hito 04",
-      "forma_de_verificacion": "Acta firmada y revisión del entregable",
-      "responsable": "Jefe de Proyecto"
+      "descripcion": "Acta UAT firmada",
+      "forma_de_verificacion": "Revisión del entregable y del acta en comité",
+      "responsable": "Kevin Henríquez"
+    },
+    {
+      "hito_id": "H04",
+      "criterio_id": "CR-H04-02",
+      "descripcion": "0 defectos críticos abiertos",
+      "forma_de_verificacion": "Revisión del entregable y del acta en comité",
+      "responsable": "Kevin Henríquez"
     },
     {
       "hito_id": "H05",
       "criterio_id": "CR-H05-01",
-      "descripcion": "Evidencia aprobada del hito 05",
-      "forma_de_verificacion": "Acta firmada y revisión del entregable",
-      "responsable": "Jefe de Proyecto"
+      "descripcion": "App en producción en la obra piloto",
+      "forma_de_verificacion": "Revisión del entregable y del acta en comité",
+      "responsable": "Kevin Henríquez"
     },
     {
       "hito_id": "H06",
       "criterio_id": "CR-H06-01",
-      "descripcion": "Evidencia aprobada del hito 06",
-      "forma_de_verificacion": "Acta firmada y revisión del entregable",
-      "responsable": "Jefe de Proyecto"
+      "descripcion": "Acta de cierre firmada por el patrocinador",
+      "forma_de_verificacion": "Revisión del entregable y del acta en comité",
+      "responsable": "Kevin Henríquez"
     }
   ],
   "Hitos_Tareas": [
     {
       "hito_id": "H01",
-      "tarea_id": "A02"
-    },
-    {
-      "hito_id": "H02",
       "tarea_id": "A04"
     },
     {
+      "hito_id": "H02",
+      "tarea_id": "A05"
+    },
+    {
+      "hito_id": "H02",
+      "tarea_id": "A06"
+    },
+    {
       "hito_id": "H03",
-      "tarea_id": "A07"
+      "tarea_id": "A08"
+    },
+    {
+      "hito_id": "H03",
+      "tarea_id": "A10"
     },
     {
       "hito_id": "H04",
-      "tarea_id": "A12"
+      "tarea_id": "A15"
     },
     {
       "hito_id": "H05",
-      "tarea_id": "A15"
+      "tarea_id": "A17"
     },
     {
       "hito_id": "H06",
@@ -992,251 +1150,371 @@
       "id": "CS02",
       "nombre": "Revisión inicial",
       "secuencia": 2,
-      "sla_horas": 48
+      "sla_horas": 24
     },
     {
       "id": "CS03",
-      "nombre": "Clasificación",
+      "nombre": "Clasificación y prioridad",
       "secuencia": 3,
-      "sla_horas": 72
+      "sla_horas": 24
     },
     {
       "id": "CS04",
       "nombre": "Análisis de impacto",
       "secuencia": 4,
-      "sla_horas": 96
+      "sla_horas": 72
     },
     {
       "id": "CS05",
       "nombre": "Revisión del comité",
       "secuencia": 5,
-      "sla_horas": 120
+      "sla_horas": 72
     },
     {
       "id": "CS06",
       "nombre": "Decisión",
       "secuencia": 6,
-      "sla_horas": 144
+      "sla_horas": 24
     },
     {
       "id": "CS07",
-      "nombre": "Planificación",
+      "nombre": "Planificación del cambio",
       "secuencia": 7,
-      "sla_horas": 168
+      "sla_horas": 48
     },
     {
       "id": "CS08",
       "nombre": "Implementación",
       "secuencia": 8,
-      "sla_horas": 192
+      "sla_horas": 120
     },
     {
       "id": "CS09",
       "nombre": "Verificación",
       "secuencia": 9,
-      "sla_horas": 216
+      "sla_horas": 48
     },
     {
       "id": "CS10",
-      "nombre": "Cierre",
+      "nombre": "Cierre y línea base",
       "secuencia": 10,
-      "sla_horas": 240
+      "sla_horas": 24
     }
   ],
   "Cambios": [
     {
-      "id": "CR-001",
-      "titulo": "Ajustar duración de integración",
-      "tipo": "PLAZO",
+      "id": "CB-01",
+      "titulo": "Agregar firma digital del inspector",
+      "tipo": "ALCANCE",
       "prioridad": "MEDIA",
       "estado": "ABIERTA",
       "etapa_actual": "Registro",
-      "delta_dias": 2,
-      "delta_costo": 480000
+      "solicitante": "Jefe de obra Viña del Mar",
+      "justificacion": ""
     },
     {
-      "id": "CR-002",
-      "titulo": "Agregar tablet para piloto",
-      "tipo": "RECURSOS",
+      "id": "CB-02",
+      "titulo": "Extender pruebas de sistema en 3 días",
+      "tipo": "PLAZO",
       "prioridad": "ALTA",
       "estado": "ABIERTA",
       "etapa_actual": "Análisis de impacto",
-      "delta_dias": 0,
-      "delta_costo": 350000
+      "solicitante": "Analista QA",
+      "justificacion": ""
     },
     {
-      "id": "CR-003",
-      "titulo": "Incluir reporte ejecutivo",
-      "tipo": "ALCANCE",
+      "id": "CB-03",
+      "titulo": "Comprar 2 tablets adicionales",
+      "tipo": "COSTO",
       "prioridad": "BAJA",
       "estado": "ABIERTA",
       "etapa_actual": "Revisión del comité",
-      "delta_dias": 4,
-      "delta_costo": 960000
+      "solicitante": "Administración de obra",
+      "justificacion": ""
     },
     {
-      "id": "CR-004",
-      "titulo": "Cambiar proveedor API",
-      "tipo": "COSTO",
-      "prioridad": "ALTA",
-      "estado": "ABIERTA",
-      "etapa_actual": "Implementación",
-      "delta_dias": 1,
-      "delta_costo": 1200000
-    },
-    {
-      "id": "CR-005",
-      "titulo": "Cerrar capacitación piloto",
-      "tipo": "ALCANCE",
+      "id": "CB-04",
+      "titulo": "Sumar apoyo QA en UAT",
+      "tipo": "RECURSOS",
       "prioridad": "MEDIA",
       "estado": "APROBADA",
-      "etapa_actual": "Cierre",
-      "delta_dias": 0,
-      "delta_costo": 220000
+      "etapa_actual": "Planificación del cambio",
+      "solicitante": "Jefe de Proyecto",
+      "justificacion": ""
+    },
+    {
+      "id": "CB-05",
+      "titulo": "Exportar reportes a Excel editable",
+      "tipo": "ALCANCE",
+      "prioridad": "BAJA",
+      "estado": "RECHAZADA",
+      "etapa_actual": "Revisión del comité",
+      "solicitante": "Oficina técnica",
+      "justificacion": ""
     }
   ],
   "KPI_Proyecto_Hitos": [
     {
-      "codigo": "SPI",
-      "nombre": "Índice de desempeño de plazo",
+      "codigo": "P01",
+      "nombre": "Índice de desempeño del cronograma (SPI)",
       "formula": "EV / PV",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "PROYECTO",
+      "meta": 1,
+      "verde": 0.95,
+      "amarillo": 0.9,
+      "unidad": "índice",
+      "adicional": "",
+      "descripcion": "Valor ganado sobre valor planificado a la fecha de corte."
     },
     {
-      "codigo": "CPI",
-      "nombre": "Índice de desempeño de costo",
+      "codigo": "P02",
+      "nombre": "Índice de desempeño de costo (CPI)",
       "formula": "EV / AC",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "PROYECTO",
+      "meta": 1,
+      "verde": 0.95,
+      "amarillo": 0.9,
+      "unidad": "índice",
+      "adicional": "",
+      "descripcion": "Valor ganado sobre costo real a la fecha de corte."
     },
     {
-      "codigo": "SV",
-      "nombre": "Variación de plazo",
+      "codigo": "P03",
+      "nombre": "Variación del cronograma (SV)",
       "formula": "EV - PV",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "PROYECTO",
+      "meta": 0,
+      "verde": 0,
+      "amarillo": -2000000,
+      "unidad": "CLP",
+      "adicional": "",
+      "descripcion": "Diferencia entre valor ganado y valor planificado."
     },
     {
-      "codigo": "CV",
-      "nombre": "Variación de costo",
+      "codigo": "P04",
+      "nombre": "Variación de costo (CV)",
       "formula": "EV - AC",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "PROYECTO",
+      "meta": 0,
+      "verde": 0,
+      "amarillo": -2000000,
+      "unidad": "CLP",
+      "adicional": "",
+      "descripcion": "Diferencia entre valor ganado y costo real."
     },
     {
-      "codigo": "ADVANCE_GAP",
+      "codigo": "P05",
       "nombre": "Desviación de avance físico",
-      "formula": "avance_real - avance_plan",
+      "formula": "AVANCE_REAL - AVANCE_PLAN",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "PROYECTO",
+      "meta": 0,
+      "verde": -2,
+      "amarillo": -5,
+      "unidad": "pp",
+      "adicional": "",
+      "descripcion": "Avance real menos avance planificado, en puntos porcentuales."
     },
     {
-      "codigo": "LATE_TASKS",
+      "codigo": "P06",
       "nombre": "Actividades atrasadas",
-      "formula": "count(actividades_atrasadas) / count(actividades)",
+      "formula": "count(ACTIVIDADES_ATRASADAS) / count(ACTIVIDADES) * 100",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "PROYECTO",
+      "meta": 0,
+      "verde": 10,
+      "amarillo": 20,
+      "unidad": "%",
+      "adicional": "",
+      "descripcion": "Subactividades iniciadas o vencidas con avance bajo lo planificado."
     },
     {
-      "codigo": "MILESTONE_ON_TIME",
+      "codigo": "P07",
       "nombre": "Hitos cumplidos a tiempo",
-      "formula": "count(hitos_a_tiempo) / count(hitos)",
+      "formula": "MILESTONES_ON_TIME_PCT",
       "ambito": "HITO",
-      "meta": 1
+      "categoria": "PROYECTO",
+      "meta": 100,
+      "verde": 90,
+      "amarillo": 75,
+      "unidad": "%",
+      "adicional": "",
+      "descripcion": "Hitos cumplidos en o antes de su fecha base, sobre hitos cumplidos."
     },
     {
-      "codigo": "CLOSE_VARIANCE",
+      "codigo": "P08",
       "nombre": "Desviación del hito de cierre",
-      "formula": "fecha_cierre_real - fecha_cierre_base",
+      "formula": "CLOSING_MILESTONE_DEVIATION",
       "ambito": "HITO",
-      "meta": 1
+      "categoria": "PROYECTO",
+      "meta": 0,
+      "verde": 0,
+      "amarillo": 10,
+      "unidad": "días",
+      "adicional": "",
+      "descripcion": "Días hábiles entre la fecha proyectada y la fecha base del cierre."
     }
   ],
   "KPI_Cambio": [
     {
-      "codigo": "CHG-01",
-      "nombre": "solicitudes registradas",
-      "formula": "valor_01",
+      "codigo": "C01",
+      "nombre": "Solicitudes registradas",
+      "formula": "CHANGE_REQUESTS",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": "",
+      "verde": "",
+      "amarillo": "",
+      "unidad": "n°",
+      "adicional": "",
+      "descripcion": "Total de solicitudes de cambio del proyecto."
     },
     {
-      "codigo": "CHG-02",
-      "nombre": "tasa de aprobación",
-      "formula": "valor_02",
+      "codigo": "C02",
+      "nombre": "Tasa de aprobación",
+      "formula": "CHANGE_APPROVAL_RATE * 100",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": "",
+      "verde": "",
+      "amarillo": "",
+      "unidad": "%",
+      "adicional": "",
+      "descripcion": "Aprobadas sobre decididas."
     },
     {
-      "codigo": "CHG-03",
-      "nombre": "tasa de rechazo",
-      "formula": "valor_03",
+      "codigo": "C03",
+      "nombre": "Tasa de rechazo",
+      "formula": "CHANGE_REJECTION_RATE * 100",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": "",
+      "verde": "",
+      "amarillo": "",
+      "unidad": "%",
+      "adicional": "",
+      "descripcion": "Rechazadas sobre decididas."
     },
     {
-      "codigo": "CHG-04",
-      "nombre": "tiempo medio de ciclo",
-      "formula": "valor_04",
+      "codigo": "C04",
+      "nombre": "Tiempo medio de ciclo",
+      "formula": "CHANGE_AVG_CYCLE_HOURS / 24",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": 7,
+      "verde": 7,
+      "amarillo": 10,
+      "unidad": "días",
+      "adicional": "",
+      "descripcion": "Promedio de días entre registro y cierre de las solicitudes cerradas."
     },
     {
-      "codigo": "CHG-05",
-      "nombre": "tiempo medio de evaluación de impacto",
-      "formula": "valor_05",
+      "codigo": "C05",
+      "nombre": "Tiempo medio de evaluación de impacto",
+      "formula": "CHANGE_AVG_IMPACT_HOURS / 24",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": 3,
+      "verde": 3,
+      "amarillo": 5,
+      "unidad": "días",
+      "adicional": "",
+      "descripcion": "Promedio de días entre registro y primer análisis de impacto."
     },
     {
-      "codigo": "CHG-06",
-      "nombre": "impacto acumulado en costo",
-      "formula": "valor_06",
+      "codigo": "C06",
+      "nombre": "Impacto acumulado en costo",
+      "formula": "CHANGE_IMPACT_COST",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": "",
+      "verde": "",
+      "amarillo": "",
+      "unidad": "CLP",
+      "adicional": "",
+      "descripcion": "Suma del delta de costo de los cambios aprobados."
     },
     {
-      "codigo": "CHG-07",
-      "nombre": "impacto acumulado en plazo",
-      "formula": "valor_07",
+      "codigo": "C07",
+      "nombre": "Impacto acumulado en plazo",
+      "formula": "CHANGE_IMPACT_DAYS",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": 0,
+      "verde": 8,
+      "amarillo": 16,
+      "unidad": "días",
+      "adicional": "",
+      "descripcion": "Suma del delta de plazo de los cambios aprobados."
     },
     {
-      "codigo": "CHG-08",
-      "nombre": "% con evidencia completa",
-      "formula": "valor_08",
+      "codigo": "C08",
+      "nombre": "Solicitudes con evidencia completa",
+      "formula": "CHANGE_EVIDENCE_COMPLETE_PCT * 100",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": 100,
+      "verde": 100,
+      "amarillo": 80,
+      "unidad": "%",
+      "adicional": "",
+      "descripcion": "Solicitudes con al menos una evidencia sobre el total."
     },
     {
-      "codigo": "CHG-09",
-      "nombre": "solicitudes fuera de SLA",
-      "formula": "valor_09",
+      "codigo": "C09",
+      "nombre": "Solicitudes fuera de SLA",
+      "formula": "CHANGE_SLA_BREACHES",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": 0,
+      "verde": 0,
+      "amarillo": 1,
+      "unidad": "n°",
+      "adicional": "",
+      "descripcion": "Solicitudes abiertas cuya etapa activa superó su SLA."
     },
     {
-      "codigo": "CHG-10",
-      "nombre": "consumo de contingencia",
-      "formula": "valor_10",
+      "codigo": "C10",
+      "nombre": "Consumo de contingencia",
+      "formula": "CHANGE_CONTINGENCY_CONSUMPTION",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": 0,
+      "verde": 30,
+      "amarillo": 50,
+      "unidad": "%",
+      "adicional": "Sí",
+      "descripcion": "Costo de cambios aprobados sobre la contingencia del proyecto."
     },
     {
-      "codigo": "CHG-11",
-      "nombre": "índice de adopción",
-      "formula": "valor_11",
+      "codigo": "C11",
+      "nombre": "Índice de adopción",
+      "formula": "CHANGE_ADOPTION_INDEX",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": 80,
+      "verde": 80,
+      "amarillo": 60,
+      "unidad": "%",
+      "adicional": "Sí",
+      "descripcion": "Usuarios activos sobre usuarios capacitados (variable manual)."
     },
     {
-      "codigo": "CHG-12",
-      "nombre": "cobertura de capacitación",
-      "formula": "valor_12",
+      "codigo": "C12",
+      "nombre": "Cobertura de capacitación",
+      "formula": "CHANGE_TRAINING_COVERAGE",
       "ambito": "PROYECTO",
-      "meta": 1
+      "categoria": "CAMBIO",
+      "meta": 100,
+      "verde": 90,
+      "amarillo": 70,
+      "unidad": "%",
+      "adicional": "Sí",
+      "descripcion": "Usuarios capacitados sobre usuarios objetivo (variable manual)."
     }
   ],
   "Tableros": [
@@ -1244,35 +1522,13 @@
       "id": "DB-PROYECTO",
       "nombre": "Tablero del proyecto",
       "tipo": "PROYECTO",
-      "kpis": [
-        "SPI",
-        "CPI",
-        "SV",
-        "CV",
-        "ADVANCE_GAP",
-        "LATE_TASKS",
-        "MILESTONE_ON_TIME",
-        "CLOSE_VARIANCE"
-      ]
+      "kpis": "P01,P02,P03,P04,P05,P06,P07,P08"
     },
     {
-      "id": "DB-CAMBIOS",
+      "id": "DB-CAMBIO",
       "nombre": "Tablero de gestión del cambio",
       "tipo": "CAMBIO",
-      "kpis": [
-        "CHG-01",
-        "CHG-02",
-        "CHG-03",
-        "CHG-04",
-        "CHG-05",
-        "CHG-06",
-        "CHG-07",
-        "CHG-08",
-        "CHG-09",
-        "CHG-10",
-        "CHG-11",
-        "CHG-12"
-      ]
+      "kpis": "C01,C02,C03,C04,C05,C06,C07,C08,C09,C10,C11,C12"
     }
   ]
 }

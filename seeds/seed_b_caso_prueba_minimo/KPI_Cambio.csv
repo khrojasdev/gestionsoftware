@@ -1,13 +1,13 @@
-codigo,nombre,formula,ambito,meta
-CHG-01,solicitudes registradas,valor_01,PROYECTO,1
-CHG-02,tasa de aprobación,valor_02,PROYECTO,1
-CHG-03,tasa de rechazo,valor_03,PROYECTO,1
-CHG-04,tiempo medio de ciclo,valor_04,PROYECTO,1
-CHG-05,tiempo medio de evaluación de impacto,valor_05,PROYECTO,1
-CHG-06,impacto acumulado en costo,valor_06,PROYECTO,1
-CHG-07,impacto acumulado en plazo,valor_07,PROYECTO,1
-CHG-08,% con evidencia completa,valor_08,PROYECTO,1
-CHG-09,solicitudes fuera de SLA,valor_09,PROYECTO,1
-CHG-10,consumo de contingencia,valor_10,PROYECTO,1
-CHG-11,índice de adopción,valor_11,PROYECTO,1
-CHG-12,cobertura de capacitación,valor_12,PROYECTO,1
+codigo,nombre,formula,ambito,categoria,meta,verde,amarillo,unidad,adicional,descripcion
+C01,Solicitudes registradas,CHANGE_REQUESTS,PROYECTO,CAMBIO,,,,n°,,Total de solicitudes de cambio del proyecto.
+C02,Tasa de aprobación,CHANGE_APPROVAL_RATE * 100,PROYECTO,CAMBIO,,,,%,,Aprobadas sobre decididas.
+C03,Tasa de rechazo,CHANGE_REJECTION_RATE * 100,PROYECTO,CAMBIO,,,,%,,Rechazadas sobre decididas.
+C04,Tiempo medio de ciclo,CHANGE_AVG_CYCLE_HOURS / 24,PROYECTO,CAMBIO,7,7,10,días,,Promedio de días entre registro y cierre de las solicitudes cerradas.
+C05,Tiempo medio de evaluación de impacto,CHANGE_AVG_IMPACT_HOURS / 24,PROYECTO,CAMBIO,3,3,5,días,,Promedio de días entre registro y primer análisis de impacto.
+C06,Impacto acumulado en costo,CHANGE_IMPACT_COST,PROYECTO,CAMBIO,,,,CLP,,Suma del delta de costo de los cambios aprobados.
+C07,Impacto acumulado en plazo,CHANGE_IMPACT_DAYS,PROYECTO,CAMBIO,0,8,16,días,,Suma del delta de plazo de los cambios aprobados.
+C08,Solicitudes con evidencia completa,CHANGE_EVIDENCE_COMPLETE_PCT * 100,PROYECTO,CAMBIO,100,100,80,%,,Solicitudes con al menos una evidencia sobre el total.
+C09,Solicitudes fuera de SLA,CHANGE_SLA_BREACHES,PROYECTO,CAMBIO,0,0,1,n°,,Solicitudes abiertas cuya etapa activa superó su SLA.
+C10,Consumo de contingencia,CHANGE_CONTINGENCY_CONSUMPTION,PROYECTO,CAMBIO,0,30,50,%,Sí,Costo de cambios aprobados sobre la contingencia del proyecto.
+C11,Índice de adopción,CHANGE_ADOPTION_INDEX,PROYECTO,CAMBIO,80,80,60,%,Sí,Usuarios activos sobre usuarios capacitados (variable manual).
+C12,Cobertura de capacitación,CHANGE_TRAINING_COVERAGE,PROYECTO,CAMBIO,100,90,70,%,Sí,Usuarios capacitados sobre usuarios objetivo (variable manual).

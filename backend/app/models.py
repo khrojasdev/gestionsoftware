@@ -213,9 +213,12 @@ class Resource(TimestampMixin, Base):
     rate: Mapped[Decimal] = mapped_column(sa.Numeric(18, 2), nullable=False, default=0)
     unit: Mapped[str | None] = mapped_column(sa.String(40))
     capacity_hours_per_day: Mapped[Decimal | None] = mapped_column(sa.Numeric(8, 2))
+    user_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), sa.ForeignKey("users.id", ondelete="SET NULL")
+    )
 
     __table_args__ = (
-        sa.UniqueConstraint("project_id", "external_id"),
+        sa.UniqueConstraint("project_id", "external_id", name="uq_resources_project_external"),
         sa.UniqueConstraint("project_id", "id", name="uq_resources_project_id"),
         sa.CheckConstraint("rate >= 0", name="resource_rate_nonnegative"),
         sa.CheckConstraint(
@@ -283,7 +286,7 @@ class GanttElement(TimestampMixin, Base):
     is_critical: Mapped[bool] = mapped_column(sa.Boolean, nullable=False, default=False)
 
     __table_args__ = (
-        sa.UniqueConstraint("project_id", "external_id"),
+        sa.UniqueConstraint("project_id", "external_id", name="uq_gantt_elements_project_external"),
         sa.UniqueConstraint("project_id", "id", name="uq_gantt_elements_project_id"),
         sa.ForeignKeyConstraint(
             ("project_id", "parent_id"),
@@ -507,6 +510,8 @@ class AcceptanceCriterion(Base):
         UUID(as_uuid=True), sa.ForeignKey("users.id", ondelete="SET NULL")
     )
     verified_at: Mapped[datetime | None] = mapped_column(sa.DateTime(timezone=True))
+    responsible_label: Mapped[str | None] = mapped_column(sa.String(200))
+    notes: Mapped[str | None] = mapped_column(sa.String(1000))
 
     __table_args__ = (sa.UniqueConstraint("milestone_id", "external_id"),)
 
@@ -543,6 +548,10 @@ class Kpi(Base):
     frequency: Mapped[str] = mapped_column(sa.String(40), nullable=False, default="CORTE")
     alert_rule: Mapped[str | None] = mapped_column(sa.String(1000))
     is_active: Mapped[bool] = mapped_column(sa.Boolean, nullable=False, default=True)
+    category: Mapped[str] = mapped_column(sa.String(20), nullable=False, default="PROYECTO")
+    is_additional: Mapped[bool] = mapped_column(sa.Boolean, nullable=False, default=False)
+    unit: Mapped[str | None] = mapped_column(sa.String(20))
+    description: Mapped[str | None] = mapped_column(sa.String(500))
 
     __table_args__ = (
         sa.ForeignKeyConstraint(
@@ -585,7 +594,9 @@ class Dashboard(TimestampMixin, Base):
     dashboard_type: Mapped[str] = mapped_column(sa.String(40), nullable=False)
     kpi_codes: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
 
-    __table_args__ = (sa.UniqueConstraint("project_id", "external_id"),)
+    __table_args__ = (
+        sa.UniqueConstraint("project_id", "external_id", name="uq_dashboards_project_external"),
+    )
 
 
 class KpiFormulaVersion(Base):
@@ -669,6 +680,9 @@ class ChangeRequest(TimestampMixin, Base):
     )
     decided_at: Mapped[datetime | None] = mapped_column(sa.DateTime(timezone=True))
     closed_at: Mapped[datetime | None] = mapped_column(sa.DateTime(timezone=True))
+    justification: Mapped[str | None] = mapped_column(sa.String(4000))
+    requester_area: Mapped[str | None] = mapped_column(sa.String(160))
+    proposal: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, nullable=False, default=list)
 
     __table_args__ = (sa.UniqueConstraint("project_id", "code"),)
 
@@ -781,3 +795,22 @@ class AuditLog(Base):
     occurred_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), default=utc_now, nullable=False)
 
     __table_args__ = (sa.Index("ix_audit_logs_entity", "entity_type", "entity_id"),)
+
+
+class ManualMetric(Base):
+    """Project variables captured manually (e.g. adoption) for KPI formulas."""
+
+    __tablename__ = "manual_metrics"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    project_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), sa.ForeignKey("projects.id", ondelete="CASCADE"), nullable=False
+    )
+    code: Mapped[str] = mapped_column(sa.String(80), nullable=False)
+    value: Mapped[Decimal] = mapped_column(sa.Numeric(18, 4), nullable=False, default=0)
+    updated_by: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), sa.ForeignKey("users.id", ondelete="SET NULL")
+    )
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), default=utc_now, nullable=False)
+
+    __table_args__ = (sa.UniqueConstraint("project_id", "code", name="uq_manual_metrics_project_code"),)

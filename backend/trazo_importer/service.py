@@ -5,7 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Protocol
 
-from .models import CANONICAL_SHEETS, CanonicalWorkbook, ImportResult
+from .converter import convert_horizonte, is_horizonte_workbook
+from .models import CANONICAL_COLUMNS, CANONICAL_SHEETS, SUPPLEMENTAL_SHEETS, CanonicalWorkbook, ImportResult
 from .spreadsheet import read_csv_bundle, read_xlsx, rows_to_sheets
 from .validation import validate_workbook
 
@@ -59,15 +60,62 @@ class ImportService:
         version = getattr(self._store, "baseline_version", None) or "v1.0"
         return ImportResult(True, result.preview, result.report, changed_rows, version)
 
-    def _read(self, source: Path) -> CanonicalWorkbook:
+    def inspect(self, source: Path) -> dict[str, object]:
+        """Describe detected format and the columns found in each sheet."""
+
+        raw = self._raw(source)
+        if source.suffix.lower() == ".xlsx" and is_horizonte_workbook(raw):
+            converted = convert_horizonte(source)
+            return {
+                "format": "HORIZONTE",
+                "label": "Libro de planificación del curso (Cronograma / Planificación / Calendario)",
+                "source_sheets": sorted(raw),
+                "sheets": [
+                    {
+                        "name": name,
+                        "rows": len(rows),
+                        "found": list(CANONICAL_COLUMNS.get(name, tuple(rows[0].keys()) if rows else ())),
+                        "expected": list(CANONICAL_COLUMNS.get(name, ())),
+                        "missing": [],
+                        "converted": True,
+                    }
+                    for name, rows in converted.sheets.items()
+                ],
+            }
+        sheets = []
+        for name in (*CANONICAL_SHEETS, *SUPPLEMENTAL_SHEETS):
+            if name not in raw:
+                if name in CANONICAL_SHEETS:
+                    sheets.append({"name": name, "rows": 0, "found": [], "expected": list(CANONICAL_COLUMNS[name]), "missing": list(CANONICAL_COLUMNS[name]), "converted": False})
+                continue
+            rows = raw[name]
+            headers = [str(value).strip() for value in rows[0]] if rows else []
+            expected = list(CANONICAL_COLUMNS.get(name, headers))
+            sheets.append(
+                {
+                    "name": name,
+                    "rows": max(0, len(rows) - 1),
+                    "found": [header for header in headers if header],
+                    "expected": expected,
+                    "missing": [column for column in expected if column not in headers],
+                    "converted": False,
+                }
+            )
+        return {"format": "PLANTILLA", "label": "Plantilla Carta Gantt de Trazo", "source_sheets": sorted(raw), "sheets": sheets}
+
+    def _raw(self, source: Path) -> dict:
         if not source.exists():
             raise FileNotFoundError(source)
         if source.is_dir() or source.suffix.lower() == ".csv":
-            raw = read_csv_bundle(source)
-        elif source.suffix.lower() == ".xlsx":
-            raw = read_xlsx(source)
-        else:
-            raise ImportFormatError(f"Formato no soportado: {source.suffix}")
+            return read_csv_bundle(source)
+        if source.suffix.lower() == ".xlsx":
+            return read_xlsx(source)
+        raise ImportFormatError(f"Formato no soportado: {source.suffix}")
+
+    def _read(self, source: Path) -> CanonicalWorkbook:
+        raw = self._raw(source)
+        if source.suffix.lower() == ".xlsx" and is_horizonte_workbook(raw):
+            return convert_horizonte(source)
         sheets = rows_to_sheets(raw)
         for sheet in CANONICAL_SHEETS:
             sheets.setdefault(sheet, [])

@@ -1,6 +1,6 @@
-id,titulo,tipo,prioridad,estado,etapa_actual,delta_dias,delta_costo
-CR-001,Ajustar duración de integración,PLAZO,MEDIA,ABIERTA,Registro,2,480000
-CR-002,Agregar tablet para piloto,RECURSOS,ALTA,ABIERTA,Análisis de impacto,0,350000
-CR-003,Incluir reporte ejecutivo,ALCANCE,BAJA,ABIERTA,Revisión del comité,4,960000
-CR-004,Cambiar proveedor API,COSTO,ALTA,ABIERTA,Implementación,1,1200000
-CR-005,Cerrar capacitación piloto,ALCANCE,MEDIA,APROBADA,Cierre,0,220000
+id,titulo,tipo,prioridad,estado,etapa_actual,solicitante,justificacion
+CB-01,Agregar firma digital del inspector,ALCANCE,MEDIA,ABIERTA,Registro,Jefe de obra Viña del Mar,
+CB-02,Extender pruebas de sistema en 3 días,PLAZO,ALTA,ABIERTA,Análisis de impacto,Analista QA,
+CB-03,Comprar 2 tablets adicionales,COSTO,BAJA,ABIERTA,Revisión del comité,Administración de obra,
+CB-04,Sumar apoyo QA en UAT,RECURSOS,MEDIA,APROBADA,Planificación del cambio,Jefe de Proyecto,
+CB-05,Exportar reportes a Excel editable,ALCANCE,BAJA,RECHAZADA,Revisión del comité,Oficina técnica,

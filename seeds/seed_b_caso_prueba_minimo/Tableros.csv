@@ -1,3 +1,3 @@
 id,nombre,tipo,kpis
-DB-PROYECTO,Tablero del proyecto,PROYECTO,"[""SPI"", ""CPI"", ""SV"", ""CV"", ""ADVANCE_GAP"", ""LATE_TASKS"", ""MILESTONE_ON_TIME"", ""CLOSE_VARIANCE""]"
-DB-CAMBIOS,Tablero de gestión del cambio,CAMBIO,"[""CHG-01"", ""CHG-02"", ""CHG-03"", ""CHG-04"", ""CHG-05"", ""CHG-06"", ""CHG-07"", ""CHG-08"", ""CHG-09"", ""CHG-10"", ""CHG-11"", ""CHG-12""]"
+DB-PROYECTO,Tablero del proyecto,PROYECTO,"P01,P02,P03,P04,P05,P06,P07,P08"
+DB-CAMBIO,Tablero de gestión del cambio,CAMBIO,"C01,C02,C03,C04,C05,C06,C07,C08,C09,C10,C11,C12"

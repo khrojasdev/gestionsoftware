@@ -113,7 +113,7 @@ def formula_variables(formula: str) -> tuple[str, ...]:
         tree = ast.parse(normalized, mode="eval")
     except SyntaxError as error:
         raise KpiFormulaError("La fórmula KPI no tiene una sintaxis válida") from error
-    return tuple(sorted({node.id.upper() for node in ast.walk(tree) if isinstance(node, ast.Name) and node.id.upper() not in _FUNCTIONS}))
+    return tuple(sorted({node.id.upper() for node in ast.walk(tree) if isinstance(node, ast.Name) and node.id.lower() not in _FUNCTIONS}))
 
 
 def _validate_node(node: ast.AST, allowed: set[str]) -> None:

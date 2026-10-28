@@ -39,3 +39,7 @@ Thumbs.db
 # Generated project data
 seeds/generated/
 docs/generated/
+
+# Build output served by the API and uploaded evidence
+backend/static/
+backend/data/

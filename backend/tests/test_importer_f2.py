@@ -68,7 +68,9 @@ class ImporterF2Tests(unittest.TestCase):
         leaves = [row for row in workbook.sheets["Gantt"] if row["tipo"] in {"SUBACTIVIDAD", "HITO"}]
         self.assertEqual(len(leaves), 52)
         self.assertEqual(before, after)
-        self.assertEqual(len(workbook.sheets["Criterios"]), 10)
+        milestones = {row["id"] for row in workbook.sheets["Gantt"] if row["tipo"] == "HITO"}
+        self.assertEqual({row["hito_id"] for row in workbook.sheets["Criterios"]}, milestones)
+        self.assertGreaterEqual(len(workbook.sheets["Criterios"]), 10)
         self.assertTrue({row["tipo"] for row in workbook.sheets["Recursos"]} >= {"HUMANO", "EQUIPAMIENTO", "INFRAESTRUCTURA_LICENCIA", "SERVICIO_EXTERNO"})
         dependencies = ";".join(row["predecesoras"] for row in workbook.sheets["Gantt"])
         self.assertTrue({"SS", "FF", "SF"} <= {dependencies[index : index + 2] for index in range(len(dependencies) - 1)})

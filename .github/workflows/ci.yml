@@ -12,6 +12,22 @@ jobs:
   backend:
     name: Backend tests and lint
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: trazo_db
+          POSTGRES_USER: trazo_app
+          POSTGRES_PASSWORD: trazo_local_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U trazo_app -d trazo_db"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      DATABASE_URL: postgresql+psycopg://trazo_app:trazo_local_password@localhost:5432/trazo_db
+      AUTH_SECRET: ci-secret-ci-secret-ci-secret-ci-secret-0123
+      TRAZO_DB_TESTS: "1"
     defaults:
       run:
         working-directory: backend
@@ -24,7 +40,8 @@ jobs:
           cache-dependency-path: backend/requirements.txt
       - run: python -m pip install -r requirements.txt
       - run: ruff check .
-      - run: pytest
+      - run: python -m alembic upgrade head
+      - run: pytest -q
 
   frontend:
     name: Frontend lint, types and build
@@ -43,3 +60,11 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
+
+  image:
+    name: Docker image builds
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t trazo:ci .

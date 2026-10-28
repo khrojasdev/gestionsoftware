@@ -1,7 +1,11 @@
 hito_id,criterio_id,descripcion,forma_de_verificacion,responsable
-H01,CR-H01-01,Evidencia aprobada del hito 01,Acta firmada y revisión del entregable,Jefe de Proyecto
-H02,CR-H02-01,Evidencia aprobada del hito 02,Acta firmada y revisión del entregable,Jefe de Proyecto
-H03,CR-H03-01,Evidencia aprobada del hito 03,Acta firmada y revisión del entregable,Jefe de Proyecto
-H04,CR-H04-01,Evidencia aprobada del hito 04,Acta firmada y revisión del entregable,Jefe de Proyecto
-H05,CR-H05-01,Evidencia aprobada del hito 05,Acta firmada y revisión del entregable,Jefe de Proyecto
-H06,CR-H06-01,Evidencia aprobada del hito 06,Acta firmada y revisión del entregable,Jefe de Proyecto
+H01,CR-H01-01,Acta de alcance firmada por el cliente,Revisión del entregable y del acta en comité,Kevin Henríquez
+H01,CR-H01-02,Backlog priorizado publicado,Revisión del entregable y del acta en comité,Kevin Henríquez
+H02,CR-H02-01,Prototipo validado con 3 jefes de obra,Revisión del entregable y del acta en comité,Kevin Henríquez
+H02,CR-H02-02,Arquitectura aprobada por TI,Revisión del entregable y del acta en comité,Kevin Henríquez
+H03,CR-H03-01,API y app desplegadas en QA,Revisión del entregable y del acta en comité,Kevin Henríquez
+H03,CR-H03-02,Reportes exportan a PDF,Revisión del entregable y del acta en comité,Kevin Henríquez
+H04,CR-H04-01,Acta UAT firmada,Revisión del entregable y del acta en comité,Kevin Henríquez
+H04,CR-H04-02,0 defectos críticos abiertos,Revisión del entregable y del acta en comité,Kevin Henríquez
+H05,CR-H05-01,App en producción en la obra piloto,Revisión del entregable y del acta en comité,Kevin Henríquez
+H06,CR-H06-01,Acta de cierre firmada por el patrocinador,Revisión del entregable y del acta en comité,Kevin Henríquez

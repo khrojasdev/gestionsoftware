@@ -47,7 +47,6 @@ from app.models import (
 from app.services.calendar import BusinessCalendar
 from app.services.calculation_engine import DeterministicCalculationEngine
 from app.services.scheduler import parse_predecessors
-from app.services.costs import CostCalculator
 from trazo_importer.models import CanonicalWorkbook, ImportResult
 from trazo_importer.service import ImportService
 
@@ -168,7 +167,9 @@ def recalculate_project(session: Session, project: Project) -> dict[str, Any]:
         raise ApiError("EMPTY_SCHEDULE", "El proyecto no tiene elementos planificables")
     calendar = project_calendar(session, project)
     engine = DeterministicCalculationEngine(calendar)
-    result = engine.schedule(schedulable, project.planned_start, project.committed_finish)
+    # The critical path is measured against the calculated finish; the
+    # committed date only defines the schedule reserve shown to users.
+    result = engine.schedule(schedulable, project.planned_start, None)
     by_external = {element.external_id: element for element in project_elements(session, project.id)}
     for task in result.tasks.values():
         element = by_external[task.task_id]
@@ -178,7 +179,10 @@ def recalculate_project(session: Session, project: Project) -> dict[str, Any]:
         element.total_slack_days = task.total_slack_days
         element.free_slack_days = task.free_slack_days
         element.is_critical = task.critical
-    costs = engine.calculate_costs(tasks, resources, assignments)
+    # Cost consolidation must use the freshly scheduled dates, not the stale
+    # ones read from the database before the recalculation.
+    scheduled = [result.tasks.get(task.task_id, task) for task in tasks]
+    costs = engine.calculate_costs(scheduled, resources, assignments)
     for task_id, value in costs.consolidated.items():
         if task_id in by_external:
             by_external[task_id].planned_cost = value.planned_cost
@@ -223,10 +227,13 @@ class SqlAlchemyImportStore:
         self._write_calendar(project, workbook)
         self._write_assignments(project, workbook, external_elements)
         self._write_milestones(workbook, external_elements)
-        self._write_baseline(project, workbook, external_elements)
         self._write_supplemental(project, workbook)
         project.status = ProjectStatus.ACTIVE
         self.session.flush()
+        recalculate_project(self.session, project)
+        baseline = create_baseline(self.session, project)
+        self.baseline_version = baseline.version
+        self.project_id = project.id
         return sum(len(rows) for rows in workbook.sheets.values())
 
     def _write_supplemental(self, project: Project, workbook: CanonicalWorkbook) -> None:
@@ -251,6 +258,9 @@ class SqlAlchemyImportStore:
             stage.is_active = True
             stages_by_sequence[sequence] = stage
         self.session.flush()
+        from app.services.analytics import project_clock
+
+        clock = project_clock(project)
         for row in workbook.sheets.get("Cambios", []):
             code = str(row.get("id", "")).strip()
             if not code:
@@ -262,16 +272,19 @@ class SqlAlchemyImportStore:
                 )
             )
             stage_name = str(row.get("etapa_actual", "")).strip()
-            stage = next((item for item in stages_by_sequence.values() if item.name == stage_name), None)
+            stage = next((item for item in stages_by_sequence.values() if item.name.casefold() == stage_name.casefold()), None)
             if change is None:
-                change = ChangeRequest(project_id=project.id, code=code, title=str(row.get("titulo", code)))
+                change = ChangeRequest(project_id=project.id, code=code, title=str(row.get("titulo", code)), created_at=clock, updated_at=clock, proposal=[])
                 self.session.add(change)
             change.title = str(row.get("titulo", code))
+            change.requester_area = str(row.get("solicitante", "")).strip() or None
+            change.justification = str(row.get("justificacion", "")).strip() or None
             change.description = change.title
             change.change_type = ChangeType(str(row.get("tipo", "ALCANCE")))
             change.priority = ChangePriority(str(row.get("prioridad", "MEDIA")))
             change.status = ChangeStatus(str(row.get("estado", "ABIERTA")))
             change.current_stage_id = stage.id if stage is not None else None
+            self.session.flush()
             if stage is not None:
                 stage_sequence = stage.sequence
                 for workflow_stage in stages_by_sequence.values():
@@ -287,13 +300,22 @@ class SqlAlchemyImportStore:
                             stage_id=workflow_stage.id,
                         )
                         self.session.add(record)
+                    finished = change.status in {ChangeStatus.REJECTED, ChangeStatus.CANCELLED, ChangeStatus.CLOSED}
                     record.status = (
                         ChangeStageStatus.COMPLETED
-                        if workflow_stage.sequence < stage_sequence
+                        if workflow_stage.sequence < stage_sequence or (finished and workflow_stage.sequence == stage_sequence)
+                        else ChangeStageStatus.SKIPPED
+                        if finished
                         else ChangeStageStatus.ACTIVE
                         if workflow_stage.sequence == stage_sequence
                         else ChangeStageStatus.PENDING
                     )
+                    if record.status == ChangeStageStatus.ACTIVE:
+                        record.entered_at = clock
+                if change.status in {ChangeStatus.APPROVED, ChangeStatus.REJECTED, ChangeStatus.CLOSED}:
+                    change.decided_at = clock
+                if change.status in {ChangeStatus.REJECTED, ChangeStatus.CLOSED}:
+                    change.closed_at = clock
         for row in workbook.sheets.get("KPI_Proyecto_Hitos", []) + workbook.sheets.get("KPI_Cambio", []):
             code = str(row.get("codigo", "")).strip()
             if not code:
@@ -306,8 +328,16 @@ class SqlAlchemyImportStore:
                 self.session.add(kpi)
             kpi.name = str(row.get("nombre", code))
             kpi.formula = str(row.get("formula", "0"))
-            kpi.scope = KpiScope(str(row.get("ambito", "PROYECTO")))
+            kpi.scope = KpiScope(str(row.get("ambito", "PROYECTO") or "PROYECTO"))
             kpi.target = _optional_decimal(row.get("meta"))
+            kpi.green_threshold = _optional_decimal(row.get("verde"))
+            kpi.yellow_threshold = _optional_decimal(row.get("amarillo"))
+            category = str(row.get("categoria", "")).strip().upper()
+            kpi.category = category or ("CAMBIO" if row in workbook.sheets.get("KPI_Cambio", []) else "PROYECTO")
+            kpi.unit = str(row.get("unidad", "")).strip() or None
+            kpi.is_additional = str(row.get("adicional", "")).strip().lower() in {"sí", "si", "true", "1", "x"}
+            kpi.description = str(row.get("descripcion", "")).strip() or None
+            kpi.frequency = "CORTE"
             kpi.is_active = True
         for row in workbook.sheets.get("Tableros", []):
             external_id = str(row.get("id", "")).strip()
@@ -505,6 +535,7 @@ class SqlAlchemyImportStore:
                         external_id=str(row.get("criterio_id", "")),
                         description=str(row.get("descripcion", "")),
                         verification_method=str(row.get("forma_de_verificacion", "")),
+                        responsible_label=str(row.get("responsable", "")).strip() or None,
                     )
                 )
         for row in workbook.sheets["Hitos_Tareas"]:
@@ -513,45 +544,46 @@ class SqlAlchemyImportStore:
             if milestone is not None and task is not None:
                 self.session.add(MilestoneTask(milestone_id=milestone.id, element_id=task.id))
 
-    def _write_baseline(self, project: Project, workbook: CanonicalWorkbook, elements: dict[str, GanttElement]) -> None:
-        active = self.session.scalar(
-            sa.select(Baseline).where(
-                Baseline.project_id == project.id,
-                Baseline.status == BaselineStatus.ACTIVE,
+
+
+def create_baseline(session: Session, project: Project, created_by: uuid.UUID | None = None) -> Baseline:
+    """Seal the current plan as the next immutable baseline (vN)."""
+
+    active = session.scalar(
+        sa.select(Baseline).where(Baseline.project_id == project.id, Baseline.status == BaselineStatus.ACTIVE)
+    )
+    if active is not None:
+        active.status = BaselineStatus.SUPERSEDED
+        session.flush()
+    versions = session.scalars(sa.select(Baseline.version).where(Baseline.project_id == project.id)).all()
+    next_version = max((_baseline_number(version) for version in versions), default=0) + 1
+    baseline = Baseline(project_id=project.id, version=f"v{next_version}", created_by=created_by)
+    session.add(baseline)
+    session.flush()
+    elements = project_elements(session, project.id)
+    external = {element.id: element.external_id for element in elements}
+    session.add_all(
+        [
+            BaselineElement(
+                baseline_id=baseline.id,
+                project_id=project.id,
+                element_id=element.id,
+                external_id=element.external_id,
+                parent_external_id=external.get(element.parent_id) if element.parent_id else None,
+                element_type=element.element_type,
+                name=element.name,
+                planned_start=element.planned_start,
+                planned_finish=element.planned_finish,
+                duration_days=element.duration_days,
+                planned_cost=element.planned_cost,
             )
-        )
-        if active is not None:
-            active.status = BaselineStatus.SUPERSEDED
-            self.session.flush()
-        versions = self.session.scalars(
-            sa.select(Baseline.version).where(Baseline.project_id == project.id)
-        ).all()
-        next_version = max((_baseline_number(version) for version in versions), default=0) + 1
-        baseline = Baseline(project_id=project.id, version=f"v{next_version}")
-        self.session.add(baseline)
-        self.session.flush()
-        tasks, resources, assignments = _domain_tasks(self.session, project)
-        costs = CostCalculator().calculate(tasks, resources, assignments)
-        for row in workbook.sheets["Gantt"]:
-            self.session.add(
-                BaselineElement(
-                    baseline_id=baseline.id,
-                    project_id=project.id,
-                    element_id=elements[str(row["id"])].id,
-                    external_id=str(row["id"]),
-                    parent_external_id=str(row.get("padre_id", "")) or None,
-                    element_type=GanttElementType(str(row["tipo"])),
-                    name=str(row["nombre"]),
-                    planned_start=row.get("inicio_plan"),
-                    planned_finish=row.get("fin_plan"),
-                    duration_days=_integer(row.get("duracion_dias")),
-                    planned_cost=costs.consolidated[str(row["id"])].planned_cost,
-                )
-            )
-        self.session.flush()
-        # The snapshot is sealed only after every immutable child row exists.
-        baseline.approved_at = utc_now()
-        self.baseline_version = baseline.version
+            for element in elements
+        ]
+    )
+    session.flush()
+    baseline.approved_at = utc_now()
+    session.flush()
+    return baseline
 
 
 def _baseline_number(version: str) -> int:

@@ -1,5 +1,6 @@
 """Seed the stable F8 role vocabulary."""
 
+from datetime import UTC, datetime
 from uuid import UUID
 
 from alembic import op
@@ -23,10 +24,15 @@ def upgrade() -> None:
         sa.column("id", sa.Uuid()),
         sa.column("name", sa.String()),
         sa.column("description", sa.String()),
+        sa.column("created_at", sa.DateTime(timezone=True)),
+        sa.column("updated_at", sa.DateTime(timezone=True)),
     )
+    now = datetime.now(UTC)
     op.bulk_insert(
         roles,
-        [{"id": identifier, "name": name, "description": description} for identifier, name, description in _ROLES],
+        [
+            {"id": identifier, "name": name, "description": description, "created_at": now, "updated_at": now}
+            for identifier, name, description in _ROLES],
     )
 
 

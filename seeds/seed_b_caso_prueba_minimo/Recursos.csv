@@ -1,9 +1,9 @@
 recurso_id,nombre,tipo,rol,tarifa,unidad,capacidad_h_dia
-R001,Ana Analista,HUMANO,Analista Funcional,22000,hora,8
-R002,Bruno Backend,HUMANO,Desarrollador Backend,24000,hora,8
-R003,Carla Frontend,HUMANO,Desarrollador Frontend/Móvil,24000,hora,8
-R004,Diego QA,HUMANO,Analista QA,18500,hora,8
-R005,Elena Proyecto,HUMANO,Jefe de Proyecto,30000,hora,8
-R006,Kit tablets de obra,EQUIPAMIENTO,Dispositivo,350000,unidad,
-R007,Nube de prueba,INFRAESTRUCTURA_LICENCIA,Cloud,1200000,mes,
-R008,Servicio API externo,SERVICIO_EXTERNO,Proveedor,3000000,servicio,
+P1,Kevin Henríquez,HUMANO,Jefe de Proyecto,30000,hora,8
+P2,María Soto,HUMANO,Analista Funcional / de Negocio,22000,hora,8
+P3,Diego López,HUMANO,Desarrollador Backend,24000,hora,8
+P4,Christian Pérez,HUMANO,Desarrollador Frontend/Móvil,24000,hora,8
+P5,Pedro Rivas,HUMANO,Analista QA,18500,hora,8
+R-EQ1,Tablets rugerizadas,EQUIPAMIENTO,Equipamiento,480000,unidad,
+R-IN1,Infraestructura cloud QA y producción,INFRAESTRUCTURA_LICENCIA,Infraestructura y licencias,850000,mes,
+R-SE1,Prueba de seguridad externa,SERVICIO_EXTERNO,Servicio externo,2400000,servicio,

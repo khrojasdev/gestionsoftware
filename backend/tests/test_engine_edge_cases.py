@@ -196,8 +196,9 @@ def test_demo_scenario_one_duration_change_propagates_to_hito() -> None:
     proposal = [make_task("A02", 6, start=MONDAY, planned_cost=100), tasks[1]]
     changed = engine.schedule(proposal, project_start=MONDAY)
 
-    assert baseline.tasks["H01"].finish == date(2026, 10, 9)
-    assert changed.tasks["H01"].finish == date(2026, 10, 13)
+    # A milestone is reached the same day its FS predecessor finishes.
+    assert baseline.tasks["H01"].finish == date(2026, 10, 8)
+    assert changed.tasks["H01"].finish == date(2026, 10, 12)
 
 
 def test_demo_scenario_two_resource_replacement_changes_consolidated_cost() -> None:

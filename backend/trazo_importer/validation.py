@@ -296,7 +296,7 @@ def _validate_assignments(
     resources: dict[str, dict[str, Any]],
 ) -> None:
     assigned_tasks: set[str] = set()
-    daily_by_resource: dict[str, float] = defaultdict(float)
+    daily_by_resource: dict[str, dict[date, float]] = defaultdict(lambda: defaultdict(float))
     for row_index, row in enumerate(workbook.sheets.get("Asignaciones", []), 2):
         task_id = _text(row.get("tarea_id"))
         resource_id = _text(row.get("recurso_id"))
@@ -315,16 +315,31 @@ def _validate_assignments(
         h_day = _number(row.get("h_dia"))
         if h_day is not None and h_day <= 0:
             report.add_error("Asignaciones", row_index, "h_dia", "INVALID_DAILY_HOURS", "h_dia debe ser mayor que cero")
-        if resource and _text(resource.get("tipo")).upper() == "HUMANO" and h_day:
-            daily_by_resource[resource_id] += h_day
+        if resource and task and _text(resource.get("tipo")).upper() == "HUMANO" and h_day:
+            start, finish = task.get("inicio_plan"), task.get("fin_plan")
+            if isinstance(start, date) and isinstance(finish, date):
+                current = start
+                while current <= finish:
+                    if current.weekday() < 5:
+                        daily_by_resource[resource_id][current] += h_day
+                    current += timedelta(days=1)
         assigned_tasks.add(task_id)
     for identifier, row in elements.items():
         if _text(row.get("tipo")).upper() == "SUBACTIVIDAD" and identifier not in assigned_tasks:
             report.add_warning("Asignaciones", None, "tarea_id", "TASK_WITHOUT_RESOURCE", f"Tarea sin recurso: {identifier}")
-    for resource_id, total in daily_by_resource.items():
+    for resource_id, days in daily_by_resource.items():
         capacity = _number(resources[resource_id].get("capacidad_h_dia"))
-        if capacity and total > capacity:
-            report.add_warning("Asignaciones", None, "h_dia", "OVERALLOCATION", f"Sobreasignación de {resource_id}: {total:g} h/día de {capacity:g}")
+        overloaded = sorted(day for day, total in days.items() if capacity and total > capacity)
+        if overloaded:
+            peak = max(days[day] for day in overloaded)
+            report.add_warning(
+                "Asignaciones",
+                None,
+                "h_dia",
+                "OVERALLOCATION",
+                f"Sobreasignación de {resource_id}: hasta {peak:g} h/día de {capacity:g} "
+                f"({len(overloaded)} días, desde {overloaded[0].strftime('%d-%m-%Y')})",
+            )
 
 
 def _validate_criteria(workbook: CanonicalWorkbook, report: ValidationReport, elements: dict[str, dict[str, Any]]) -> None:

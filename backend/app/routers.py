@@ -37,6 +37,7 @@ from app.schemas import (
 router = APIRouter(prefix="/api/v1", tags=["F8 usuarios y auditoría"])
 DbSession = Annotated[Session, Depends(get_db)]
 Manager = Annotated[User, Depends(require_roles(*MANAGEMENT_ROLES))]
+Admin = Annotated[User, Depends(require_roles(ROLE_ADMIN))]
 
 
 def user_response(user: User) -> UserResponse:
@@ -105,7 +106,7 @@ def list_roles(db: DbSession, _: Annotated[User, Depends(get_current_user)]) -> 
 def list_users(
     db: DbSession,
     _: Manager,
-    limit: int = Query(default=20, ge=1, le=100),
+    limit: int = Query(default=100, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
 ) -> list[UserResponse]:
     users = db.scalars(
@@ -119,7 +120,7 @@ def list_users(
 
 
 @router.post("/users", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def create_user(payload: UserCreateRequest, db: DbSession, actor: Manager) -> UserResponse:
+def create_user(payload: UserCreateRequest, db: DbSession, actor: Admin) -> UserResponse:
     _ensure_admin_grant(actor, payload.roles)
     roles = _roles_by_name(db, payload.roles)
     user = User(
@@ -149,7 +150,7 @@ def create_user(payload: UserCreateRequest, db: DbSession, actor: Manager) -> Us
 
 @router.patch("/users/{user_id}", response_model=UserResponse)
 def update_user(
-    user_id: UUID, payload: UserUpdateRequest, db: DbSession, actor: Manager
+    user_id: UUID, payload: UserUpdateRequest, db: DbSession, actor: Admin
 ) -> UserResponse:
     user = db.scalar(sa.select(User).options(selectinload(User.roles)).where(User.id == user_id))
     if user is None:

@@ -2,7 +2,7 @@
 
 from functools import lru_cache
 
-from pydantic import model_validator
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -18,6 +18,17 @@ class Settings(BaseSettings):
     auth_token_ttl_minutes: int = 480
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    @field_validator("database_url")
+    @classmethod
+    def normalize_database_url(cls, value: str) -> str:
+        """Accept the plain ``postgres://`` URLs that hosting providers hand out."""
+
+        value = value.strip()
+        for prefix in ("postgres://", "postgresql://"):
+            if value.startswith(prefix):
+                return "postgresql+psycopg://" + value[len(prefix):]
+        return value
 
     @model_validator(mode="after")
     def validate_auth_secret(self) -> "Settings":

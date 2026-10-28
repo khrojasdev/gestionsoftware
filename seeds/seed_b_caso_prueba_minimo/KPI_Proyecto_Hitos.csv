@@ -1,9 +1,9 @@
-codigo,nombre,formula,ambito,meta
-SPI,Índice de desempeño de plazo,EV / PV,PROYECTO,1
-CPI,Índice de desempeño de costo,EV / AC,PROYECTO,1
-SV,Variación de plazo,EV - PV,PROYECTO,1
-CV,Variación de costo,EV - AC,PROYECTO,1
-ADVANCE_GAP,Desviación de avance físico,avance_real - avance_plan,PROYECTO,1
-LATE_TASKS,Actividades atrasadas,count(actividades_atrasadas) / count(actividades),PROYECTO,1
-MILESTONE_ON_TIME,Hitos cumplidos a tiempo,count(hitos_a_tiempo) / count(hitos),HITO,1
-CLOSE_VARIANCE,Desviación del hito de cierre,fecha_cierre_real - fecha_cierre_base,HITO,1
+codigo,nombre,formula,ambito,categoria,meta,verde,amarillo,unidad,adicional,descripcion
+P01,Índice de desempeño del cronograma (SPI),EV / PV,PROYECTO,PROYECTO,1,0.95,0.9,índice,,Valor ganado sobre valor planificado a la fecha de corte.
+P02,Índice de desempeño de costo (CPI),EV / AC,PROYECTO,PROYECTO,1,0.95,0.9,índice,,Valor ganado sobre costo real a la fecha de corte.
+P03,Variación del cronograma (SV),EV - PV,PROYECTO,PROYECTO,0,0,-2000000,CLP,,Diferencia entre valor ganado y valor planificado.
+P04,Variación de costo (CV),EV - AC,PROYECTO,PROYECTO,0,0,-2000000,CLP,,Diferencia entre valor ganado y costo real.
+P05,Desviación de avance físico,AVANCE_REAL - AVANCE_PLAN,PROYECTO,PROYECTO,0,-2,-5,pp,,"Avance real menos avance planificado, en puntos porcentuales."
+P06,Actividades atrasadas,count(ACTIVIDADES_ATRASADAS) / count(ACTIVIDADES) * 100,PROYECTO,PROYECTO,0,10,20,%,,Subactividades iniciadas o vencidas con avance bajo lo planificado.
+P07,Hitos cumplidos a tiempo,MILESTONES_ON_TIME_PCT,HITO,PROYECTO,100,90,75,%,,"Hitos cumplidos en o antes de su fecha base, sobre hitos cumplidos."
+P08,Desviación del hito de cierre,CLOSING_MILESTONE_DEVIATION,HITO,PROYECTO,0,0,10,días,,Días hábiles entre la fecha proyectada y la fecha base del cierre.

@@ -157,7 +157,10 @@ class Scheduler:
     def _successor_start(self, predecessor: Task, successor: Task, dependency: Dependency) -> date:
         relation = dependency.dependency_type
         if relation == "FS":
-            return self.calendar.add_working_days(predecessor.finish, 1 + dependency.lag_days)
+            # A zero-duration milestone happens on the day its predecessor ends
+            # (same convention as the course workbook: A01 ends 08-10 → H01 08-10).
+            gap = 0 if (successor.duration_days or 0) == 0 else 1
+            return self.calendar.add_working_days(predecessor.finish, gap + dependency.lag_days)
         if relation == "SS":
             return self.calendar.add_working_days(predecessor.start, dependency.lag_days)
         if relation == "FF":
@@ -179,8 +182,9 @@ class Scheduler:
             for successor_id, dependency in successors[task_id]:
                 successor = tasks[successor_id]
                 if dependency.dependency_type == "FS":
+                    gap = 0 if (successor.duration_days or 0) == 0 else 1
                     bound_finish = self.calendar.add_working_days(
-                        latest[successor_id], -(1 + dependency.lag_days)
+                        latest[successor_id], -(gap + dependency.lag_days)
                     )
                     candidate_starts.append(
                         self._start_from_finish(bound_finish, task.duration_days or 0)

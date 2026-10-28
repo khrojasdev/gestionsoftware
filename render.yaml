@@ -1,0 +1,26 @@
+# Despliegue en Render (https://render.com) con un clic: New > Blueprint > este repositorio.
+# Crea la base PostgreSQL y el servicio web desde el Dockerfile de la raíz.
+databases:
+  - name: trazo-db
+    plan: free
+    databaseName: trazo_db
+    user: trazo_app
+
+services:
+  - type: web
+    name: trazo
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: trazo-db
+          property: connectionString
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: DEMO_SEED
+        value: "true"

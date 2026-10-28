@@ -6,16 +6,17 @@
 
 from __future__ import annotations
 
-import uuid
+import os
 import tempfile
+import uuid
 from contextlib import contextmanager
-from datetime import UTC, date, datetime, time
-from decimal import Decimal
+from datetime import datetime
 from pathlib import Path
 from typing import Annotated, Any
 
 import sqlalchemy as sa
 from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from app.api.errors import ApiError
@@ -41,7 +42,6 @@ from app.models import (
     AcceptanceCriterion,
     ChangeRequest,
     ChangeRequestStage,
-    ChangeImpact,
     ChangeStage,
     ChangeStageStatus,
     ChangeStatus,
@@ -80,7 +80,6 @@ from app.services.kpi import (
     DEFAULT_KPI_VARIABLES,
     KpiFormulaError,
     evaluate_formula,
-    formula_variables,
     validate_formula,
 )
 
@@ -347,22 +346,53 @@ def update_project(project_id: uuid.UUID, payload: ProjectUpdate, session: Sessi
 def preview_import(file: UploadFile = File(...), _: CurrentUser = None) -> dict[str, Any]:
     from trazo_importer.service import ImportService
 
+    service = ImportService()
     try:
         with _uploaded_source(file) as source:
-            result = ImportService().preview(source)
+            result = service.preview(source)
+            inspection = service.inspect(source)
     except ApiError:
         raise
     except (FileNotFoundError, ValueError, KeyError) as exc:
         raise ApiError("INVALID_IMPORT_FILE", str(exc)) from exc
+    sheets = result.preview.sheets
+    project_info = {str(row.get("clave")): row.get("valor") for row in sheets.get("Proyecto", [])}
+    gantt_rows = sheets.get("Gantt", [])
+    by_type: dict[str, int] = {}
+    for row in gantt_rows:
+        kind = str(row.get("tipo") or "").upper()
+        by_type[kind] = by_type.get(kind, 0) + 1
+    resources = sheets.get("Recursos", [])
     return _ok(
         {
             "valid": result.report.valid,
             "report": result.report.as_dict(),
             "project_code": result.preview.project_code,
             "baseline_version": result.baseline_version,
-            "sheets": {name: len(rows) for name, rows in result.preview.sheets.items()},
+            "sheets": {name: len(rows) for name, rows in sheets.items()},
+            "inspection": inspection,
+            "project": project_info,
+            "summary": {
+                "elements": by_type,
+                "resources_human": sum(1 for row in resources if str(row.get("tipo") or "").upper() in {"HUMANO", "PERSONA"}),
+                "resources_other": sum(1 for row in resources if str(row.get("tipo") or "").upper() not in {"HUMANO", "PERSONA"}),
+                "assignments": len(sheets.get("Asignaciones", [])),
+                "criteria": len(sheets.get("Criterios", [])),
+                "holidays": len(sheets.get("Calendario", [])),
+                "kpis": len(sheets.get("KPI_Proyecto_Hitos", [])) + len(sheets.get("KPI_Cambio", [])),
+            },
+            "sample": gantt_rows[:12],
         }
     )
+
+
+@router.get("/import-template", tags=["imports"])
+def download_import_template() -> FileResponse:
+    seeds = Path(os.environ.get("SEEDS_DIR") or Path(__file__).resolve().parents[3] / "seeds")
+    template = seeds / "Carta_Gantt_Plantilla.xlsx"
+    if not template.exists():
+        raise ApiError("NOT_FOUND", "Plantilla no disponible", 404)
+    return FileResponse(template, filename="Carta_Gantt_Plantilla_Trazo.xlsx", media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
 
 @router.post("/projects/import", status_code=201, tags=["imports"])
@@ -741,122 +771,6 @@ def _validate_kpi_scope(session: Session, project_id: uuid.UUID, scope: Any, ele
         raise ApiError("INVALID_KPI_SCOPE", f"El elemento debe ser de tipo {expected}")
 
 
-def _project_kpi_metrics(session: Session, project_id: uuid.UUID, cutoff: date) -> dict[str, Any]:
-    """Calculate the catalogue's project and change-management variables."""
-
-    elements = session.scalars(sa.select(GanttElement).where(GanttElement.project_id == project_id)).all()
-    activities = [element for element in elements if element.element_type.value == "ACTIVIDAD"]
-    late = [element for element in activities if element.planned_finish and element.planned_finish < cutoff and element.progress_pct < 100]
-    milestones = [element for element in elements if element.element_type.value == "HITO"]
-    completed_milestones = [element for element in milestones if element.progress_pct >= 100]
-    on_time_milestones = [element for element in completed_milestones if element.actual_finish is None or element.planned_finish is None or element.actual_finish <= element.planned_finish]
-    planned_progress = _planned_progress(elements, cutoff)
-    actual_progress = _ratio(
-        sum((element.progress_pct for element in elements if element.element_type.value == "SUBACTIVIDAD"), Decimal("0")),
-        len([element for element in elements if element.element_type.value == "SUBACTIVIDAD"]),
-    )
-    closing = next((element for element in milestones if "cierre" in element.name.casefold()), None)
-    changes = session.scalars(sa.select(ChangeRequest).where(ChangeRequest.project_id == project_id)).all()
-    decided = [change for change in changes if change.status in {ChangeStatus.APPROVED, ChangeStatus.REJECTED, ChangeStatus.CLOSED}]
-    approved = [change for change in decided if change.status in {ChangeStatus.APPROVED, ChangeStatus.CLOSED}]
-    rejected = [change for change in decided if change.status == ChangeStatus.REJECTED]
-    cycle_hours = [
-        Decimal(str((change.closed_at - change.created_at).total_seconds())) / Decimal("3600")
-        for change in changes
-        if change.closed_at is not None
-    ]
-    impacts = session.scalars(
-        sa.select(ChangeImpact).join(ChangeRequest, ChangeImpact.request_id == ChangeRequest.id).where(ChangeRequest.project_id == project_id)
-    ).all()
-    evidence_changes = session.scalars(
-        sa.select(sa.distinct(Evidence.change_request_id)).join(ChangeRequest, Evidence.change_request_id == ChangeRequest.id).where(ChangeRequest.project_id == project_id, Evidence.change_request_id.is_not(None))
-    ).all()
-    rates = {
-        "CHANGE_APPROVAL_RATE": _ratio(len(approved), len(decided)),
-        "CHANGE_REJECTION_RATE": _ratio(len(rejected), len(decided)),
-        "CHANGE_EVIDENCE_COMPLETE_PCT": _ratio(len(evidence_changes), len(changes)),
-    }
-    metrics: dict[str, Any] = {
-        "PHYSICAL_PROGRESS_DEVIATION": (actual_progress - planned_progress) * Decimal("100"),
-        "AVANCE_REAL": actual_progress * Decimal("100"),
-        "AVANCE_PLAN": planned_progress * Decimal("100"),
-        "ACTIVIDADES_ATRASADAS": [1] * len(late),
-        "ACTIVIDADES": [1] * len(activities),
-        "HITOS_A_TIEMPO": [1] * len(on_time_milestones),
-        "HITOS": [1] * len(milestones),
-        "FECHA_CIERRE_REAL": (closing.actual_finish or closing.planned_finish or cutoff).toordinal() if closing else cutoff.toordinal(),
-        "FECHA_CIERRE_BASE": (closing.planned_finish or cutoff).toordinal() if closing else cutoff.toordinal(),
-        "LATE_ACTIVITIES_PCT": _ratio(len(late), len(activities)) * Decimal("100"),
-        "MILESTONES_ON_TIME_PCT": _ratio(len(on_time_milestones), len(completed_milestones)) * Decimal("100"),
-        "CLOSING_MILESTONE_DEVIATION": Decimal("0"),
-        "CHANGE_REQUESTS": Decimal(len(changes)),
-        "CHANGE_AVG_CYCLE_HOURS": _average(cycle_hours),
-        "CHANGE_AVG_IMPACT_HOURS": Decimal("0"),
-        "CHANGE_IMPACT_COST": sum((impact.delta_cost for impact in impacts), Decimal("0")),
-        "CHANGE_IMPACT_DAYS": Decimal(sum(impact.delta_schedule_days for impact in impacts)),
-        "CHANGE_SLA_BREACHES": Decimal("0"),
-        "CHANGE_CONTINGENCY_CONSUMPTION": sum((impact.delta_contingency for impact in impacts), Decimal("0")),
-        "CHANGE_ADOPTION_INDEX": Decimal("0"),
-        "CHANGE_TRAINING_COVERAGE": Decimal("0"),
-        **rates,
-    }
-    metrics.update(
-        {
-            "ADVANCE_GAP": metrics["AVANCE_REAL"] - metrics["AVANCE_PLAN"],
-            "LATE_TASKS": _ratio(len(late), len(activities)),
-            "MILESTONE_ON_TIME": _ratio(len(on_time_milestones), len(milestones)),
-            "CLOSE_VARIANCE": metrics["FECHA_CIERRE_REAL"] - metrics["FECHA_CIERRE_BASE"],
-        }
-    )
-    for index, value in enumerate(
-        (
-            metrics["CHANGE_REQUESTS"],
-            metrics["CHANGE_APPROVAL_RATE"],
-            metrics["CHANGE_REJECTION_RATE"],
-            metrics["CHANGE_AVG_CYCLE_HOURS"],
-            metrics["CHANGE_AVG_IMPACT_HOURS"],
-            metrics["CHANGE_IMPACT_COST"],
-            metrics["CHANGE_IMPACT_DAYS"],
-            metrics["CHANGE_EVIDENCE_COMPLETE_PCT"],
-            metrics["CHANGE_SLA_BREACHES"],
-            metrics["CHANGE_CONTINGENCY_CONSUMPTION"],
-            metrics["CHANGE_ADOPTION_INDEX"],
-            metrics["CHANGE_TRAINING_COVERAGE"],
-        ),
-        start=1,
-    ):
-        metrics[f"VALOR_{index:02d}"] = value
-    return metrics
-
-
-def _ratio(numerator: int, denominator: int) -> Decimal:
-    return Decimal(numerator) / Decimal(denominator) if denominator else Decimal("0")
-
-
-def _average(values: list[Decimal]) -> Decimal:
-    return sum(values, Decimal("0")) / Decimal(len(values)) if values else Decimal("0")
-
-
-def _planned_progress(elements: list[GanttElement], cutoff: date) -> Decimal:
-    """Return the mean temporal progress of scheduled leaf work."""
-
-    leaves = [element for element in elements if element.element_type.value == "SUBACTIVIDAD"]
-    values = []
-    for element in leaves:
-        if not element.planned_start or not element.planned_finish or element.planned_finish <= element.planned_start:
-            values.append(Decimal("1") if element.planned_finish and cutoff >= element.planned_finish else Decimal("0"))
-            continue
-        if cutoff <= element.planned_start:
-            values.append(Decimal("0"))
-        elif cutoff >= element.planned_finish:
-            values.append(Decimal("1"))
-        else:
-            elapsed = (cutoff - element.planned_start).days
-            duration = (element.planned_finish - element.planned_start).days
-            values.append(Decimal(elapsed) / Decimal(duration))
-    return _average(values) if values else Decimal("0")
-
-
 @router.patch("/projects/{project_id}/kpis/{kpi_id}", tags=["kpis"])
 def update_kpi(project_id: uuid.UUID, kpi_id: uuid.UUID, payload: KpiUpdate, session: Session = Depends(get_db), actor: Manager = None) -> dict[str, Any]:
     kpi = session.scalar(sa.select(Kpi).where(Kpi.id == kpi_id, Kpi.project_id == project_id))
@@ -883,34 +797,10 @@ def recalculate_project_kpis(
 ) -> list[dict[str, Any]]:
     """Recalculate and persist the KPI snapshot without committing the transaction."""
 
+    from app.services.kpi_engine import recalculate_kpis
+
     project = require_project(session, project_id)
-    tasks, _, _ = _calculation_inputs(session, project)
-    cutoff = project.cutoff_date or date.today()
-    evm = DeterministicCalculationEngine(project_calendar(session, project)).calculate_evm(tasks, cutoff)
-    metrics = {name: value for name, value in vars(evm).items()} if hasattr(evm, "__dict__") else {
-        "BAC": evm.bac, "PV": evm.pv, "EV": evm.ev, "AC": evm.ac, "SPI": evm.spi, "CPI": evm.cpi,
-        "SV": evm.sv, "CV": evm.cv, "EAC": evm.eac, "ETC": evm.etc, "VAC": evm.vac,
-    }
-    metrics.update(_project_kpi_metrics(session, project_id, cutoff))
-    snapshot_at = cutoff_at or datetime.combine(cutoff, time.min, tzinfo=UTC)
-    now = datetime.now(UTC)
-    values: list[dict[str, Any]] = []
-    for kpi in session.scalars(sa.select(Kpi).where(Kpi.project_id == project_id, Kpi.is_active.is_(True))).all():
-        try:
-            value = _formula_value(kpi.formula, metrics, _variable_codes(session, project_id))
-        except ApiError:
-            raise
-        existing = session.scalar(sa.select(KpiValue).where(KpiValue.kpi_id == kpi.id, KpiValue.cutoff_at == snapshot_at))
-        breakdown = {"formula": kpi.formula, "variables": {name: metrics.get(name) for name in formula_variables(kpi.formula)}}
-        if existing is None:
-            existing = KpiValue(kpi_id=kpi.id, cutoff_at=snapshot_at, value=value, breakdown=breakdown)
-            session.add(existing)
-        else:
-            existing.value = value
-            existing.breakdown = breakdown
-            existing.calculated_at = now
-        values.append({"kpi_id": kpi.id, "code": kpi.code, "value": value, "cutoff_at": snapshot_at, "breakdown": breakdown})
-    return values
+    return recalculate_kpis(session, project, cutoff_at.date() if cutoff_at else None)
 
 
 @router.post("/projects/{project_id}/kpis/recalculate", tags=["kpis"])
