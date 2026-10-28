@@ -161,3 +161,35 @@ def test_only_admin_can_reset_demo(client, manager):
     assert len(restored["projects"]) == 2
     codes = {item["code"] for item in _data(client.get("/api/v1/projects-overview", headers=admin))}
     assert codes == {"HORIZONTE-CONECTA", "CASO-PRUEBA"}
+
+
+def test_course_workbook_imports_as_new_project_equivalent_to_demo(client, manager):
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    source = root / "insumos" / "Caso3_Horizonte_Planificacion_Gantt.xlsx"
+    if not source.exists():
+        source = root / "seeds" / "Horizonte_Conecta_Carta_Gantt.xlsx"
+    with source.open("rb") as handle:
+        response = client.post(
+            "/api/v1/projects/import",
+            headers=manager,
+            files={"file": ("horizonte.xlsx", handle, "application/octet-stream")},
+            data={"codigo": "HORIZONTE-COPIA", "nombre": "Horizonte Conecta (copia)"},
+        )
+    created = _data(response)["project"]
+    assert created["code"] == "HORIZONTE-COPIA"
+    projects = {item["code"]: item for item in _data(client.get("/api/v1/projects-overview", headers=manager))}
+    original, copy = projects["HORIZONTE-CONECTA"], projects["HORIZONTE-COPIA"]
+    assert copy["counts"] == original["counts"]
+    assert copy["baseline_version"] == "v1"
+    assert copy["bac"] == 212_809_000
+    board = _data(client.get(f"/api/v1/projects/{copy['id']}/kpis/board", headers=manager))
+    assert len(board["kpis"]) == 20 and all(len(kpi["history"]) >= 1 for kpi in board["kpis"])
+    duplicate = client.post(
+        "/api/v1/projects/import",
+        headers=manager,
+        files={"file": ("horizonte.xlsx", source.read_bytes(), "application/octet-stream")},
+        data={"codigo": "HORIZONTE-COPIA"},
+    )
+    assert duplicate.status_code == 409

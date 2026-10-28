@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Annotated, Any
 
 import sqlalchemy as sa
-from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
@@ -396,20 +396,36 @@ def download_import_template() -> FileResponse:
 
 
 @router.post("/projects/import", status_code=201, tags=["imports"])
-def import_project(file: UploadFile = File(...), session: Session = Depends(get_db), _: Manager = None) -> dict[str, Any]:
+def import_project(
+    file: UploadFile = File(...),
+    codigo: str | None = Form(default=None, max_length=50),
+    nombre: str | None = Form(default=None, max_length=200),
+    session: Session = Depends(get_db),
+    actor: Manager = None,
+) -> dict[str, Any]:
+    """Import a workbook; ``codigo``/``nombre`` override the Proyecto sheet (import as a new project)."""
+
+    overrides = {"codigo": codigo or "", "nombre": nombre or ""}
+    if codigo and session.scalar(sa.select(Project).where(Project.code == codigo.strip())):
+        raise ApiError("CONFLICT", f"Ya existe un proyecto con el código {codigo.strip()}", 409)
     try:
         with _uploaded_source(file) as source:
-            result = import_workbook(session, source)
+            result = import_workbook(session, source, overrides=overrides)
     except (FileNotFoundError, ValueError, KeyError) as exc:
         session.rollback()
         raise ApiError("INVALID_IMPORT", str(exc)) from exc
     if not result.report.valid:
         session.rollback()
         raise ApiError("INVALID_IMPORT", "La importación contiene errores", details=result.report.as_dict())
-    session.commit()
-    project = session.scalar(sa.select(Project).where(Project.code == result.preview.project_code))
+    code = (codigo or "").strip() or result.preview.project_code
+    project = session.scalar(sa.select(Project).where(Project.code == code))
     if project is None:
+        session.rollback()
         raise ApiError("IMPORT_FAILED", "No fue posible crear el proyecto", 500)
+    if project.responsible_id is None and actor is not None:
+        project.responsible_id = actor.id
+    _snapshot_kpis(session, project)
+    session.commit()
     return _ok(
         {
             "project": _project(project),
@@ -419,6 +435,15 @@ def import_project(file: UploadFile = File(...), session: Session = Depends(get_
             "report": result.report.as_dict(),
         }
     )
+
+
+def _snapshot_kpis(session: Session, project: Project) -> None:
+    """Store the first KPI measurement right after an import."""
+
+    from app.services.kpi_engine import recalculate_kpis
+
+    session.flush()
+    recalculate_kpis(session, project)
 
 
 @router.post("/projects/{project_id}/imports", tags=["imports"])
@@ -435,6 +460,7 @@ def import_project_version(
     if not result.report.valid:
         session.rollback()
         raise ApiError("INVALID_IMPORT", "La importación contiene errores", details=result.report.as_dict())
+    _snapshot_kpis(session, require_project(session, project_id))
     session.commit()
     return _ok(
         {

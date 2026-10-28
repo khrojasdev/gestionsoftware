@@ -59,8 +59,9 @@ La pantalla **Caso de prueba** muestra el checklist automático y el guion de lo
 ## Cargar tu propia planificación
 
 En **Importar Carta Gantt** sube la plantilla (`Descargar plantilla .xlsx`) llena con
-tus datos o el libro del curso. Con un **código de proyecto nuevo** se crea otro
-proyecto; con un código existente se reemplaza su planificación. El sistema calcula
+tus datos o el libro del curso. Antes de confirmar puedes cambiar el código y el
+nombre; si el código ya existe eliges entre **crear un proyecto nuevo** o
+**reemplazar** la planificación existente. El sistema calcula
 fechas, ruta crítica, costos, línea base, carga de recursos y KPI; si el archivo no
 trae KPI ni etapas de cambio, crea los 20 KPI y el flujo de 10 etapas estándar.
 

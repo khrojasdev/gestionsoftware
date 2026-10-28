@@ -2,7 +2,7 @@ import { useRef, useState, type DragEvent } from "react";
 
 import { api, errorMessage, templateUrl } from "../api";
 import { useAuth } from "../auth";
-import { Alert, Card, Icon, Loading, PageHeader, ReadOnlyNote, Tag, useToast } from "../components/ui";
+import { Alert, Card, Field, Icon, Loading, PageHeader, ReadOnlyNote, Tag, useToast } from "../components/ui";
 import { d, fileSize, money } from "../format";
 import { useProject } from "../project";
 import { go } from "../router";
@@ -29,6 +29,9 @@ export default function ImportPage() {
   const [busy, setBusy] = useState<"preview" | "import" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [drag, setDrag] = useState(false);
+  const [mode, setMode] = useState<"nuevo" | "reemplazar">("nuevo");
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
 
   async function inspect(selected: File) {
     setFile(selected);
@@ -36,7 +39,15 @@ export default function ImportPage() {
     setError(null);
     setBusy("preview");
     try {
-      setPreview(await api.upload<ImportPreview>("/projects/import/preview", selected));
+      const result = await api.upload<ImportPreview>("/projects/import/preview", selected);
+      const taken = projects.some((project) => project.code === result.project_code);
+      const used = new Set(projects.map((project) => project.code));
+      let suggestion = result.project_code;
+      for (let index = 2; taken && used.has(suggestion); index += 1) suggestion = `${result.project_code}-${index}`;
+      setCode(suggestion);
+      setName(taken ? `${result.project.nombre ?? result.project_code} (${suggestion.split("-").pop()})` : result.project.nombre ?? "");
+      setMode("nuevo");
+      setPreview(result);
     } catch (err) {
       setError(errorMessage(err));
     } finally {
@@ -51,12 +62,12 @@ export default function ImportPage() {
     setBusy("import");
     setError(null);
     try {
-      if (existing) {
+      if (existing && mode === "reemplazar") {
         await api.upload(`/projects/${existing.id}/imports`, file);
         select(existing.id);
         toast("ok", `Planificación de ${existing.name} reemplazada desde ${file.name}. Se generó una nueva línea base.`);
       } else {
-        const result = await api.upload<{ project: ProjectOverview }>("/projects/import", file);
+        const result = await api.upload<{ project: ProjectOverview }>("/projects/import", file, { codigo: code.trim(), nombre: name.trim() });
         select(result.project.id);
         toast("ok", `Proyecto ${result.project.name} importado con línea base v1.`);
       }
@@ -272,12 +283,44 @@ export default function ImportPage() {
               {existing && (
                 <div style={{ marginTop: 12 }}>
                   <Alert level="warn">
-                    Ya existe <b>{existing.name}</b>. Confirmar reemplaza su planificación (Gantt, recursos y asignaciones) y genera una nueva línea base.
+                    El archivo trae el código de <b>{existing.name}</b>, que ya existe. Elige qué hacer:
                   </Alert>
+                  <label className={`rolecard ${mode === "nuevo" ? "on" : ""}`} style={{ marginTop: 8 }}>
+                    <input type="radio" name="mode" checked={mode === "nuevo"} onChange={() => setMode("nuevo")} />
+                    <div>
+                      <b>Crear como proyecto nuevo</b>
+                      <br />
+                      <span className="muted">El proyecto actual no se toca; se crea otro con el código y nombre de abajo.</span>
+                    </div>
+                  </label>
+                  <label className={`rolecard ${mode === "reemplazar" ? "on" : ""}`}>
+                    <input type="radio" name="mode" checked={mode === "reemplazar"} onChange={() => setMode("reemplazar")} />
+                    <div>
+                      <b>Reemplazar la planificación de {existing.name}</b>
+                      <br />
+                      <span className="muted">Sobrescribe Gantt, recursos y asignaciones y genera una nueva línea base.</span>
+                    </div>
+                  </label>
                 </div>
               )}
-              <button className="btn pri" style={{ width: "100%", justifyContent: "center", marginTop: 14 }} disabled={!preview.valid || busy !== null} onClick={() => void confirm()}>
-                {busy === "import" ? "Importando y calculando…" : existing ? "Reemplazar planificación" : "Importar y calcular"}
+              {(!existing || mode === "nuevo") && (
+                <div style={{ marginTop: 12 }}>
+                  <Field label="Código del proyecto">
+                    <input className="mono" value={code} onChange={(event) => setCode(event.target.value.toUpperCase())} />
+                  </Field>
+                  <Field label="Nombre del proyecto">
+                    <input value={name} onChange={(event) => setName(event.target.value)} />
+                  </Field>
+                  {projects.some((project) => project.code === code.trim()) && <Alert level="crit">Ya existe un proyecto con ese código; usa otro.</Alert>}
+                </div>
+              )}
+              <button
+                className="btn pri"
+                style={{ width: "100%", justifyContent: "center", marginTop: 14 }}
+                disabled={!preview.valid || busy !== null || ((!existing || mode === "nuevo") && (!code.trim() || projects.some((project) => project.code === code.trim())))}
+                onClick={() => void confirm()}
+              >
+                {busy === "import" ? "Importando y calculando…" : existing && mode === "reemplazar" ? "Reemplazar planificación" : "Crear proyecto y calcular"}
               </button>
               {!preview.valid && <p className="muted" style={{ fontSize: 12 }}>Corrige los errores en el archivo y vuelve a cargarlo.</p>}
             </Card>
@@ -287,7 +330,7 @@ export default function ImportPage() {
                 La plantilla tiene una hoja por entidad. La jerarquía (Etapa → Actividad → Subactividad / Hito) vive dentro del Gantt mediante <span className="mono">padre_id</span>.
               </p>
               <Alert level="info">
-                Para crear un proyecto nuevo usa un <b>código distinto</b> en la hoja Proyecto (clave <span className="mono">codigo</span>). Si el código ya existe, se reemplaza la planificación de ese proyecto. Si el archivo no trae KPI ni etapas de cambio, se crean los 20 KPI y el flujo de 10 etapas estándar.
+                Antes de confirmar puedes cambiar el código y el nombre del proyecto. Si el código del archivo ya existe, eliges entre <b>crear un proyecto nuevo</b> o <b>reemplazar</b> el existente. Si el archivo no trae KPI ni etapas de cambio, se crean los 20 KPI y el flujo de 10 etapas estándar.
               </Alert>
               {STRUCTURE.map((item) => (
                 <div key={item.sheet} className="check">

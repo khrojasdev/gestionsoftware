@@ -203,13 +203,15 @@ def recalculate_project(session: Session, project: Project) -> dict[str, Any]:
 class SqlAlchemyImportStore:
     """Transactional adapter from the canonical importer to the F1 schema."""
 
-    def __init__(self, session: Session, project_id: uuid.UUID | None = None) -> None:
+    def __init__(self, session: Session, project_id: uuid.UUID | None = None, overrides: dict[str, str] | None = None) -> None:
         self.session = session
         self.project_id = project_id
+        self.overrides = {key: value.strip() for key, value in (overrides or {}).items() if value and value.strip()}
         self.baseline_version: str | None = None
 
     def commit_import(self, workbook: CanonicalWorkbook) -> int:
         values = {str(row.get("clave", "")): str(row.get("valor", "")).strip() for row in workbook.sheets["Proyecto"]}
+        values.update(self.overrides)
         code = values.get("codigo", "").strip()
         if not code:
             raise ApiError("INVALID_IMPORT", "La importación no contiene código de proyecto")
@@ -606,8 +608,10 @@ def _baseline_number(version: str) -> int:
     return int(major)
 
 
-def import_workbook(session: Session, source: Path, project_id: uuid.UUID | None = None) -> ImportResult:
-    store = SqlAlchemyImportStore(session, project_id)
+def import_workbook(
+    session: Session, source: Path, project_id: uuid.UUID | None = None, overrides: dict[str, str] | None = None
+) -> ImportResult:
+    store = SqlAlchemyImportStore(session, project_id, overrides)
     result = ImportService(store).import_file(source)
     if not result.imported:
         return result
