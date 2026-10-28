@@ -259,6 +259,23 @@ def delete_project_admin(
     return Response(status_code=204)
 
 
+@router.post("/admin/demo-reset")
+def reset_demo(
+    session: Session = Depends(get_db),
+    actor: Annotated[User, Depends(require_roles(ROLE_ADMIN))] = None,
+) -> dict[str, Any]:
+    """Delete every project and reload the demonstration data (admin only)."""
+
+    from app.demo import load, reset
+
+    reset(session)
+    session.flush()
+    projects = load(session)
+    record_audit(session, user_id=actor.id, action="DEMO_RESET", entity_type="PROJECT", entity_id=None, after_data={"projects": [p.code for p in projects.values()]})
+    session.commit()
+    return ok({"projects": [project.name for project in projects.values()]})
+
+
 def _purge_project(session: Session, project: Project) -> None:
     project_id = project.id
     element_ids = list(session.scalars(sa.select(GanttElement.id).where(GanttElement.project_id == project_id)).all())

@@ -137,3 +137,27 @@ def test_cycles_and_milestone_criteria_are_rejected(client, manager, project_id)
     milestone = client.patch(f"/api/v1/projects/{project_id}/elements/H05", headers=manager, json={"progress_pct": 100})
     assert milestone.status_code == 409
     assert milestone.json()["error"]["code"] == "MILESTONE_CRITERIA_PENDING"
+
+
+def test_template_import_creates_full_project(client, manager):
+    from pathlib import Path
+
+    template = Path(__file__).resolve().parents[2] / "seeds" / "Carta_Gantt_Plantilla.xlsx"
+    with template.open("rb") as handle:
+        response = client.post("/api/v1/projects/import", headers=manager, files={"file": ("plantilla.xlsx", handle, "application/octet-stream")})
+    created = _data(response)["project"]
+    board = _data(client.get(f"/api/v1/projects/{created['id']}/kpis/board", headers=manager))
+    assert len(board["kpis"]) == 20
+    changes = _data(client.get(f"/api/v1/projects/{created['id']}/change-board", headers=manager))
+    assert len(changes["stages"]) == 10
+    gantt = _data(client.get(f"/api/v1/projects/{created['id']}/gantt/full", headers=manager))
+    assert gantt["elements"] and all(element["finish"] for element in gantt["elements"])
+
+
+def test_only_admin_can_reset_demo(client, manager):
+    assert client.post("/api/v1/admin/demo-reset", headers=manager).status_code == 403
+    admin = _headers(client, "admin@trazo.cl")
+    restored = _data(client.post("/api/v1/admin/demo-reset", headers=admin))
+    assert len(restored["projects"]) == 2
+    codes = {item["code"] for item in _data(client.get("/api/v1/projects-overview", headers=admin))}
+    assert codes == {"HORIZONTE-CONECTA", "CASO-PRUEBA"}

@@ -31,7 +31,8 @@ Contraseña de todos: **`Trazo2026!`** (la pantalla de ingreso tiene botones par
 Otros archivos útiles en la raíz:
 
 - `detener-trazo.bat` – detiene los contenedores (los datos se conservan).
-- `reiniciar-demo.bat` – borra los proyectos y vuelve a cargar la demostración.
+- `reiniciar-demo.bat` – borra los proyectos y vuelve a cargar la demostración
+  (en la web: Administrador → Proyectos → **Restaurar demo**).
 - `docker compose logs -f app` – ver registros si algo falla.
 - `docker compose down -v` – borrar también la base de datos.
 
@@ -54,6 +55,14 @@ Al iniciar con la base vacía se cargan dos proyectos:
 
 La pantalla **Caso de prueba** muestra el checklist automático y el guion de los
 3 escenarios. El guion completo está en [docs/guion-demo.md](docs/guion-demo.md).
+
+## Cargar tu propia planificación
+
+En **Importar Carta Gantt** sube la plantilla (`Descargar plantilla .xlsx`) llena con
+tus datos o el libro del curso. Con un **código de proyecto nuevo** se crea otro
+proyecto; con un código existente se reemplaza su planificación. El sistema calcula
+fechas, ruta crítica, costos, línea base, carga de recursos y KPI; si el archivo no
+trae KPI ni etapas de cambio, crea los 20 KPI y el flujo de 10 etapas estándar.
 
 ## Pantallas
 

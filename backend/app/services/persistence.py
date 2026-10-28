@@ -239,6 +239,18 @@ class SqlAlchemyImportStore:
     def _write_supplemental(self, project: Project, workbook: CanonicalWorkbook) -> None:
         """Persist optional Seed B change, KPI and dashboard definitions."""
 
+        # A plain template without the optional sheets still gets the standard
+        # 10-stage change flow and the 20 KPI of the catalogue.
+        from trazo_importer.converter import CHANGE_KPIS, PROJECT_KPIS, change_stage_rows, kpi_rows
+
+        sheets = dict(workbook.sheets)
+        if not sheets.get("Etapas_Cambio"):
+            sheets["Etapas_Cambio"] = change_stage_rows()
+        if not sheets.get("KPI_Proyecto_Hitos") and not sheets.get("KPI_Cambio"):
+            sheets["KPI_Proyecto_Hitos"] = kpi_rows(PROJECT_KPIS)
+            sheets["KPI_Cambio"] = kpi_rows(CHANGE_KPIS)
+        workbook = CanonicalWorkbook(sheets=sheets)
+
         stages_by_sequence: dict[int, ChangeStage] = {}
         for row in workbook.sheets.get("Etapas_Cambio", []):
             sequence = int(row.get("secuencia", 0))

@@ -286,6 +286,9 @@ export default function ImportPage() {
               <p className="muted" style={{ marginTop: 0, fontSize: 12.5 }}>
                 La plantilla tiene una hoja por entidad. La jerarquía (Etapa → Actividad → Subactividad / Hito) vive dentro del Gantt mediante <span className="mono">padre_id</span>.
               </p>
+              <Alert level="info">
+                Para crear un proyecto nuevo usa un <b>código distinto</b> en la hoja Proyecto (clave <span className="mono">codigo</span>). Si el código ya existe, se reemplaza la planificación de ese proyecto. Si el archivo no trae KPI ni etapas de cambio, se crean los 20 KPI y el flujo de 10 etapas estándar.
+              </Alert>
               {STRUCTURE.map((item) => (
                 <div key={item.sheet} className="check">
                   <span className="ci y">

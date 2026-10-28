@@ -60,7 +60,10 @@ Publicar el puerto 8000 detrás de un proxy con HTTPS (Caddy, Nginx o Traefik).
 
 ## Reiniciar la demostración en un despliegue
 
-Desde la consola del servicio (Render «Shell», Railway «Run command») o con
+Lo más simple: ingresar como `admin@trazo.cl` → **Proyectos → Restaurar demo**.
+Borra todos los proyectos y recarga la demostración (los usuarios se conservan).
+
+También desde la consola del servicio (Render «Shell», Railway «Run command») o con
 `docker compose exec app`:
 
 ```bash

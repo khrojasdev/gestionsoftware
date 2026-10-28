@@ -42,6 +42,8 @@ export default function ProjectsPage() {
   const toast = useToast();
   const [editing, setEditing] = useState<ProjectOverview | "new" | null>(null);
   const [removing, setRemoving] = useState<ProjectOverview | null>(null);
+  const [resetting, setResetting] = useState(false);
+  const [busyReset, setBusyReset] = useState(false);
 
   async function close(project: ProjectOverview) {
     try {
@@ -56,6 +58,11 @@ export default function ProjectsPage() {
   return (
     <>
       <PageHeader crumb="General" title="Proyectos">
+        {isAdmin && (
+          <button className="btn" onClick={() => setResetting(true)} title="Borra todos los proyectos y vuelve a cargar la demostración">
+            <Icon name="refresh" size={14} /> Restaurar demo
+          </button>
+        )}
         {isManager && (
           <>
             <button className="btn" onClick={() => setEditing("new")}>
@@ -177,6 +184,45 @@ export default function ProjectsPage() {
         })}
       </div>
       {editing && <ProjectModal project={editing === "new" ? undefined : editing} onClose={() => setEditing(null)} onSaved={(id) => { setEditing(null); touch(); if (id) select(id); }} />}
+      {resetting && (
+        <Modal
+          title="Restaurar la demostración"
+          onClose={() => !busyReset && setResetting(false)}
+          footer={
+            <>
+              <button className="btn" disabled={busyReset} onClick={() => setResetting(false)}>
+                Cancelar
+              </button>
+              <button
+                className="btn pri"
+                disabled={busyReset}
+                onClick={async () => {
+                  setBusyReset(true);
+                  try {
+                    await api.post("/admin/demo-reset");
+                    toast("ok", "Demostración restaurada: Horizonte Conecta y Caso de prueba en su estado inicial.");
+                    setResetting(false);
+                    touch();
+                  } catch (err) {
+                    toast("crit", errorMessage(err));
+                  } finally {
+                    setBusyReset(false);
+                  }
+                }}
+              >
+                {busyReset ? "Restaurando… (unos segundos)" : "Borrar todo y restaurar"}
+              </button>
+            </>
+          }
+        >
+          <p style={{ marginTop: 0 }}>
+            Se eliminarán <b>todos los proyectos</b> (incluidos los que hayas importado) con sus solicitudes, KPI y evidencias, y se volverán a cargar Horizonte Conecta y el Caso de prueba tal como al inicio.
+          </p>
+          <p className="muted" style={{ marginBottom: 0 }}>
+            Los usuarios se conservan. Úsalo antes de una presentación o después de ensayar los escenarios.
+          </p>
+        </Modal>
+      )}
       {removing && (
         <Modal
           title="Eliminar proyecto"
