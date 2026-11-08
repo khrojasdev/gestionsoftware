@@ -653,6 +653,8 @@ function ResourceModal({ resource, onClose, onDone }: { resource?: ResourceRow; 
     user_id: resource?.user_id ?? "",
   });
   const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const set = (key: keyof typeof draft) => (event: { target: { value: string } }) => setDraft((value) => ({ ...value, [key]: event.target.value }));
 
   async function save() {
@@ -672,18 +674,44 @@ function ResourceModal({ resource, onClose, onDone }: { resource?: ResourceRow; 
     }
   }
 
+  async function remove() {
+    if (!resource) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await api.del(`/projects/${projectId}/resources-admin/${resource.id}`);
+      onDone();
+    } catch (err) {
+      setError(errorMessage(err));
+      setBusy(false);
+    }
+  }
+
   return (
     <Modal
       title={resource ? `Recurso ${resource.external_id}` : "Nuevo recurso"}
       onClose={onClose}
       footer={
         <>
-          <button className="btn" onClick={onClose}>
+          {resource && !confirmDelete && (
+            <button className="btn danger" disabled={busy} onClick={() => setConfirmDelete(true)}>
+              <Icon name="x" size={12} /> Eliminar
+            </button>
+          )}
+          {resource && confirmDelete && (
+            <button className="btn danger" disabled={busy} onClick={() => void remove()}>
+              {busy ? "Eliminando…" : "Confirmar eliminación"}
+            </button>
+          )}
+          <div className="sp" style={{ flex: 1 }} />
+          <button className="btn" onClick={confirmDelete ? () => setConfirmDelete(false) : onClose}>
             Cancelar
           </button>
-          <button className="btn pri" onClick={() => void save()} disabled={!draft.external_id || !draft.name}>
-            Guardar
-          </button>
+          {!confirmDelete && (
+            <button className="btn pri" onClick={() => void save()} disabled={!draft.external_id || !draft.name}>
+              Guardar
+            </button>
+          )}
         </>
       }
     >

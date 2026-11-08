@@ -193,3 +193,146 @@ def test_course_workbook_imports_as_new_project_equivalent_to_demo(client, manag
         data={"codigo": "HORIZONTE-COPIA"},
     )
     assert duplicate.status_code == 409
+
+
+# These tests run after the demo-reset test, which rebuilds the projects with
+# fresh IDs, so the module-scoped project_id fixture is stale here: each test
+# resolves the current HORIZONTE-CONECTA id live instead.
+def _horizonte(client, manager) -> str:
+    projects = client.get("/api/v1/projects-overview", headers=manager).json()["data"]
+    return next(item["id"] for item in projects if item["code"] == "HORIZONTE-CONECTA")
+
+
+def _find_parent(client, manager, project_id, kind: str) -> str:
+    gantt = _data(client.get(f"/api/v1/projects/{project_id}/gantt/full", headers=manager))
+    return next(element["external_id"] for element in gantt["elements"] if element["kind"] == kind)
+
+
+def test_create_and_delete_subactivity_recalculates(client, manager):
+    project_id = _horizonte(client, manager)
+    activity = _find_parent(client, manager, project_id, "ACTIVIDAD")
+    before = _data(client.get(f"/api/v1/projects/{project_id}/gantt/full", headers=manager))
+    count_before = len(before["elements"])
+
+    created = _data(
+        client.post(
+            f"/api/v1/projects/{project_id}/elements",
+            headers=manager,
+            json={"external_id": "QA-NEW-1", "name": "Tarea de prueba CRUD", "element_type": "SUBACTIVIDAD", "parent": activity, "duration_days": 4},
+        )
+    )
+    assert created["external_id"] == "QA-NEW-1"
+
+    after = _data(client.get(f"/api/v1/projects/{project_id}/gantt/full", headers=manager))
+    assert len(after["elements"]) == count_before + 1
+    new_element = next(element for element in after["elements"] if element["external_id"] == "QA-NEW-1")
+    # El recálculo le asignó fechas a partir de la planificación del proyecto.
+    assert new_element["start"] and new_element["finish"]
+    assert new_element["duration_days"] == 4
+
+    deleted = _data(client.delete(f"/api/v1/projects/{project_id}/elements/QA-NEW-1", headers=manager))
+    assert deleted["deleted"] == "QA-NEW-1"
+    restored = _data(client.get(f"/api/v1/projects/{project_id}/gantt/full", headers=manager))
+    assert len(restored["elements"]) == count_before
+
+
+def test_create_milestone_creates_milestone_record(client, manager):
+    project_id = _horizonte(client, manager)
+    activity = _find_parent(client, manager, project_id, "ACTIVIDAD")
+    _data(
+        client.post(
+            f"/api/v1/projects/{project_id}/elements",
+            headers=manager,
+            json={"external_id": "QA-HITO-1", "name": "Hito de prueba", "element_type": "HITO", "parent": activity},
+        )
+    )
+    milestones = _data(client.get(f"/api/v1/projects/{project_id}/milestones", headers=manager))
+    assert any(item["external_id"] == "QA-HITO-1" for item in milestones["milestones"])
+    _data(client.delete(f"/api/v1/projects/{project_id}/elements/QA-HITO-1", headers=manager))
+
+
+def test_delete_element_with_children_is_blocked(client, manager):
+    project_id = _horizonte(client, manager)
+    stage = _find_parent(client, manager, project_id, "ETAPA")
+    response = client.delete(f"/api/v1/projects/{project_id}/elements/{stage}", headers=manager)
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "HAS_CHILDREN"
+
+
+def test_duplicate_external_id_is_rejected(client, manager):
+    project_id = _horizonte(client, manager)
+    activity = _find_parent(client, manager, project_id, "ACTIVIDAD")
+    existing = _find_parent(client, manager, project_id, "SUBACTIVIDAD")
+    response = client.post(
+        f"/api/v1/projects/{project_id}/elements",
+        headers=manager,
+        json={"external_id": existing, "name": "Duplicada", "element_type": "SUBACTIVIDAD", "parent": activity, "duration_days": 2},
+    )
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "CONFLICT"
+
+
+def test_member_cannot_create_or_delete_elements(client, manager, member):
+    project_id = _horizonte(client, manager)
+    activity = _find_parent(client, manager, project_id, "ACTIVIDAD")
+    created = client.post(
+        f"/api/v1/projects/{project_id}/elements",
+        headers=member,
+        json={"external_id": "QA-MEMBER", "name": "No permitido", "element_type": "SUBACTIVIDAD", "parent": activity, "duration_days": 3},
+    )
+    assert created.status_code == 403
+
+
+def test_create_and_delete_resource(client, manager):
+    project_id = _horizonte(client, manager)
+    created = _data(
+        client.post(
+            f"/api/v1/projects/{project_id}/resources-admin",
+            headers=manager,
+            json={"external_id": "QA-RES-1", "name": "Recurso de prueba", "resource_type": "HUMANO", "rate": 12000, "role": "QA"},
+        )
+    )
+    assert created["id"]
+    deleted = _data(client.delete(f"/api/v1/projects/{project_id}/resources-admin/{created['id']}", headers=manager))
+    assert deleted["deleted"] == "QA-RES-1"
+
+
+def test_delete_assigned_resource_is_blocked(client, manager):
+    project_id = _horizonte(client, manager)
+    overview = _data(client.get(f"/api/v1/projects/{project_id}/resources/overview", headers=manager))
+    assigned = next(resource for resource in overview["resources"] if resource["assignments"])
+    response = client.delete(f"/api/v1/projects/{project_id}/resources-admin/{assigned['id']}", headers=manager)
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "RESOURCE_IN_USE"
+
+
+def test_kpi_comparator_range_and_rule(client, manager):
+    project_id = _horizonte(client, manager)
+    board = _data(client.get(f"/api/v1/projects/{project_id}/kpis/board", headers=manager))
+    kpi = next(item for item in board["kpis"] if item["category"] == "PROYECTO")
+    # Configura un KPI en modo RANGO y verifica que la regla y el estado se calculan con el nuevo operador.
+    _data(
+        client.put(
+            f"/api/v1/projects/{project_id}/kpi-config/{kpi['id']}",
+            headers=manager,
+            json={"comparator": "RANGE", "green_min": 0.9, "green_max": 1.1, "yellow_min": 0.8, "yellow_max": 1.2},
+        )
+    )
+    updated = _data(client.get(f"/api/v1/projects/{project_id}/kpis/board", headers=manager))
+    changed = next(item for item in updated["kpis"] if item["id"] == kpi["id"])
+    assert changed["comparator"] == "RANGE"
+    assert "entre" in changed["rule"].lower()
+    assert changed["status"] in {"VERDE", "AMARILLO", "ROJO", "SIN_DATOS", "INFO"}
+
+
+def test_kpi_comparator_rejects_inconsistent_thresholds(client, manager):
+    project_id = _horizonte(client, manager)
+    board = _data(client.get(f"/api/v1/projects/{project_id}/kpis/board", headers=manager))
+    kpi = next(item for item in board["kpis"] if item["category"] == "PROYECTO")
+    # En modo "mayor o igual" el verde debe ser >= al amarillo.
+    response = client.put(
+        f"/api/v1/projects/{project_id}/kpi-config/{kpi['id']}",
+        headers=manager,
+        json={"comparator": "GE", "green_threshold": 0.8, "yellow_threshold": 0.95},
+    )
+    assert response.status_code == 400

@@ -542,9 +542,18 @@ class Kpi(Base):
         UUID(as_uuid=True), sa.ForeignKey("gantt_elements.id", ondelete="CASCADE")
     )
     target: Mapped[Decimal | None] = mapped_column(sa.Numeric(18, 6))
+    # How the traffic-light status is derived from the value:
+    # GE (>=), GT (>), LE (<=), LT (<), RANGE (band), INFO (no threshold).
+    comparator: Mapped[str] = mapped_column(sa.String(10), nullable=False, default="GE")
     green_threshold: Mapped[Decimal | None] = mapped_column(sa.Numeric(18, 6))
     yellow_threshold: Mapped[Decimal | None] = mapped_column(sa.Numeric(18, 6))
     red_threshold: Mapped[Decimal | None] = mapped_column(sa.Numeric(18, 6))
+    # RANGE mode: value is green inside [green_min, green_max], yellow inside
+    # [yellow_min, yellow_max] (the tolerance band), red otherwise.
+    green_min: Mapped[Decimal | None] = mapped_column(sa.Numeric(18, 6))
+    green_max: Mapped[Decimal | None] = mapped_column(sa.Numeric(18, 6))
+    yellow_min: Mapped[Decimal | None] = mapped_column(sa.Numeric(18, 6))
+    yellow_max: Mapped[Decimal | None] = mapped_column(sa.Numeric(18, 6))
     frequency: Mapped[str] = mapped_column(sa.String(40), nullable=False, default="CORTE")
     alert_rule: Mapped[str | None] = mapped_column(sa.String(1000))
     is_active: Mapped[bool] = mapped_column(sa.Boolean, nullable=False, default=True)

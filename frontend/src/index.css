@@ -28,6 +28,20 @@ button:disabled {
 .btn.dark:hover {
   background: #2b3238;
 }
+.btn.danger {
+  color: var(--crit);
+  border-color: color-mix(in srgb, var(--crit) 35%, transparent);
+}
+.btn.danger:hover {
+  background: var(--crit);
+  border-color: var(--crit);
+  color: #fff;
+}
+.btn.danger:disabled {
+  color: var(--muted);
+  border-color: rgba(0, 0, 0, 0.08);
+  background: transparent;
+}
 .sp {
   flex: 1;
 }
@@ -743,6 +757,15 @@ a.dep:hover {
   font-size: 11px;
   padding: 2px 7px;
 }
+.thr {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.thr > div {
+  border-radius: 7px;
+  padding: 7px 9px;
+}
 .thr input {
   width: 100%;
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -755,6 +778,51 @@ a.dep:hover {
 .thr label {
   display: block;
   margin-bottom: 3px;
+}
+.thr-band {
+  border-radius: 7px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+}
+.thr-band.ok {
+  background: var(--ok-soft);
+  border-color: color-mix(in srgb, var(--ok) 28%, transparent);
+}
+.thr-band.warn {
+  background: var(--warn-soft);
+  border-color: color-mix(in srgb, var(--warn) 28%, transparent);
+}
+.thr-band label {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.thr-band input {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 5px;
+  padding: 4px 6px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  background: rgba(255, 255, 255, 0.7);
+}
+.rule-preview {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  background: var(--accent-soft);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 7px;
+  padding: 9px 11px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin: 10px 0;
+}
+.rule-preview svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--muted);
 }
 .code {
   overflow-x: auto;

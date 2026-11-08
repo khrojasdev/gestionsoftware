@@ -65,13 +65,13 @@ from app.models import (
     ResourceType,
     User,
 )
+from app.services import thresholds
 from app.services.analytics import (
     MANUAL_METRICS,
     STATUS_LABELS,
     ElementState,
     ProjectAnalytics,
     json_value,
-    kpi_status,
     project_clock,
 )
 from app.services.calculation_engine import DeterministicCalculationEngine
@@ -596,6 +596,137 @@ def _is_assigned(session: Session, element: GanttElement, user: User) -> bool:
     )
 
 
+class ElementCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    external_id: str = Field(min_length=1, max_length=80)
+    name: str = Field(min_length=1, max_length=300)
+    element_type: GanttElementType
+    parent: str | None = Field(default=None, min_length=1, max_length=80)
+    duration_days: int | None = Field(default=None, ge=0)
+    planned_start: date | None = None
+
+
+# Which element types may contain which children.
+_CONTAINER_TYPES = {GanttElementType.STAGE, GanttElementType.ACTIVITY}
+
+
+@router.post("/projects/{project_id}/elements", status_code=201)
+def create_element(
+    project_id: uuid.UUID,
+    payload: ElementCreate,
+    session: Session = Depends(get_db),
+    actor: Manager = None,
+) -> dict[str, Any]:
+    project = require_project(session, project_id)
+    if session.scalar(
+        sa.select(GanttElement.id).where(GanttElement.project_id == project_id, GanttElement.external_id == payload.external_id)
+    ):
+        raise ApiError("CONFLICT", f"Ya existe un elemento con el ID «{payload.external_id}»", 409)
+
+    parent: GanttElement | None = None
+    if payload.parent:
+        parent = _require_element(session, project_id, payload.parent)
+        if parent.element_type not in _CONTAINER_TYPES:
+            raise ApiError(
+                "INVALID_HIERARCHY",
+                "Solo las etapas y actividades pueden contener otros elementos; una subactividad o un hito no puede ser padre",
+                400,
+            )
+        if parent.element_type == GanttElementType.STAGE and payload.element_type not in {GanttElementType.ACTIVITY, GanttElementType.MILESTONE}:
+            raise ApiError("INVALID_HIERARCHY", "Una etapa contiene actividades (o hitos), no subactividades sueltas", 400)
+        if parent.element_type == GanttElementType.ACTIVITY and payload.element_type in {GanttElementType.STAGE, GanttElementType.ACTIVITY}:
+            raise ApiError("INVALID_HIERARCHY", "Una actividad contiene subactividades e hitos, no etapas ni otras actividades", 400)
+    elif payload.element_type in {GanttElementType.ACTIVITY, GanttElementType.SUBACTIVITY}:
+        raise ApiError("INVALID_HIERARCHY", "Una actividad o subactividad debe tener un elemento padre", 400)
+
+    duration = payload.duration_days
+    if payload.element_type in _CONTAINER_TYPES:
+        duration = None  # etapas y actividades consolidan desde sus hijos
+    elif payload.element_type == GanttElementType.MILESTONE:
+        duration = 0
+    elif payload.element_type == GanttElementType.SUBACTIVITY:
+        if duration is None or duration <= 0:
+            raise ApiError("INVALID_DURATION", "La duración de una subactividad debe ser mayor que cero", 400)
+
+    before = _snapshot(session, project_id)
+    finish_before = ProjectAnalytics(session, project).project_finish()
+    element = GanttElement(
+        project_id=project_id,
+        external_id=payload.external_id,
+        element_type=payload.element_type,
+        name=payload.name,
+        parent_id=parent.id if parent else None,
+        planned_start=payload.planned_start,
+        duration_days=duration,
+    )
+    session.add(element)
+    session.flush()
+    if payload.element_type == GanttElementType.MILESTONE:
+        session.add(Milestone(element_id=element.id))
+    record_audit(
+        session, user_id=actor.id, action="CREATE", entity_type="GANTT_ELEMENT", entity_id=element.id,
+        after_data=json_value({"external_id": element.external_id, "type": element.element_type.value, "name": element.name}),
+    )
+    session.flush()
+    _recalculate(session, project)
+    names = {e.external_id: e.name for e in session.scalars(sa.select(GanttElement).where(GanttElement.project_id == project_id)).all()}
+    after = _snapshot(session, project_id)
+    analytics = _commit_with_kpis(session, project)
+    return ok(
+        {
+            "element": element.external_id,
+            "id": element.id,
+            "external_id": element.external_id,
+            "changes": _diff(before, after, names),
+            "finish_before": finish_before,
+            "finish_after": analytics.project_finish(),
+        }
+    )
+
+
+@router.delete("/projects/{project_id}/elements/{element_id}")
+def delete_element(
+    project_id: uuid.UUID,
+    element_id: str,
+    session: Session = Depends(get_db),
+    actor: Manager = None,
+) -> dict[str, Any]:
+    project = require_project(session, project_id)
+    element = _require_element(session, project_id, element_id)
+    children = session.scalars(
+        sa.select(GanttElement.external_id).where(GanttElement.project_id == project_id, GanttElement.parent_id == element.id)
+    ).all()
+    if children:
+        raise ApiError(
+            "HAS_CHILDREN",
+            f"Elimina primero los elementos hijos ({', '.join(sorted(children, key=_natural))}) antes de borrar «{element.external_id}»",
+            409,
+        )
+    external = element.external_id
+    before = _snapshot(session, project_id)
+    finish_before = ProjectAnalytics(session, project).project_finish()
+    record_audit(
+        session, user_id=actor.id, action="DELETE", entity_type="GANTT_ELEMENT", entity_id=element.id,
+        before_data=json_value({"external_id": external, "type": element.element_type.value, "name": element.name}),
+    )
+    # Dependencias, asignaciones, avances, hitos y criterios se eliminan en cascada (FK ON DELETE CASCADE).
+    session.delete(element)
+    session.flush()
+    _recalculate(session, project)
+    names = {e.external_id: e.name for e in session.scalars(sa.select(GanttElement).where(GanttElement.project_id == project_id)).all()}
+    after = _snapshot(session, project_id)
+    analytics = _commit_with_kpis(session, project)
+    return ok(
+        {
+            "deleted": external,
+            "element": external,
+            "changes": _diff(before, after, names),
+            "finish_before": finish_before,
+            "finish_after": analytics.project_finish(),
+        }
+    )
+
+
 class DependencyInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     predecessor: str = Field(min_length=1, max_length=80)
@@ -1062,6 +1193,40 @@ def update_resource_admin(
     return ok({"id": resource.id})
 
 
+@router.delete("/projects/{project_id}/resources-admin/{resource_id}")
+def delete_resource_admin(
+    project_id: uuid.UUID, resource_id: uuid.UUID, session: Session = Depends(get_db), actor: Manager = None
+) -> dict[str, Any]:
+    project = require_project(session, project_id)
+    resource = session.scalar(sa.select(Resource).where(Resource.id == resource_id, Resource.project_id == project_id))
+    if resource is None:
+        raise ApiError("NOT_FOUND", "Recurso no encontrado", 404)
+    assigned = session.scalars(
+        sa.select(GanttElement.external_id)
+        .join(Assignment, Assignment.element_id == GanttElement.id)
+        .where(Assignment.resource_id == resource_id)
+    ).all()
+    if assigned:
+        raise ApiError(
+            "RESOURCE_IN_USE",
+            f"El recurso está asignado a {', '.join(sorted(set(assigned), key=_natural))}. Quita esas asignaciones antes de eliminarlo",
+            409,
+        )
+    name = resource.name
+    record_audit(
+        session, user_id=actor.id, action="DELETE", entity_type="RESOURCE", entity_id=resource.id,
+        before_data=json_value({"external_id": resource.external_id, "name": name}),
+    )
+    session.delete(resource)
+    session.flush()
+    if _has_plan(session, project):
+        _recalculate(session, project)
+        _commit_with_kpis(session, project)
+    else:
+        session.commit()
+    return ok({"deleted": resource.external_id})
+
+
 # ========================================================= milestones
 @router.get("/projects/{project_id}/milestones")
 def milestones(project_id: uuid.UUID, session: Session = Depends(get_db), _: CurrentUser = None) -> dict[str, Any]:
@@ -1356,6 +1521,8 @@ def kpi_board(project_id: uuid.UUID, session: Session = Depends(get_db), _: Curr
     payload = []
     for kpi in kpis:
         value, breakdown = evaluate(kpi.formula, metrics, codes)
+        threshold = thresholds.from_kpi(kpi)
+        threshold_cfg = thresholds.config(threshold)
         breakdown["variables_detail"] = [
             {
                 "code": code,
@@ -1379,14 +1546,21 @@ def kpi_board(project_id: uuid.UUID, session: Session = Depends(get_db), _: Curr
                 "unit": kpi.unit,
                 "scope": kpi.scope.value,
                 "target": kpi.target,
+                "comparator": threshold.comparator,
+                "comparator_label": threshold_cfg["comparator_label"],
+                "rule": threshold_cfg["rule"],
                 "green_threshold": kpi.green_threshold,
                 "yellow_threshold": kpi.yellow_threshold,
+                "green_min": threshold_cfg["green_min"],
+                "green_max": threshold_cfg["green_max"],
+                "yellow_min": threshold_cfg["yellow_min"],
+                "yellow_max": threshold_cfg["yellow_max"],
                 "frequency": kpi.frequency,
                 "alert_rule": kpi.alert_rule,
                 "is_active": kpi.is_active,
                 "value": value,
-                "status": kpi_status(value, kpi.green_threshold, kpi.yellow_threshold) if kpi.is_active else "INACTIVO",
-                "direction": "MAYOR" if (kpi.green_threshold or ZERO) >= (kpi.yellow_threshold or ZERO) else "MENOR",
+                "status": thresholds.evaluate(value, threshold) if kpi.is_active else "INACTIVO",
+                "direction": threshold_cfg["direction"],
                 "breakdown": breakdown,
                 "history": history.get(kpi.id, []),
                 "versions": versions.get(kpi.id, []),
@@ -1449,11 +1623,41 @@ class KpiConfig(BaseModel):
     unit: str | None = Field(default=None, max_length=20)
     scope: KpiScope | None = None
     target: Decimal | None = None
+    comparator: str | None = Field(default=None, pattern=r"^(GE|GT|LE|LT|RANGE|INFO)$")
     green_threshold: Decimal | None = None
     yellow_threshold: Decimal | None = None
+    green_min: Decimal | None = None
+    green_max: Decimal | None = None
+    yellow_min: Decimal | None = None
+    yellow_max: Decimal | None = None
     frequency: str | None = Field(default=None, max_length=40)
     alert_rule: str | None = Field(default=None, max_length=1000)
     is_active: bool | None = None
+
+
+def _validate_threshold(data: dict[str, Any], kpi: Kpi | None) -> None:
+    """Check the threshold rule is coherent for the chosen comparator."""
+
+    comparator = data.get("comparator") or (kpi.comparator if kpi else "GE")
+    pick = lambda key: data.get(key, getattr(kpi, key, None) if kpi else None)  # noqa: E731
+    if comparator == "RANGE":
+        gmin, gmax = pick("green_min"), pick("green_max")
+        if gmin is None or gmax is None:
+            raise ApiError("VALIDATION_ERROR", "En modo rango debes definir el mínimo y el máximo verde")
+        if Decimal(gmin) > Decimal(gmax):
+            raise ApiError("VALIDATION_ERROR", "El mínimo verde no puede ser mayor que el máximo verde")
+        ymin, ymax = pick("yellow_min"), pick("yellow_max")
+        if ymin is not None and ymax is not None and Decimal(ymin) > Decimal(ymax):
+            raise ApiError("VALIDATION_ERROR", "El mínimo amarillo no puede ser mayor que el máximo amarillo")
+    elif comparator in ("GE", "GT", "LE", "LT"):
+        green, yellow = pick("green_threshold"), pick("yellow_threshold")
+        if green is None or yellow is None:
+            return
+        higher = comparator in ("GE", "GT")
+        if higher and Decimal(green) < Decimal(yellow):
+            raise ApiError("VALIDATION_ERROR", "Con ≥/>, el umbral verde debe ser mayor o igual que el amarillo")
+        if not higher and Decimal(green) > Decimal(yellow):
+            raise ApiError("VALIDATION_ERROR", "Con ≤/<, el umbral verde debe ser menor o igual que el amarillo")
 
 
 @router.put("/projects/{project_id}/kpi-config/{kpi_id}")
@@ -1464,6 +1668,7 @@ def update_kpi_config(project_id: uuid.UUID, kpi_id: uuid.UUID, payload: KpiConf
         raise ApiError("NOT_FOUND", "KPI no encontrado", 404)
     data = payload.model_dump(exclude_unset=True)
     data.pop("code", None)
+    _validate_threshold(data, kpi)
     if "formula" in data:
         try:
             validate_formula(data["formula"], variable_codes(session, project_id))
@@ -1494,6 +1699,7 @@ def create_kpi_config(project_id: uuid.UUID, payload: KpiConfig, session: Sessio
         raise ApiError("INVALID_KPI_FORMULA", str(error)) from error
     data = payload.model_dump(exclude_unset=True)
     data.setdefault("scope", KpiScope.PROJECT)
+    _validate_threshold(data, None)
     kpi = Kpi(project_id=project_id, **data)
     session.add(kpi)
     session.flush()
@@ -1963,7 +2169,7 @@ def dashboard_project(
     kpi_values = {}
     for kpi in session.scalars(sa.select(Kpi).where(Kpi.project_id == project_id, Kpi.category == "PROYECTO")).all():
         value, _ = evaluate(kpi.formula, metrics, variable_codes(session, project_id))
-        kpi_values[kpi.code] = {"name": kpi.name, "value": value, "status": kpi_status(value, kpi.green_threshold, kpi.yellow_threshold), "unit": kpi.unit}
+        kpi_values[kpi.code] = {"name": kpi.name, "value": value, "status": thresholds.evaluate(value, thresholds.from_kpi(kpi)), "unit": kpi.unit}
     return ok(
         {
             "cutoff": analytics.cutoff,
@@ -2050,7 +2256,7 @@ def dashboard_change(
     kpi_values = {}
     for kpi in session.scalars(sa.select(Kpi).where(Kpi.project_id == project_id, Kpi.category == "CAMBIO").order_by(Kpi.code)).all():
         value, _ = evaluate(kpi.formula, metrics, variable_codes(session, project_id))
-        kpi_values[kpi.code] = {"name": kpi.name, "value": value, "status": kpi_status(value, kpi.green_threshold, kpi.yellow_threshold), "unit": kpi.unit, "is_additional": kpi.is_additional}
+        kpi_values[kpi.code] = {"name": kpi.name, "value": value, "status": thresholds.evaluate(value, thresholds.from_kpi(kpi)), "unit": kpi.unit, "is_additional": kpi.is_additional}
     return ok(
         {
             "cutoff": analytics.cutoff,

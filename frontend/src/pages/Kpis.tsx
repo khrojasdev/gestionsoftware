@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { api, errorMessage } from "../api";
 import { useAuth } from "../auth";
@@ -6,9 +6,11 @@ import { Sparkline } from "../components/charts";
 import { Alert, Card, ErrorBox, Field, Icon, Loading, Modal, PageHeader, Seg, Tag, useLoad, useToast } from "../components/ui";
 import { dt, KPI_LABEL, kpiDot, kpiTag, kpiValue, n } from "../format";
 import { useProject } from "../project";
-import type { Kpi, KpiBoard } from "../types";
+import { COMPARATORS, draftFromKpi, evaluateStatus, ruleText, thresholdPayload, type ThresholdDraft } from "../threshold";
+import type { Comparator, Kpi, KpiBoard } from "../types";
 
 type Category = "PROYECTO" | "CAMBIO";
+const SYM: Record<string, string> = { GE: "≥", GT: ">", LE: "≤", LT: "<" };
 
 function renderValue(value: unknown): string {
   if (typeof value === "number") return Math.abs(value) >= 1000 ? n(value) : n(value, Number.isInteger(value) ? 0 : 2);
@@ -96,8 +98,7 @@ export default function KpiPage({ focus }: { focus: string | null }) {
                 <th>Indicador</th>
                 <th className="num">Valor</th>
                 <th>Estado</th>
-                <th>Umbral verde</th>
-                <th>Umbral amarillo</th>
+                <th>Regla de evaluación</th>
               </tr>
             </thead>
             <tbody>
@@ -114,11 +115,8 @@ export default function KpiPage({ focus }: { focus: string | null }) {
                   <td>
                     <Tag cls={kpiTag(kpi.status)}>{KPI_LABEL[kpi.status]}</Tag>
                   </td>
-                  <td className="mono" style={{ fontSize: 12 }}>
-                    {kpi.green_threshold !== null ? `${kpi.direction === "MENOR" ? "≤" : "≥"} ${kpiValue(kpi.green_threshold, kpi.unit)}` : "—"}
-                  </td>
-                  <td className="mono" style={{ fontSize: 12 }}>
-                    {kpi.yellow_threshold !== null ? `${kpi.direction === "MENOR" ? "≤" : "≥"} ${kpiValue(kpi.yellow_threshold, kpi.unit)}` : "—"}
+                  <td style={{ fontSize: 12, whiteSpace: "normal" }} className="muted">
+                    {kpi.rule}
                   </td>
                 </tr>
               ))}
@@ -179,16 +177,17 @@ function KpiDetail({ kpi, board, canEdit, onSaved }: { kpi: Kpi; board: KpiBoard
   const { projectId } = useProject();
   const toast = useToast();
   const [formula, setFormula] = useState(kpi.formula);
-  const [green, setGreen] = useState(kpi.green_threshold?.toString() ?? "");
-  const [yellow, setYellow] = useState(kpi.yellow_threshold?.toString() ?? "");
+  const [thr, setThr] = useState<ThresholdDraft>(() => draftFromKpi(kpi));
   const [target, setTarget] = useState(kpi.target?.toString() ?? "");
   const [test, setTest] = useState<{ value: number; substituted: string | null } | null>(null);
   const [testError, setTestError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const area = useRef<HTMLTextAreaElement>(null);
-  const dirty = formula !== kpi.formula || green !== (kpi.green_threshold?.toString() ?? "") || yellow !== (kpi.yellow_threshold?.toString() ?? "") || target !== (kpi.target?.toString() ?? "");
+  const baseThr = useMemo(() => draftFromKpi(kpi), [kpi]);
+  const dirty = formula !== kpi.formula || JSON.stringify(thr) !== JSON.stringify(baseThr) || target !== (kpi.target?.toString() ?? "");
   const breakdown = kpi.breakdown;
-  const higher = Number(green) >= Number(yellow);
+  const setT = (patch: Partial<ThresholdDraft>) => setThr((value) => ({ ...value, ...patch }));
+  const previewStatus = evaluateStatus(kpi.value, thr);
 
   async function runTest() {
     setTestError(null);
@@ -205,8 +204,7 @@ function KpiDetail({ kpi, board, canEdit, onSaved }: { kpi: Kpi; board: KpiBoard
     setBusy(true);
     try {
       const payload: Record<string, unknown> = {
-        green_threshold: green === "" ? null : Number(green),
-        yellow_threshold: yellow === "" ? null : Number(yellow),
+        ...thresholdPayload(thr),
         target: target === "" ? null : Number(target),
       };
       if (formula !== kpi.formula) payload.formula = formula;
@@ -310,34 +308,73 @@ function KpiDetail({ kpi, board, canEdit, onSaved }: { kpi: Kpi; board: KpiBoard
             ))}
           </div>
         )}
-        <div className="thr" style={{ margin: "10px 0" }}>
-          <div style={{ background: "var(--ok-soft)" }}>
-            <label className="muted" style={{ fontSize: 11 }}>
-              Verde {higher ? "≥" : "≤"}
-            </label>
-            <input value={green} onChange={(event) => setGreen(event.target.value)} disabled={!canEdit} type="number" step="any" />
-          </div>
-          <div style={{ background: "var(--warn-soft)" }}>
-            <label className="muted" style={{ fontSize: 11 }}>
-              Amarillo {higher ? "≥" : "≤"}
-            </label>
-            <input value={yellow} onChange={(event) => setYellow(event.target.value)} disabled={!canEdit} type="number" step="any" />
-          </div>
-          <div style={{ background: "var(--crit-soft)" }}>
-            <label className="muted" style={{ fontSize: 11 }}>
-              Rojo
-            </label>
-            <div className="mono" style={{ fontSize: 12, paddingTop: 6 }}>
-              {yellow === "" ? "—" : `${higher ? "<" : ">"} ${yellow}`}
+        <Field label="¿Cómo se asigna el riesgo?" hint="El operador define cuándo el valor es verde, amarillo o rojo.">
+          <select value={thr.comparator} onChange={(event) => setT({ comparator: event.target.value as ThresholdDraft["comparator"] })} disabled={!canEdit}>
+            {COMPARATORS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label} — {option.hint}
+              </option>
+            ))}
+          </select>
+        </Field>
+        {thr.comparator === "RANGE" ? (
+          <div className="grid g2" style={{ gap: 8, margin: "8px 0" }}>
+            <div className="thr-band ok">
+              <label>Verde: entre</label>
+              <div className="row" style={{ gap: 6 }}>
+                <input value={thr.greenMin} onChange={(event) => setT({ greenMin: event.target.value })} disabled={!canEdit} type="number" step="any" placeholder="mín" />
+                <input value={thr.greenMax} onChange={(event) => setT({ greenMax: event.target.value })} disabled={!canEdit} type="number" step="any" placeholder="máx" />
+              </div>
+            </div>
+            <div className="thr-band warn">
+              <label>Amarillo: entre (tolerancia)</label>
+              <div className="row" style={{ gap: 6 }}>
+                <input value={thr.yellowMin} onChange={(event) => setT({ yellowMin: event.target.value })} disabled={!canEdit} type="number" step="any" placeholder="mín" />
+                <input value={thr.yellowMax} onChange={(event) => setT({ yellowMax: event.target.value })} disabled={!canEdit} type="number" step="any" placeholder="máx" />
+              </div>
             </div>
           </div>
+        ) : thr.comparator === "INFO" ? (
+          <p className="muted" style={{ fontSize: 12.5 }}>Sin semáforo: el tablero muestra el valor como dato informativo.</p>
+        ) : (
+          <div className="thr" style={{ margin: "8px 0" }}>
+            <div style={{ background: "var(--ok-soft)" }}>
+              <label className="muted" style={{ fontSize: 11 }}>
+                Verde {SYM[thr.comparator]}
+              </label>
+              <input value={thr.green} onChange={(event) => setT({ green: event.target.value })} disabled={!canEdit} type="number" step="any" />
+            </div>
+            <div style={{ background: "var(--warn-soft)" }}>
+              <label className="muted" style={{ fontSize: 11 }}>
+                Amarillo {SYM[thr.comparator]}
+              </label>
+              <input value={thr.yellow} onChange={(event) => setT({ yellow: event.target.value })} disabled={!canEdit} type="number" step="any" />
+            </div>
+            <div style={{ background: "var(--crit-soft)" }}>
+              <label className="muted" style={{ fontSize: 11 }}>
+                Rojo
+              </label>
+              <div className="mono" style={{ fontSize: 12, paddingTop: 6 }}>
+                {thr.yellow === "" ? "—" : `${thr.comparator === "GE" || thr.comparator === "GT" ? "<" : ">"} ${thr.yellow}`}
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="rule-preview">
+          <Icon name="info" size={13} />
+          <div>
+            <b>Regla:</b> {ruleText(thr, kpi.unit)}
+            {kpi.value !== null && thr.comparator !== "INFO" && (
+              <div style={{ marginTop: 3 }}>
+                Con el valor actual <b className="mono">{kpiValue(kpi.value, kpi.unit)}</b> →{" "}
+                <Tag cls={kpiTag(previewStatus)}>{KPI_LABEL[previewStatus]}</Tag>
+              </div>
+            )}
+          </div>
         </div>
-        <Field label="Meta">
+        <Field label="Meta (referencia)">
           <input value={target} onChange={(event) => setTarget(event.target.value)} disabled={!canEdit} type="number" step="any" />
         </Field>
-        <p className="muted" style={{ fontSize: 12, marginTop: 0 }}>
-          Si el umbral verde es mayor que el amarillo, un valor más alto es mejor; si es menor, un valor más bajo es mejor. Sin umbrales el KPI es informativo.
-        </p>
         {canEdit && (
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <button className="btn" onClick={() => void runTest()}>
@@ -351,8 +388,7 @@ function KpiDetail({ kpi, board, canEdit, onSaved }: { kpi: Kpi; board: KpiBoard
                 className="btn"
                 onClick={() => {
                   setFormula(kpi.formula);
-                  setGreen(kpi.green_threshold?.toString() ?? "");
-                  setYellow(kpi.yellow_threshold?.toString() ?? "");
+                  setThr(draftFromKpi(kpi));
                   setTarget(kpi.target?.toString() ?? "");
                   setTest(null);
                 }}
@@ -436,11 +472,15 @@ function ManualRow({ metric, canEdit, onSaved }: { metric: KpiBoard["manual"][nu
   );
 }
 
+const EMPTY_THR: ThresholdDraft = { comparator: "GE", green: "", yellow: "", greenMin: "", greenMax: "", yellowMin: "", yellowMax: "" };
+
 function KpiCreateModal({ category, board, onClose, onSaved }: { category: Category; board: KpiBoard; onClose: () => void; onSaved: (code: string) => void }) {
   const { projectId } = useProject();
-  const [draft, setDraft] = useState({ code: "", name: "", description: "", formula: "", unit: "", green: "", yellow: "", category, additional: true });
+  const [draft, setDraft] = useState({ code: "", name: "", description: "", formula: "", unit: "", category, additional: true });
+  const [thr, setThr] = useState<ThresholdDraft>(EMPTY_THR);
   const [error, setError] = useState<string | null>(null);
   const set = (key: keyof typeof draft) => (event: { target: { value: string } }) => setDraft((value) => ({ ...value, [key]: event.target.value }));
+  const setT = (patch: Partial<ThresholdDraft>) => setThr((value) => ({ ...value, ...patch }));
   async function save() {
     try {
       await api.post(`/projects/${projectId}/kpi-config`, {
@@ -451,8 +491,7 @@ function KpiCreateModal({ category, board, onClose, onSaved }: { category: Categ
         unit: draft.unit || null,
         category: draft.category,
         is_additional: draft.additional,
-        green_threshold: draft.green === "" ? null : Number(draft.green),
-        yellow_threshold: draft.yellow === "" ? null : Number(draft.yellow),
+        ...thresholdPayload(thr),
       });
       onSaved(draft.code);
     } catch (err) {
@@ -497,13 +536,63 @@ function KpiCreateModal({ category, board, onClose, onSaved }: { category: Categ
       <Field label="Fórmula" hint={`Variables: ${board.variables.map((variable) => variable.code).slice(0, 18).join(", ")}…`}>
         <input className="mono" value={draft.formula} onChange={set("formula")} placeholder="EAC - BAC" />
       </Field>
-      <div className="row">
-        <Field label="Umbral verde">
-          <input type="number" step="any" value={draft.green} onChange={set("green")} />
-        </Field>
-        <Field label="Umbral amarillo">
-          <input type="number" step="any" value={draft.yellow} onChange={set("yellow")} />
-        </Field>
+      <Field label="¿Cómo se asigna el riesgo?" hint="El operador define cuándo el valor es verde, amarillo o rojo.">
+        <select value={thr.comparator} onChange={(event) => setT({ comparator: event.target.value as Comparator })}>
+          {COMPARATORS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label} — {option.hint}
+            </option>
+          ))}
+        </select>
+      </Field>
+      {thr.comparator === "RANGE" ? (
+        <div className="grid g2" style={{ gap: 8 }}>
+          <div className="thr-band ok">
+            <label>Verde: entre</label>
+            <div className="row" style={{ gap: 6 }}>
+              <input value={thr.greenMin} onChange={(event) => setT({ greenMin: event.target.value })} type="number" step="any" placeholder="mín" />
+              <input value={thr.greenMax} onChange={(event) => setT({ greenMax: event.target.value })} type="number" step="any" placeholder="máx" />
+            </div>
+          </div>
+          <div className="thr-band warn">
+            <label>Amarillo: entre (tolerancia)</label>
+            <div className="row" style={{ gap: 6 }}>
+              <input value={thr.yellowMin} onChange={(event) => setT({ yellowMin: event.target.value })} type="number" step="any" placeholder="mín" />
+              <input value={thr.yellowMax} onChange={(event) => setT({ yellowMax: event.target.value })} type="number" step="any" placeholder="máx" />
+            </div>
+          </div>
+        </div>
+      ) : thr.comparator === "INFO" ? (
+        <p className="muted" style={{ fontSize: 12.5 }}>Sin semáforo: el tablero muestra el valor como dato informativo.</p>
+      ) : (
+        <div className="thr">
+          <div style={{ background: "var(--ok-soft)" }}>
+            <label className="muted" style={{ fontSize: 11 }}>
+              Verde {SYM[thr.comparator]}
+            </label>
+            <input value={thr.green} onChange={(event) => setT({ green: event.target.value })} type="number" step="any" />
+          </div>
+          <div style={{ background: "var(--warn-soft)" }}>
+            <label className="muted" style={{ fontSize: 11 }}>
+              Amarillo {SYM[thr.comparator]}
+            </label>
+            <input value={thr.yellow} onChange={(event) => setT({ yellow: event.target.value })} type="number" step="any" />
+          </div>
+          <div style={{ background: "var(--crit-soft)" }}>
+            <label className="muted" style={{ fontSize: 11 }}>
+              Rojo
+            </label>
+            <div className="mono" style={{ fontSize: 12, paddingTop: 6 }}>
+              {thr.yellow === "" ? "—" : `${thr.comparator === "GE" || thr.comparator === "GT" ? "<" : ">"} ${thr.yellow}`}
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="rule-preview" style={{ marginTop: 10 }}>
+        <Icon name="info" size={13} />
+        <div>
+          <b>Regla:</b> {ruleText(thr, draft.unit || null)}
+        </div>
       </div>
       {error && <Alert level="crit">{error}</Alert>}
     </Modal>

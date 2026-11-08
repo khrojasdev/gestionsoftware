@@ -10,7 +10,8 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Session
 
 from app.models import Kpi, KpiValue, KpiVariable, Project
-from app.services.analytics import ProjectAnalytics, json_value, kpi_status
+from app.services import thresholds
+from app.services.analytics import ProjectAnalytics, json_value
 from app.services.kpi import DEFAULT_KPI_VARIABLES, KpiFormulaError, evaluate_formula, formula_variables
 
 
@@ -62,7 +63,10 @@ def recalculate_kpis(
         sa.select(Kpi).where(Kpi.project_id == project.id, Kpi.is_active.is_(True)).order_by(Kpi.code)
     ).all():
         value, breakdown = evaluate(kpi.formula, metrics, codes)
-        breakdown["status"] = kpi_status(value, kpi.green_threshold, kpi.yellow_threshold)
+        threshold = thresholds.from_kpi(kpi)
+        breakdown["status"] = thresholds.evaluate(value, threshold)
+        breakdown["rule"] = thresholds.rule_text(threshold)
+        breakdown["comparator"] = threshold.comparator
         existing = session.scalar(
             sa.select(KpiValue).where(
                 KpiValue.kpi_id == kpi.id, KpiValue.cutoff_at == snapshot_at, KpiValue.element_id.is_(None)

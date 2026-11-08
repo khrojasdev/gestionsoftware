@@ -346,6 +346,23 @@ class SqlAlchemyImportStore:
             kpi.target = _optional_decimal(row.get("meta"))
             kpi.green_threshold = _optional_decimal(row.get("verde"))
             kpi.yellow_threshold = _optional_decimal(row.get("amarillo"))
+            kpi.green_min = _optional_decimal(row.get("verde_min"))
+            kpi.green_max = _optional_decimal(row.get("verde_max"))
+            kpi.yellow_min = _optional_decimal(row.get("amarillo_min"))
+            kpi.yellow_max = _optional_decimal(row.get("amarillo_max"))
+            # Explicit operator if the sheet carries one; otherwise infer it from
+            # the green/yellow ordering so "lower is better" KPIs behave correctly.
+            operator = str(row.get("operador", "")).strip().upper()
+            if operator in {"GE", "GT", "LE", "LT", "RANGE", "INFO"}:
+                kpi.comparator = operator
+            elif kpi.green_min is not None and kpi.green_max is not None:
+                kpi.comparator = "RANGE"
+            elif kpi.green_threshold is None or kpi.yellow_threshold is None:
+                kpi.comparator = "INFO"
+            elif kpi.green_threshold >= kpi.yellow_threshold:
+                kpi.comparator = "GE"
+            else:
+                kpi.comparator = "LE"
             category = str(row.get("categoria", "")).strip().upper()
             kpi.category = category or ("CAMBIO" if row in workbook.sheets.get("KPI_Cambio", []) else "PROYECTO")
             kpi.unit = str(row.get("unidad", "")).strip() or None

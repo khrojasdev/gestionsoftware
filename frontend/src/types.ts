@@ -258,6 +258,7 @@ export type MilestonesView = {
 };
 
 export type KpiStatus = "VERDE" | "AMARILLO" | "ROJO" | "INFO" | "SIN_DATOS";
+export type Comparator = "GE" | "GT" | "LE" | "LT" | "RANGE" | "INFO";
 
 export type Kpi = {
   id: string;
@@ -271,14 +272,21 @@ export type Kpi = {
   unit: string | null;
   scope: string;
   target: number | null;
+  comparator: Comparator;
+  comparator_label: string;
+  rule: string;
   green_threshold: number | null;
   yellow_threshold: number | null;
+  green_min: number | null;
+  green_max: number | null;
+  yellow_min: number | null;
+  yellow_max: number | null;
   frequency: string | null;
   alert_rule: string | null;
   is_active: boolean;
   value: number | null;
   status: KpiStatus;
-  direction: "MAYOR" | "MENOR" | null;
+  direction: "MAYOR" | "MENOR" | "RANGO" | "INFO" | null;
   breakdown: {
     formula: string;
     variables: Record<string, unknown>;

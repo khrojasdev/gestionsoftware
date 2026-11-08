@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { api, errorMessage } from "../api";
 import { useAuth } from "../auth";
 import { RecalcModal } from "../components/Recalc";
-import { Alert, Bar, Card, ErrorBox, Field, Icon, Loading, PageHeader, Tag, useLoad, useToast } from "../components/ui";
+import { Alert, Bar, Card, ErrorBox, Field, Icon, Loading, Modal, PageHeader, Tag, useLoad, useToast } from "../components/ui";
 import { d, money, statusTag } from "../format";
 import { useProject } from "../project";
 import { go, href } from "../router";
@@ -31,6 +31,7 @@ export default function ActivitiesPage({ focus }: { focus: string | null }) {
   const [stage, setStage] = useState("");
   const [selected, setSelected] = useState<string | null>(focus);
   const [result, setResult] = useState<{ title: string; result: RecalcResult } | null>(null);
+  const [creating, setCreating] = useState(false);
 
   const [lastFocus, setLastFocus] = useState(focus);
   if (focus !== lastFocus) {
@@ -76,6 +77,11 @@ export default function ActivitiesPage({ focus }: { focus: string | null }) {
   return (
     <>
       <PageHeader crumb="Planificación" title="Actividades y precedencias">
+        {isManager && (
+          <button className="btn pri" onClick={() => setCreating(true)}>
+            <Icon name="plus" size={14} /> Nuevo elemento
+          </button>
+        )}
         <a className="btn" href={href("gantt")}>
           Ver en Carta Gantt <Icon name="arrow" size={14} />
         </a>
@@ -194,6 +200,11 @@ export default function ActivitiesPage({ focus }: { focus: string | null }) {
                 setResult({ title, result: value });
                 touch();
               }}
+              onDeleted={(value) => {
+                setSelected(null);
+                setResult({ title: `${current.external_id} eliminado`, result: value });
+                touch();
+              }}
             />
           ) : (
             <Card title="Editor">
@@ -214,6 +225,18 @@ export default function ActivitiesPage({ focus }: { focus: string | null }) {
         </div>
       </div>
       {result && <RecalcModal title={result.title} result={result.result} onClose={() => setResult(null)} />}
+      {creating && (
+        <ElementCreateModal
+          gantt={gantt}
+          onClose={() => setCreating(false)}
+          onCreated={(externalId, title, value) => {
+            setCreating(false);
+            setSelected(externalId);
+            setResult({ title, result: value });
+            touch();
+          }}
+        />
+      )}
     </>
   );
 }
@@ -239,16 +262,33 @@ function Editor({
   canPlan,
   canProgress,
   onDone,
+  onDeleted,
 }: {
   element: GanttElement;
   gantt: GanttFull;
   canPlan: boolean;
   canProgress: boolean;
   onDone: (title: string, result: RecalcResult) => void;
+  onDeleted: (result: RecalcResult) => void;
 }) {
   const toast = useToast();
   const { projectId } = useProject();
   const isLeaf = element.kind === "SUBACTIVIDAD" || element.kind === "HITO";
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  async function remove() {
+    setBusy(true);
+    setError(null);
+    try {
+      const value = await api.del<RecalcResult>(`/projects/${projectId}/elements/${element.external_id}`);
+      toast("ok", `${element.external_id} eliminado. Ruta crítica, Gantt, costos y KPI recalculados.`);
+      onDeleted(value);
+    } catch (err) {
+      setError(errorMessage(err));
+      toast("crit", errorMessage(err));
+      setBusy(false);
+    }
+  }
   const [name, setName] = useState(element.name);
   const [duration, setDuration] = useState(String(element.duration_days ?? ""));
   const [progress, setProgress] = useState(String(Math.round(element.progress)));
@@ -464,9 +504,33 @@ function Editor({
         </Card>
       )}
       {error && <Alert level="crit">{error}</Alert>}
-      <button className="btn sm" onClick={() => go("gantt", element.external_id)}>
-        Ubicar en la Carta Gantt <Icon name="arrow" size={13} />
-      </button>
+      <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+        <button className="btn sm" onClick={() => go("gantt", element.external_id)}>
+          Ubicar en la Carta Gantt <Icon name="arrow" size={13} />
+        </button>
+        <div className="sp" style={{ flex: 1 }} />
+        {canPlan && !confirmDelete && (
+          <button className="btn sm danger" disabled={busy} onClick={() => setConfirmDelete(true)}>
+            <Icon name="x" size={12} /> Eliminar {KIND_LABEL[element.kind].toLowerCase()}
+          </button>
+        )}
+        {canPlan && confirmDelete && (
+          <>
+            <span className="muted" style={{ fontSize: 12 }}>¿Eliminar {element.external_id}?</span>
+            <button className="btn sm" disabled={busy} onClick={() => setConfirmDelete(false)}>
+              Cancelar
+            </button>
+            <button className="btn sm danger" disabled={busy} onClick={() => void remove()}>
+              {busy ? "Eliminando…" : "Sí, eliminar y recalcular"}
+            </button>
+          </>
+        )}
+      </div>
+      {canPlan && (
+        <p className="muted" style={{ fontSize: 11.5, margin: 0 }}>
+          Al eliminar se quitan sus precedencias, asignaciones y avances, y se recalculan ruta crítica, Carta Gantt, costos y KPI. Las etapas y actividades requieren eliminar antes sus elementos hijos.
+        </p>
+      )}
     </div>
   );
 }
@@ -534,5 +598,144 @@ function DependencyRow({
         </span>
       )}
     </div>
+  );
+}
+
+type NewKind = "ETAPA" | "ACTIVIDAD" | "SUBACTIVIDAD" | "HITO";
+const KIND_HINT: Record<NewKind, string> = {
+  ETAPA: "Agrupador de primer nivel. No tiene padre; su duración y costo se consolidan desde las actividades.",
+  ACTIVIDAD: "Agrupa subactividades e hitos dentro de una etapa. Se consolida desde sus hijos.",
+  SUBACTIVIDAD: "Tarea de trabajo con duración propia. Es la que mueve la ruta crítica.",
+  HITO: "Punto de control con duración cero; se cumple cuando sus criterios están cumplidos.",
+};
+
+function ElementCreateModal({
+  gantt,
+  onClose,
+  onCreated,
+}: {
+  gantt: GanttFull;
+  onClose: () => void;
+  onCreated: (externalId: string, title: string, result: RecalcResult) => void;
+}) {
+  const { projectId } = useProject();
+  const [kind, setKind] = useState<NewKind>("SUBACTIVIDAD");
+  const [externalId, setExternalId] = useState("");
+  const [name, setName] = useState("");
+  const [parent, setParent] = useState("");
+  const [duration, setDuration] = useState("5");
+  const [plannedStart, setPlannedStart] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const needsParent = kind === "ACTIVIDAD" || kind === "SUBACTIVIDAD";
+  const parentKinds: Record<NewKind, string[]> = {
+    ETAPA: [],
+    ACTIVIDAD: ["ETAPA"],
+    SUBACTIVIDAD: ["ACTIVIDAD"],
+    HITO: ["ETAPA", "ACTIVIDAD"],
+  };
+  const parents = gantt.elements.filter((element) => parentKinds[kind].includes(element.kind));
+  const idExists = gantt.elements.some((element) => element.external_id.toLowerCase() === externalId.trim().toLowerCase());
+  const valid =
+    externalId.trim() !== "" &&
+    !idExists &&
+    name.trim() !== "" &&
+    (!needsParent || parent !== "") &&
+    (kind !== "SUBACTIVIDAD" || Number(duration) > 0);
+
+  async function save() {
+    setBusy(true);
+    setError(null);
+    try {
+      const payload: Record<string, unknown> = { external_id: externalId.trim(), name: name.trim(), element_type: kind };
+      if (parent) payload.parent = parent;
+      if (kind === "SUBACTIVIDAD") payload.duration_days = Number(duration);
+      if ((kind === "SUBACTIVIDAD" || kind === "HITO") && plannedStart) payload.planned_start = plannedStart;
+      const result = await api.post<RecalcResult>(`/projects/${projectId}/elements`, payload);
+      onCreated(externalId.trim(), `${externalId.trim()} creado (${KIND_LABEL[kind]})`, result);
+    } catch (err) {
+      setError(errorMessage(err));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Modal
+      title="Nuevo elemento de la planificación"
+      onClose={onClose}
+      footer={
+        <>
+          <button className="btn" onClick={onClose}>
+            Cancelar
+          </button>
+          <button className="btn pri" disabled={!valid || busy} onClick={() => void save()}>
+            {busy ? "Creando…" : "Crear y recalcular"}
+          </button>
+        </>
+      }
+    >
+      <Field label="Tipo de elemento">
+        <select
+          value={kind}
+          onChange={(event) => {
+            const next = event.target.value as NewKind;
+            setKind(next);
+            setParent("");
+          }}
+        >
+          <option value="ETAPA">Etapa</option>
+          <option value="ACTIVIDAD">Actividad</option>
+          <option value="SUBACTIVIDAD">Subactividad (tarea)</option>
+          <option value="HITO">Hito</option>
+        </select>
+      </Field>
+      <p className="muted" style={{ fontSize: 12, marginTop: -4 }}>{KIND_HINT[kind]}</p>
+      <div className="row">
+        <Field label="ID" hint={idExists ? "Ya existe ese ID" : "Único en el proyecto"}>
+          <input value={externalId} onChange={(event) => setExternalId(event.target.value)} placeholder={kind === "HITO" ? "H9" : kind === "ETAPA" ? "E5" : "A5.3"} />
+        </Field>
+        <Field label="Nombre">
+          <input value={name} onChange={(event) => setName(event.target.value)} />
+        </Field>
+      </div>
+      {kind !== "ETAPA" && (
+        <Field label={needsParent ? "Elemento padre" : "Elemento padre (opcional)"} hint={parentKinds[kind].map((value) => KIND_LABEL[value]).join(" o ")}>
+          <select value={parent} onChange={(event) => setParent(event.target.value)}>
+            <option value="">{needsParent ? "Selecciona un padre…" : "Sin padre"}</option>
+            {parents.map((item) => (
+              <option key={item.external_id} value={item.external_id}>
+                {item.external_id} · {item.name.slice(0, 48)}
+              </option>
+            ))}
+          </select>
+        </Field>
+      )}
+      {kind === "SUBACTIVIDAD" && (
+        <div className="row">
+          <Field label="Duración (días hábiles)">
+            <input type="number" min={1} value={duration} onChange={(event) => setDuration(event.target.value)} />
+          </Field>
+          <Field label="Inicio planificado (opcional)" hint="Si lo dejas vacío, lo ubica el motor según precedencias.">
+            <input type="date" value={plannedStart} onChange={(event) => setPlannedStart(event.target.value)} />
+          </Field>
+        </div>
+      )}
+      {kind === "HITO" && (
+        <Field label="Fecha planificada (opcional)" hint="Normalmente se ubica por sus precedencias.">
+          <input type="date" value={plannedStart} onChange={(event) => setPlannedStart(event.target.value)} />
+        </Field>
+      )}
+      {(kind === "ETAPA" || kind === "ACTIVIDAD") && (
+        <p className="muted" style={{ fontSize: 12 }}>
+          Las fechas, la duración y el costo se consolidan automáticamente desde las subactividades que agregues dentro.
+        </p>
+      )}
+      <p className="muted" style={{ fontSize: 12 }}>
+        Después de crearlo podrás añadir precedencias y asignar recursos; cada cambio recalcula la ruta crítica, la Carta Gantt, los costos y los KPI.
+      </p>
+      {error && <Alert level="crit">{error}</Alert>}
+    </Modal>
   );
 }
